@@ -9,7 +9,7 @@ import uuid from 'uuid'
 
 /** 项目模块 */
 
-const genUUID36 = exports.genUUID36 = () => {
+const genUUID36 = () => {
   let id36 = uuid.v4();
   return id36;
 }
@@ -30,7 +30,7 @@ const genUUID = exports.genUUID = () => {
  * 返回
  *   <string>
  */
-const genRandStr = exports.genRandStr = (len = 32, chars) => {
+const genRandStr = (len = 32, chars) => {
   let samples = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   let randStr = ''
@@ -40,4 +40,10 @@ const genRandStr = exports.genRandStr = (len = 32, chars) => {
   }
 
   return randStr;
+}
+
+export default {
+  genUUID
+  , genUUID36
+  , genRandStr
 }

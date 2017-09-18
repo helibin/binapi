@@ -16,6 +16,7 @@ import CONFIG from 'config'
  * 仅输出至控制台
  */
 
+// level: [ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF]
 log4js.configure({
   appenders: {
     'out': {
@@ -24,7 +25,7 @@ log4js.configure({
   }, categories: {
     default: {
       appenders: ['out'],
-      level: 'info'
+      level: CONFIG.webServer.logLevel
     }
   }, pm2: true,
 })

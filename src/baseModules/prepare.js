@@ -7,15 +7,15 @@ import colors from 'colors'
 
 /** 基础模块 */
 import CONFIG from 'config'
-import t from './utils'
+import t from './tools'
 import {logger} from './logger'
 
 /** 项目模块 */
 
-exports.response = (ctx, next) => {
+const response = (ctx, next) => {
   let _clientId = ctx._clientId || t.genRandStr(24)
 
-  logger.error(ctx.cookies.get('_clientId'))
+  // logger.error(ctx.cookies.get('_clientId'))
 
   ctx.cookies.set('_clientId', _clientId, {
     maxAge: 365 * 24 * 60 * 60 * 1000, // cookie有效时长
@@ -38,4 +38,8 @@ exports.response = (ctx, next) => {
   }
 
   return next()
+}
+
+export default {
+  response
 }
