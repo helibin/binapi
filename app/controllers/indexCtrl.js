@@ -9,9 +9,10 @@ import CONFIG from 'config'
 import t from '../baseModules/tools'
 
 /** 项目模块 */
+import sqlTest from '../baseModules/mysqlHelper'
 
 var index = async (ctx) => {
-  await ctx.render('index')
+  await ctx.state.render('index', {body: 'xxx'})
 }
 
 var testLogger = async (ctx) => {

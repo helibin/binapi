@@ -8,20 +8,18 @@ import Router from 'koa-router'
 /** 基础模块 */
 
 /** 项目模块 */
-import indexCtrl from '../controllers/indexCtrl'
 
-
-
-const router = new Router()
 const apiRouter = new Router({
   prefix: '/api'
 })
 
-router.get('/test-logger'
-  , indexCtrl.testLogger
-)
-router.get('/',
-  indexCtrl.index
+apiRouter.get('/uses/do/list'
+  , async(ctx) => {
+    ctx.body = [
+      {name: 'sdw', sex: 'f'}
+      , {name: '2rsa', sex: 'm'}
+    ]
+  }
 )
 
-export default router
+export default apiRouter

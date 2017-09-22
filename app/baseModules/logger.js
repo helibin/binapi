@@ -35,4 +35,4 @@ hostName = hostName || hostName[0] || 'webServer'
 
 let logger = log4js.getLogger(hostName)
 
-exports.logger = logger
+export default logger
