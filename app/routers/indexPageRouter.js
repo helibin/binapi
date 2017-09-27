@@ -14,12 +14,18 @@ import indexCtrl from '../controllers/indexCtrl'
 
 const router = new Router()
 
-router.get('/'
-  , indexCtrl.index
+router.get('/',
+  async(ctx) => {
+    ctx.state.redirect('/index')
+  },
 )
 
-router.get('/test-logger'
-  , indexCtrl.testLogger
+router.get('/index',
+  indexCtrl.index,
+)
+
+router.get('/test-logger',
+  indexCtrl.testLogger,
 )
 
 export default router

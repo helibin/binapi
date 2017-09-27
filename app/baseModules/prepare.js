@@ -36,23 +36,45 @@ const response = (ctx, next) => {
 
     logger[logLevel].apply(logger, args)
   }
+  // 包装重定向函数，自动打印日志并包含RequestId
+  ctx.state.redirect = function redirect(nextUrl) {
+    ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`)
+
+    ctx.set('x-request-id', ctx.state.requestId);
+    ctx.redirect(nextUrl);
+  }
 
   ctx.state.render = async(view, pageData) => {
     let renderData = {
-      t          : t
-      , path     : ctx.path
-      , query    : ctx.query
-      , params   : ctx.params
-      , useragent: ctx.useragent
-      , CONFIG   : CONFIG
-      , pageData : pageData || {}
+      t        : t,
+      CONFIG   : CONFIG,
+      path     : ctx.path,
+      query    : ctx.query,
+      params   : ctx.params,
+      userAgent: ctx.userAgent,
+      pageData : pageData || {},
     }
 
     await ctx.render(view, renderData)
     ctx.state.logger(renderData.pageError, '渲染HTML页面')
 
-    ctx.html += '<!-- requestId=' + ctx.state.requestId + ' -->';
+    ctx.body += '<!-- requestId=' + ctx.state.requestId + ' -->';
   }
+
+  // 打印请求
+  ctx.state.logger('debug', `收到请求：${JSON.stringify({
+    ip      : ctx.ip,
+    referer : ctx.get('referer') || undefined,
+    host    : ctx.host,
+    browser : ctx.userAgent.browser,
+    version : ctx.userAgent.version,
+    os      : ctx.userAgent.os,
+    platform: ctx.userAgent.platform,
+    method  : ctx.method,
+    url     : ctx.originalUrl,
+    query   : ctx.query,
+    body    : ctx.body || undefined,
+  })}`)
 
   return next()
 }

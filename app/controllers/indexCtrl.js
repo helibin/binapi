@@ -11,11 +11,11 @@ import t from '../baseModules/tools'
 /** 项目模块 */
 import sqlTest from '../baseModules/mysqlHelper'
 
-var index = async (ctx) => {
+let index = async (ctx) => {
   await ctx.state.render('index', {body: 'xxx'})
 }
 
-var testLogger = async (ctx) => {
+let testLogger = async (ctx) => {
   ctx.logger('trace', 'Entering cheese testing')
   ctx.logger('debug', 'Got cheese.')
   ctx.logger('info', 'Cheese is Gouda.')
