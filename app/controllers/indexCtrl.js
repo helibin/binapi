@@ -13,6 +13,7 @@ import sqlTest from '../baseModules/mysqlHelper'
 
 let index = async (ctx) => {
   await ctx.state.render('index', {body: 'xxx'})
+  console.log(111, ',,,')
 }
 
 let testLogger = async (ctx) => {
