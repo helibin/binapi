@@ -11,31 +11,42 @@ import t from '../baseModules/tools'
 /** 项目模块 */
 import User from '../baseModules/db-init'
 
-console.log(JSON.stringify(User), ',,,')
 let index = async (ctx) => {
   // force: true will drop the table if it already exists
-  User.sync({force: false}).then(() => {
-    // Table created
-    return User.create({
-      id: t.genUUID(),
-      username: t.genRandStr(8),
-    })
-  })
+  // User.sync({force: false}).then(() => {
+  //   // Table created
+  //   return User.create({
+  //     id: t.genUUID(),
+  //     username: t.genRandStr(8),
+  //   })
+  // })
+  console.log(ctx.state.logger, ',,,')
   await ctx.state.render('index', {body: 'xxx'})
-  console.log(111, ',,,')
 }
 
 let testLogger = async (ctx) => {
-  ctx.logger('trace', 'Entering cheese testing')
-  ctx.logger('debug', 'Got cheese.')
-  ctx.logger('info', 'Cheese is Gouda.')
-  ctx.logger('warn', 'Cheese is quite smelly.')
-  ctx.logger('error', 'Cheese is too ripe!')
-  ctx.logger('fatal', 'Cheese was breeding ground for listeria.')
+  console.log(111, ',,,')
+  ctx.state.logger('trace', 'Entering cheese testing')
+  ctx.state.logger('debug', 'Got cheese.')
+  ctx.state.logger('info', 'Cheese is Gouda.')
+  ctx.state.logger('warn', 'Cheese is quite smelly.')
+  ctx.state.logger('error', 'Cheese is too ripe!')
+  ctx.state.logger('fatal', 'Cheese was breeding ground for listeria.')
   await ctx.render('testLogger')
 }
 
+let debugTest = async (ctx) => {
+  ctx.state.logger('trace', 'Entering cheese testing')
+  ctx.state.logger('debug', 'Got cheese.')
+  ctx.state.logger('info', 'Cheese is Gouda.')
+  ctx.state.logger('warn', 'Cheese is quite smelly.')
+  ctx.state.logger('error', 'Cheese is too ripe!')
+  ctx.state.logger('fatal', 'Cheese was breeding ground for listeria.')
+  await ctx.render('debug-test.html')
+}
+
 export default {
-  index
-  , testLogger
+  index,
+  testLogger,
+  debugTest,
 }

@@ -28,4 +28,8 @@ router.get('/test-logger',
   indexCtrl.testLogger,
 )
 
+router.get('/debug-test',
+  indexCtrl.debugTest,
+)
+
 export default router
