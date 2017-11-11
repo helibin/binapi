@@ -9,9 +9,18 @@ import CONFIG from 'config'
 import t from '../baseModules/tools'
 
 /** 项目模块 */
-import sqlTest from '../baseModules/mysqlHelper'
+import User from '../baseModules/db-init'
 
+console.log(JSON.stringify(User), ',,,')
 let index = async (ctx) => {
+  // force: true will drop the table if it already exists
+  User.sync({force: false}).then(() => {
+    // Table created
+    return User.create({
+      id: t.genUUID(),
+      username: t.genRandStr(8),
+    })
+  })
   await ctx.state.render('index', {body: 'xxx'})
   console.log(111, ',,,')
 }

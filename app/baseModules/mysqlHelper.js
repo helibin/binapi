@@ -12,16 +12,15 @@ import logger from './logger'
 
 /** 项目模块 */
 
-const dbTypeKey = 'mysql'
-const dbConfigKey = CONFIG.db.config
-const DBConfig = CONFIG[dbTypeKey][dbConfigKey]
+const whosDB = CONFIG.db.who || 'none'
+const dbConfig = CONFIG.db.mysql[whosDB] || CONFIG.db.mysql || {}
 
-const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, {
-  host: DBConfig.host,
-  dialect: dbTypeKey,
+const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+  host: dbConfig.host,
+  dialect: 'mysql',
 
   pool: {
-    max: DBConfig.connectionLimit,
+    max: dbConfig.connectionLimit,
     min: 0,
     idle: 10000
   }
@@ -31,4 +30,10 @@ sequelize.authenticate().then(() => {
   console.log('Connection has been established successfully.');
 }).catch(err => {
   console.error('Unable to connect to the database:', err);
-});
+  console.error(dbConfig, 'dbConfig...')
+})
+
+const MySQLHelper = async (ctx) => {
+  this.sequelize = sequelize,
+  this.ctx = ctx
+}

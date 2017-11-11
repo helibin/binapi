@@ -14,7 +14,10 @@ import logger from './logger'
 
 const response = (ctx, next) => {
   let _clientId = ctx.cookies._clientId || t.genRandStr(24)
-  ctx.state._clientId = _clientId
+  let _requestId = t.genUUID()
+
+  ctx.state._clientId  = _clientId
+  ctx.state._requestId = _requestId
   // logger.error(ctx.cookies.get('_clientId'))
 
   ctx.cookies.set('_clientId', _clientId, {
@@ -23,12 +26,12 @@ const response = (ctx, next) => {
     httpOnly: false,  // 是否只用于http请求中获取
     overwrite: true  // 是否允许重写
   })
-  ctx.state.requestId = t.genUUID()
+
   // 包装日志函数，使日志中包含RequestId
   ctx.state.logger = function loggerWrap() {
     let args = Array.prototype.slice.call(arguments)
     let logLevel = args.shift()
-    args.unshift(colors.yellow(`[ReqId: ${ctx.state.requestId}]`))
+    args.unshift(colors.yellow(`[ReqId: ${_requestId}]`))
 
     if (!['trace', 'debug', 'info', 'warn', 'error', 'fatal'].includes(logLevel)) {
       logLevel = logLevel ? 'error' : 'info'
@@ -40,25 +43,26 @@ const response = (ctx, next) => {
   ctx.state.redirect = function redirect(nextUrl) {
     ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`)
 
-    ctx.set('x-request-id', ctx.state.requestId);
+    ctx.set('x-request-id', _requestId);
     ctx.redirect(nextUrl);
   }
 
   ctx.state.render = async(view, pageData) => {
     let renderData = {
-      t        : t,
-      CONFIG   : CONFIG,
-      path     : ctx.path,
-      query    : ctx.query,
-      params   : ctx.params,
-      userAgent: ctx.userAgent,
-      pageData : pageData || {},
+      t           : t,
+      CONFIG      : CONFIG,
+      path        : ctx.path,
+      query       : ctx.query,
+      params      : ctx.params,
+      userAgent   : ctx.userAgent,
+      xResposeTime: ctx.state.xResposeTime,
+      pageData    : pageData || {},
     }
 
     await ctx.render(view, renderData)
     ctx.state.logger(renderData.pageError, '渲染HTML页面')
 
-    ctx.body += '<!-- requestId=' + ctx.state.requestId + ' -->';
+    ctx.body += '<!-- requestId=' + _requestId + ' -->';
   }
 
   // 打印请求
