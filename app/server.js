@@ -8,6 +8,7 @@ import path from 'path'
 import Koa from 'koa'
 import views from 'koa-views'
 import userAgent from 'koa-useragent'
+import nunjucks from 'nunjucks'
 
 /* 基础模块 */
 import CONFIG from 'config'
@@ -22,9 +23,26 @@ import indexAPIRouter from './routers/indexAPIRouter'
 
 const app = new Koa()
 
-
+// handlebars, nunjucks, ejs
 app.use(views(path.join(__dirname, '/views'), {
-  extension: 'ejs'
+  options: {
+    nunjucksEnv: new nunjucks.Environment(
+      new nunjucks.FileSystemLoader(path.join(__dirname, 'views'))
+    ).addFilter('shorten', (str, count) => {
+      return str.slice(0, count || 5)
+    }),
+
+    helpers: {
+      uppercase: str => str.toUpperCase()
+    },
+    partials: CONFIG.hbs.partials
+  },
+  extension: 'hbs',
+  map: {
+    hbs: 'handlebars',
+    njk: 'nunjucks',
+    html: 'ejs',
+  }
 }))
 
 app.use(async (ctx, next) => {

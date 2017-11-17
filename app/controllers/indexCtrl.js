@@ -20,19 +20,17 @@ let index = async (ctx) => {
   //     username: t.genRandStr(8),
   //   })
   // })
-  console.log(ctx.state.logger, ',,,')
   await ctx.state.render('index', {body: 'xxx'})
 }
 
 let testLogger = async (ctx) => {
-  console.log(111, ',,,')
   ctx.state.logger('trace', 'Entering cheese testing')
   ctx.state.logger('debug', 'Got cheese.')
   ctx.state.logger('info', 'Cheese is Gouda.')
   ctx.state.logger('warn', 'Cheese is quite smelly.')
   ctx.state.logger('error', 'Cheese is too ripe!')
   ctx.state.logger('fatal', 'Cheese was breeding ground for listeria.')
-  await ctx.render('testLogger')
+  await ctx.render('test-logger')
 }
 
 let debugTest = async (ctx) => {

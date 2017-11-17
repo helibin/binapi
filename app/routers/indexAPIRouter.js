@@ -10,7 +10,7 @@ import Router from 'koa-router'
 /** 项目模块 */
 
 const apiRouter = new Router({
-  prefix: '/api'
+  prefix: '/api/v1'
 })
 
 apiRouter.get('/uses/do/list'

@@ -27,7 +27,7 @@ log4js.configure({
       appenders: ['out'],
       level: CONFIG.webServer.logLevel
     }
-  }, pm2: true,
+  }
 })
 
 let hostName = os.hostname()
