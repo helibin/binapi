@@ -1,6 +1,7 @@
 'use strict'
 
 /** 内建模块 */
+import bytes from 'bytes'
 
 /** 第三方模块 */
 

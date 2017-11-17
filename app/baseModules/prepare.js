@@ -1,6 +1,7 @@
 'use strict'
 
 /** 内建模块 */
+import bytes from 'bytes'
 
 /** 第三方模块 */
 import colors from 'colors'
@@ -12,13 +13,14 @@ import logger from './logger'
 
 /** 项目模块 */
 
-const response = (ctx, next) => {
-  let _clientId = ctx.cookies._clientId || t.genRandStr(24)
+const response = async (ctx, next) => {
+  ctx.state.startTime = Date.now()
+
+  let _clientId  = ctx.cookies._clientId || t.genRandStr(24)
   let _requestId = t.genUUID()
 
   ctx.state._clientId  = _clientId
   ctx.state._requestId = _requestId
-  // logger.error(ctx.cookies.get('_clientId'))
 
   ctx.cookies.set('_clientId', _clientId, {
     maxAge: 365 * 24 * 60 * 60 * 1000, // cookie有效时长
@@ -39,6 +41,7 @@ const response = (ctx, next) => {
 
     logger[logLevel].apply(logger, args)
   }
+
   // 包装重定向函数，自动打印日志并包含RequestId
   ctx.state.redirect = function redirect(nextUrl) {
     ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`)
@@ -47,6 +50,7 @@ const response = (ctx, next) => {
     ctx.redirect(nextUrl);
   }
 
+  // 渲染页面
   ctx.state.render = async(view, pageData) => {
     let renderData = {
       t           : t,
@@ -65,6 +69,8 @@ const response = (ctx, next) => {
     ctx.body += '<!-- requestId=' + _requestId + ' -->';
   }
 
+  await next()
+
   // 打印请求
   ctx.state.logger('debug', `收到请求：${JSON.stringify({
     ip      : ctx.ip,
@@ -77,10 +83,10 @@ const response = (ctx, next) => {
     method  : ctx.method,
     url     : ctx.originalUrl,
     query   : ctx.query,
-    body    : ctx.body || undefined,
+    type    : ctx.type,
+    time    : `${Date.now() - ctx.state.startTime}ms`,
+    length  : bytes(ctx.length).toLowerCase(),
   })}`)
-
-  return next()
 }
 
 export default {

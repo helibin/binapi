@@ -6,9 +6,11 @@ import path from 'path'
 
 /** 第三方模块 */
 import Koa from 'koa'
+import server from 'koa-static'
 import views from 'koa-views'
 import userAgent from 'koa-useragent'
 import nunjucks from 'nunjucks'
+import logger from 'koa-logger'
 
 /* 基础模块 */
 import CONFIG from 'config'
@@ -22,6 +24,9 @@ import indexPageRouter from './routers/indexPageRouter'
 import indexAPIRouter from './routers/indexAPIRouter'
 
 const app = new Koa()
+
+// 靜態服務器
+app.use(server(__dirname + '/static'))
 
 // handlebars, nunjucks, ejs
 app.use(views(path.join(__dirname, '/views'), {
@@ -44,15 +49,7 @@ app.use(views(path.join(__dirname, '/views'), {
     html: 'ejs',
   }
 }))
-
-app.use(async (ctx, next) => {
-  ctx.state = ctx.state || {}
-  const start = Date.now()
-  await next()
-  const ms = Date.now() - start
-  ctx.state.xResposeTime = ms
-  ctx.set('X-Response-Time', `${ms}ms`)
-})
+app.use(logger())
 
 // 中间初始化
 app.use(userAgent)
