@@ -9,12 +9,11 @@ import uuid from 'uuid'
 
 /** 项目模块 */
 
-const genUUID36 = () => {
-  let id36 = uuid.v4();
-  return id36;
+export const genUUID36 = () => {
+  let id36 = uuid.v4()
 }
 
-const genUUID = exports.genUUID = () => {
+export const genUUID = exports.genUUID = () => {
   let id36 = uuid.v4();
   let id32 = id36.replace(/-/g, '');
   return id32;
@@ -30,7 +29,7 @@ const genUUID = exports.genUUID = () => {
  * 返回
  *   <string>
  */
-const genRandStr = (len = 32, chars) => {
+export const genRandStr = (len = 32, chars) => {
   let samples = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   let randStr = ''
@@ -42,8 +41,12 @@ const genRandStr = (len = 32, chars) => {
   return randStr;
 }
 
-export default {
-  genUUID
-  , genUUID36
-  , genRandStr
+/**
+ * 初始化返回值
+ */
+export const initRet = () => {
+  return {
+    err: 0,
+    msg: ''
+  }
 }

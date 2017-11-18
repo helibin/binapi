@@ -1,8 +1,53 @@
-{{> header.base}}
-{{> header}}
+{{> header.base title=pageData.title}}
 
-index.hbs
+<div class="ui container">
+  <div class="ui pointing  menu">
+    <a class="active item" href="/">
+      首页
+    </a>
+    <a class="item">
+      消息
+    </a>
+    <a class="item">
+      好友
+    </a>
+    <div class="right menu">
+      <div class="item">
+        <div class="ui icon input">
+          <input type="text" placeholder="Search...">
+          <i class="search link icon"></i>
+        </div>
+      </div>
+      <a class="ui item" href="/login">
+        登录 · 注册
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="ui container">
+  <div class="ui segment">
+    <form class="ui form">
+      <div class="field">
+        <label>用户名</label>
+        <input type="text" name="first-name" placeholder="First Name">
+      </div>
+      <div class="field">
+        <label>密码</label>
+        <input type="text" name="last-name" placeholder="Last Name">
+      </div>
+      <div class="field">
+        <div class="ui checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>记住我</label>
+        </div>
+      </div>
+      <button class="ui button" type="button">登录</button>
+    </form>
+  </div>
+</div>
 
 {{> footer}}
 {{> footer.base}}
+
 <script src="/js/index.js"></script>

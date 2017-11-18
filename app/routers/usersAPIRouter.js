@@ -10,19 +10,16 @@ import CONFIG from 'config'
 import * as t from '../baseModules/tools'
 
 /** 项目模块 */
+import * as userAPICtrl from '../controllers/userAPICtrl'
+
+
 
 const apiRouter = new Router({
   prefix: CONFIG.apiServer.prefix
 })
 
-apiRouter.get('/test', async (ctx) => {
-  ctx.body = [{
-    name: 'sdw',
-    sex: 'f'
-  }, {
-    name: '2rsa',
-    sex: 'm'
-  }]
-})
+apiRouter.get('/auth/users/:targetId/do/get'
+  , userAPICtrl.getUser
+)
 
 export default apiRouter

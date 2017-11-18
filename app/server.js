@@ -9,75 +9,144 @@ import Koa from 'koa'
 import server from 'koa-static'
 import views from 'koa-views'
 import userAgent from 'koa-useragent'
-import nunjucks from 'nunjucks'
-import logger from 'koa-logger'
+import colors from 'colors/safe'
+import hbs from 'hbs'
+import helpers from 'handlebars-helpers'
 
 /* 基础模块 */
 import CONFIG from 'config'
-import t from './baseModules/tools'
+import * as t from './baseModules/tools'
 
 /** 项目模块 */
 import prepare from './baseModules/prepare'
 
-/** 路由加载 */
+/** 路由模块 */
 import indexPageRouter from './routers/indexPageRouter'
 import indexAPIRouter from './routers/indexAPIRouter'
+import usersAPIRouter from './routers/usersAPIRouter'
 
 const app = new Koa()
 
 // 靜態服務器
 app.use(server(__dirname + '/static'))
 
-// handlebars, nunjucks, ejs
+// handlebars, ejs
 app.use(views(path.join(__dirname, '/views'), {
   options: {
-    nunjucksEnv: new nunjucks.Environment(
-      new nunjucks.FileSystemLoader(path.join(__dirname, 'views'))
-    ).addFilter('shorten', (str, count) => {
-      return str.slice(0, count || 5)
-    }),
-
-    helpers: {
-      uppercase: str => str.toUpperCase()
-    },
+    helpers: helpers(),
     partials: CONFIG.hbs.partials
   },
   extension: 'hbs',
   map: {
     hbs: 'handlebars',
-    njk: 'nunjucks',
     html: 'ejs',
   }
 }))
-app.use(logger())
 
 // 中间初始化
 app.use(userAgent)
 app.use(prepare.response)
 
+// 页面禁止缓存
+app.use(async(ctx, next) => {
+  ctx.set("Cache-Control", "no-cache,no-store,must-revalidate")
+  ctx.set("Expires", "0")
+  ctx.set("Pragma", "no-cache")
+
+  await next()
+})
+
 app.use(indexPageRouter.routes()).use(indexAPIRouter.routes())
+app.use(usersAPIRouter.routes())
 
 app.on('error', (err) => {
   console.log(err.stack)
 })
 
-app.use(async (ctx, next) => {
+app.use(async(ctx, next) => {
   try {
     await next()
   } catch (err) {
     err.status = err.statusCode || err.status || 500
 
-
     // 错误详情
     try {
-      ctx.state.logger('error', JSON.stringify(err.toJSON()));
+      ctx.state.logger('error', JSON.stringify(err.toJSON()))
     } catch (ex) {
-      ctx.state.logger('error', err);
+      ctx.state.logger('error', err)
     }
     throw err
   }
 })
 
-app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
-  console.log(`the server is start at port ${CONFIG.webServer.port}`)
-})
+try {
+  app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
+    /* 服务器运行配置 */
+    console.log(colors.green('服务器已启动'))
+    console.log('监听端口   ：', `${colors.cyan(CONFIG.webServer.port)}`)
+    console.log('运行环境   ：', `${colors.cyan(CONFIG.env)}`)
+
+    let mysqlExtraConfigs = []
+    for (let k in CONFIG.dbServer.mysql) {
+      if (['host', 'port', 'username', 'password', 'database'].includes(k)) continue
+
+      mysqlExtraConfigs.push(k + '=' + colors.cyan(CONFIG.dbServer.mysql[k]))
+    }
+
+    console.log('MySQL      ：', colors.yellow(`mysql://\
+      ${colors.cyan(CONFIG.dbServer.mysql.username)}@\
+      ${colors.cyan(CONFIG.dbServer.mysql.host)}:\
+      ${CONFIG.dbServer.mysql.port}/\
+      ${colors.cyan(CONFIG.dbServer.mysql.database)}?\
+      ${mysqlExtraConfigs.join('&')}`.replace(/  /g, '')))
+
+    console.log('Redis      ：', colors.yellow(`redis://\
+      ${colors.cyan(CONFIG.dbServer.redis.host)}:\
+      ${CONFIG.dbServer.redis.port}/\
+      ${colors.cyan(CONFIG.dbServer.redis.db)}`.replace(/  /g, '')))
+
+    /* 服务器安全配置 */
+    if (CONFIG.dbServer.mysql.password) {
+      console.log('MySQL密码  ：', colors.green('启用'))
+    } else {
+      console.log('MySQL密码  ：', colors.red('禁用'), colors.magenta('存在安全风险！'))
+    }
+
+    if (CONFIG.dbServer.redis.password) {
+      console.log('Redis密码  ：', colors.green('启用'))
+    } else {
+      console.log('Redis密码  ：', colors.red('禁用'), colors.magenta('存在安全风险！'))
+    }
+
+    /* 用户认证配置 */
+    if (CONFIG.webServer.xAuthHeader) {
+      console.log('Header认证 ：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthHeader)}`))
+    } else {
+      console.log('Header认证 ：', colors.white('禁用'))
+    }
+
+    if (CONFIG.webServer.xAuthQuery) {
+      console.log('Query 认证 ：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthQuery)}`))
+    } else {
+      console.log('Query 认证 ：', colors.white('禁用'))
+    }
+
+    if (CONFIG.webServer.xAuthCookie) {
+      console.log('Cookie认证 ：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthCookie)}`))
+    } else {
+      console.log('Cookie认证：', colors.white('禁用'))
+    }
+
+    if (!CONFIG.webServer.xAuthHeader &&
+      !CONFIG.webServer.xAuthQuery &&
+      !CONFIG.webServer.xAuthCookie) {
+      console.log(colors.red('未启用任何认证方式，请检查配置中`webServer.xAuth*`部分'))
+      process.exit(1)
+    }
+
+    console.log(colors.green('Have fun!'))
+  })
+} catch (ex) {
+  console.log(ex)
+  process.exit(1)
+}

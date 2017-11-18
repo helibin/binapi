@@ -4,14 +4,14 @@
 import bytes from 'bytes'
 
 /** 第三方模块 */
-import colors from 'colors'
+import colors from 'colors/safe'
 
 /** 基础模块 */
 import CONFIG from 'config'
-import t from './tools'
-import logger from './logger'
+import * as t from './tools'
 
 /** 项目模块 */
+import logger from './logger'
 
 const response = async (ctx, next) => {
   ctx.state.startTime = Date.now()
@@ -46,27 +46,35 @@ const response = async (ctx, next) => {
   ctx.state.redirect = function redirect(nextUrl) {
     ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`)
 
-    ctx.set('x-request-id', _requestId);
+    ctx.set('x-request-id', ctx.state._requestId)
     ctx.redirect(nextUrl);
   }
 
   // 渲染页面
   ctx.state.render = async(view, pageData) => {
     let renderData = {
-      t           : t,
-      CONFIG      : CONFIG,
-      path        : ctx.path,
-      query       : ctx.query,
-      params      : ctx.params,
-      userAgent   : ctx.userAgent,
-      xResposeTime: ctx.state.xResposeTime,
-      pageData    : pageData || {},
+      t        : t,
+      CONFIG   : CONFIG,
+      path     : ctx.path,
+      query    : ctx.query,
+      params   : ctx.params,
+      userAgent: ctx.userAgent,
+      time     : Date.now() - ctx.state.startTime,
+      pageData : pageData || {},
     }
 
     await ctx.render(view, renderData)
     ctx.state.logger(renderData.pageError, '渲染HTML页面')
 
     ctx.body += '<!-- requestId=' + _requestId + ' -->';
+  }
+
+  // 包装数据发送函数，自动打印日志并包含RequestId
+  ctx.state.sendJSON = (data) => {
+    data.requestId = ctx.state._requestId
+
+    ctx.type('json')
+    ctx.send(data)
   }
 
   await next()
@@ -85,7 +93,7 @@ const response = async (ctx, next) => {
     query   : ctx.query,
     type    : ctx.type,
     time    : `${Date.now() - ctx.state.startTime}ms`,
-    length  : bytes(ctx.length).toLowerCase(),
+    size    : bytes(ctx.length) ? bytes(ctx.length).toLowerCase() : undefined,
   })}`)
 }
 

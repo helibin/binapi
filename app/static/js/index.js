@@ -1,10 +1,8 @@
 (() => {
-  $('.context.example .ui.sidebar')
-  .sidebar({
-    context: $('.context.example .bottom.segment')
-  })
-  .sidebar('attach events', '.context.example .menu .item')
-;
-  let index  = 'index page'
-  console.log(index, ',,,')
+  console.log('index.page', ',,,')
+  function onLoad() {
+    var now = new Date().getTime();
+    var page_load_time = now - performance.timing.navigationStart;
+  }
+  onLoad()
 })()

@@ -7,21 +7,14 @@ import bytes from 'bytes'
 
 /** 基础模块 */
 import CONFIG from 'config'
-import t from '../baseModules/tools'
+import * as t from '../baseModules/tools'
 
 /** 项目模块 */
-import User from '../baseModules/db-init'
+
+
 
 let index = async (ctx) => {
-  // force: true will drop the table if it already exists
-  // User.sync({force: false}).then(() => {
-  //   // Table created
-  //   return User.create({
-  //     id: t.genUUID(),
-  //     username: t.genRandStr(8),
-  //   })
-  // })
-  await ctx.state.render('index', {body: 'xxx'})
+  await ctx.state.render('index', {body: 'index'})
 }
 
 let testLogger = async (ctx) => {

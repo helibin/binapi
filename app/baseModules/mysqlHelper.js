@@ -7,13 +7,11 @@ import Sequelize from 'sequelize'
 
 /** 基础模块 */
 import CONFIG from 'config'
-import t from './tools'
-import logger from './logger'
+import * as t from './tools'
 
 /** 项目模块 */
 
-const whosDB = CONFIG.db.who || 'none'
-const dbConfig = CONFIG.db.mysql[whosDB] || CONFIG.db.mysql || {}
+const dbConfig = CONFIG.dbServer.mysql || {}
 
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
   host: dbConfig.host,
@@ -26,14 +24,15 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   }
 })
 
+// 测试db连接
 sequelize.authenticate().then(() => {
-  console.log('Connection has been established successfully.');
-}).catch(err => {
-  console.error('Unable to connect to the database:', err);
-  console.error(dbConfig, 'dbConfig...')
+  console.log('连接成功！');
 })
+.catch(err => {
+  console.error('无法连接至数据库：', err);
+});
 
-const MySQLHelper = async (ctx) => {
-  this.sequelize = sequelize,
-  this.ctx = ctx
+export default {
+  sequelize,
+  Sequelize
 }
