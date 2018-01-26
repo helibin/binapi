@@ -4,6 +4,7 @@
 
 /** 第三方模块 */
 import uuid from 'uuid'
+import CONFIG from 'config'
 
 /** 基础模块 */
 
@@ -11,13 +12,15 @@ import uuid from 'uuid'
 
 export const genUUID36 = () => {
   let id36 = uuid.v4()
+  return id36;
 }
 
-export const genUUID = exports.genUUID = () => {
-  let id36 = uuid.v4();
-  let id32 = id36.replace(/-/g, '');
-  return id32;
+export const genUUID = () => {
+  let id36 = uuid.v4()
+  let id32 = id36.replace(/-/g, '')
+  return id32
 }
+
 
 /**
  * 生成随机字符串
@@ -50,3 +53,33 @@ export const initRet = () => {
     msg: ''
   }
 }
+
+/**
+生成分页信息
+!!重要 需要与`detectPageSetting`配合使用
+
+参数
+  ctx <object> 原始响应对象
+  result <JSON> mysql查询结果
+
+返回
+  <JSON> 详细如下：
+    {
+      "pageNumber"  : <页号>,
+      "pageSize"    : <分页大小>,
+      "pageCount"   : <分页数量>
+      "currentCount": <本页记录数>,
+      "totalCount"  : <所有记录数>,
+    }
+*/
+export const genPageInfo = (ctx, result) => {
+  var pageInfo = {
+    pageNumber: ctx.state.pageSetting.pageNumber,
+    pageSize: ctx.state.pageSetting.pageSize,
+    pageCount: Math.ceil(result.count / ctx.state.pageSetting.pageSize),
+    currentCount: result.rows.length,
+    totalCount: result.count,
+  }
+
+  return pageInfo;
+};

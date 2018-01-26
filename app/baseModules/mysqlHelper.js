@@ -16,7 +16,12 @@ const dbConfig = CONFIG.dbServer.mysql || {}
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
   host: dbConfig.host,
   dialect: 'mysql',
+  logging: CONFIG.env == 'product' ? false : console.log,
 
+  define: {
+    freezeTableName: true,
+    timestamps: false,
+  },
   pool: {
     max: dbConfig.connectionLimit,
     min: 0,

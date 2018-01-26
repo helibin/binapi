@@ -13,11 +13,13 @@ import * as t from '../baseModules/tools'
 
 
 
-let index = async (ctx) => {
-  await ctx.state.render('index', {body: 'index'})
+export const index = async(ctx) => {
+  await ctx.state.render('index', {
+    body: 'index'
+  })
 }
 
-let testLogger = async (ctx) => {
+export const testLogger = async(ctx) => {
   ctx.state.logger('trace', 'Entering cheese testing')
   ctx.state.logger('debug', 'Got cheese.')
   ctx.state.logger('info', 'Cheese is Gouda.')
@@ -27,7 +29,7 @@ let testLogger = async (ctx) => {
   await ctx.render('test-logger')
 }
 
-let debugTest = async (ctx) => {
+export const debugTest = async(ctx) => {
   ctx.state.logger('trace', 'Entering cheese testing')
   ctx.state.logger('debug', 'Got cheese.')
   ctx.state.logger('info', 'Cheese is Gouda.')
@@ -35,10 +37,4 @@ let debugTest = async (ctx) => {
   ctx.state.logger('error', 'Cheese is too ripe!')
   ctx.state.logger('fatal', 'Cheese was breeding ground for listeria.')
   await ctx.render('debug-test.html')
-}
-
-export default {
-  index,
-  testLogger,
-  debugTest,
 }

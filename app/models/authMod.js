@@ -5,8 +5,6 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from './tools'
 
 /** 项目模块 */
 import mysql from '../baseModules/mysqlHelper'
@@ -55,3 +53,6 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
   comment: 'auth认证表'
 })
 
+Auth.sync()
+
+export default Auth

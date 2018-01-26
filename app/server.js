@@ -9,6 +9,8 @@ import Koa from 'koa'
 import server from 'koa-static'
 import views from 'koa-views'
 import userAgent from 'koa-useragent'
+import bodyparser from 'koa-bodyparser'
+
 import colors from 'colors/safe'
 import hbs from 'hbs'
 import helpers from 'handlebars-helpers'
@@ -18,12 +20,14 @@ import CONFIG from 'config'
 import * as t from './baseModules/tools'
 
 /** 项目模块 */
-import prepare from './baseModules/prepare'
+import * as prepare from './baseModules/prepare'
+import * as authMid from './middlewares/authMid'
 
 /** 路由模块 */
 import indexPageRouter from './routers/indexPageRouter'
 import indexAPIRouter from './routers/indexAPIRouter'
 import usersAPIRouter from './routers/usersAPIRouter'
+import templatesAPIRouter from './routers/templatesAPIRouter'
 
 const app = new Koa()
 
@@ -45,19 +49,24 @@ app.use(views(path.join(__dirname, '/views'), {
 
 // 中间初始化
 app.use(userAgent)
+app.use(bodyparser())
+
 app.use(prepare.response)
+app.use(prepare.detectPageSetting)
+app.use(authMid.prepareUserInfo)
 
 // 页面禁止缓存
-app.use(async(ctx, next) => {
-  ctx.set("Cache-Control", "no-cache,no-store,must-revalidate")
-  ctx.set("Expires", "0")
-  ctx.set("Pragma", "no-cache")
+// app.use(async(ctx, next) => {
+//   ctx.set("Cache-Control", "no-cache,no-store,must-revalidate")
+//   ctx.set("Expires", "0")
+//   ctx.set("Pragma", "no-cache")
 
-  await next()
-})
+//   await next()
+// })
 
 app.use(indexPageRouter.routes()).use(indexAPIRouter.routes())
 app.use(usersAPIRouter.routes())
+app.use(templatesAPIRouter.routes())
 
 app.on('error', (err) => {
   console.log(err.stack)

@@ -8,7 +8,7 @@ import Router from 'koa-router'
 /** 基础模块 */
 
 /** 项目模块 */
-import indexCtrl from '../controllers/indexCtrl'
+import * as indexPageCtrl from '../controllers/indexPageCtrl'
 
 
 
@@ -21,15 +21,15 @@ router.get('/',
 )
 
 router.get('/index',
-  indexCtrl.index,
+  indexPageCtrl.index,
 )
 
 router.get('/test-logger',
-  indexCtrl.testLogger,
+  indexPageCtrl.testLogger,
 )
 
 router.get('/debug-test',
-  indexCtrl.debugTest,
+  indexPageCtrl.debugTest,
 )
 
 export default router

@@ -11,20 +11,13 @@ import CONFIG from 'config'
 import * as t from '../baseModules/tools'
 
 /** 项目模块 */
-import * as indexAPICtrl from '../controllers/indexAPICtrl'
+import * as templatesAPICtrl from '../controllers/templatesAPICtrl'
+
 
 const apiRouter = new Router({
   prefix: CONFIG.apiServer.prefix
 })
 
-apiRouter.get('/test', async (ctx) => {
-  ctx.body = [{
-    name: 'sdw',
-    sex: 'f'
-  }, {
-    name: '2rsa',
-    sex: 'm'
-  }]
-})
+apiRouter.get('/templates/do/list', templatesAPICtrl.listTemplates)
 
 export default apiRouter

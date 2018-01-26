@@ -5,14 +5,13 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from './tools'
 
 /** 项目模块 */
 import mysql from '../baseModules/mysqlHelper'
 
 
-export const Auth = mysql.sequelize.define('tb_main_auth', {
+
+export const Template = mysql.sequelize.define('tb_main_templates', {
   seq: {
     type: mysql.Sequelize.BIGINT,
     primaryKey: true,
@@ -22,24 +21,20 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     type: mysql.Sequelize.CHAR(65),
     allowNull: false,
   },
-  userId: {
-    type: mysql.Sequelize.CHAR(65),
-    allowNull: false,
-    comment: '用户ID',
-    unique: true,
-  },
-  username: {
+  name: {
     type: mysql.Sequelize.STRING,
-    allowNull: false,
-    comment: "用户名",
+    comment: "名称",
   },
-  passwordHash: {
+  path: {
     type: mysql.Sequelize.STRING,
-    comment: "密码",
+    comment: "路径",
   },
-  uniqueId: {
+  isDisabled: {
     type: mysql.Sequelize.STRING,
-    comment: "第三方接入ID",
+    validate: {
+      isIn: [[0, 1]]
+    },
+    comment: "是否禁用",
   },
   createdAt: {
     type: mysql.Sequelize.BIGINT,
@@ -52,6 +47,9 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     comment: "更新时间戳",
   },
 }, {
-  comment: 'auth认证表'
+  comment: '网站模板表'
 })
 
+Template.sync()
+
+export default Template
