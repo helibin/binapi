@@ -27,6 +27,7 @@ import * as authMid from './middlewares/authMid'
 import indexPageRouter from './routers/indexPageRouter'
 import indexAPIRouter from './routers/indexAPIRouter'
 import usersAPIRouter from './routers/usersAPIRouter'
+import authAPIRouter from './routers/authAPIRouter'
 import templatesAPIRouter from './routers/templatesAPIRouter'
 
 const app = new Koa()
@@ -66,6 +67,7 @@ app.use(authMid.prepareUserInfo)
 
 app.use(indexPageRouter.routes()).use(indexAPIRouter.routes())
 app.use(usersAPIRouter.routes())
+app.use(authAPIRouter.routes())
 app.use(templatesAPIRouter.routes())
 
 app.on('error', (err) => {

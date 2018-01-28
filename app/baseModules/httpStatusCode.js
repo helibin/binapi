@@ -1,5 +1,13 @@
 'use strict'
 
+/** 内建模块 */
+
+/** 第三方模块 */
+
+/** 基础模块 */
+
+/** 项目模块 */
+
 module.exports = {
   100: 'Continue',
   101: 'Switching Protocols',

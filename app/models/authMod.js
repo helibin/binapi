@@ -9,16 +9,11 @@
 /** 项目模块 */
 import mysql from '../baseModules/mysqlHelper'
 
-
 export const Auth = mysql.sequelize.define('tb_main_auth', {
   seq: {
     type: mysql.Sequelize.BIGINT,
     primaryKey: true,
     autoIncrement: true,
-  },
-  id: {
-    type: mysql.Sequelize.CHAR(65),
-    allowNull: false,
   },
   userId: {
     type: mysql.Sequelize.CHAR(65),
@@ -26,10 +21,10 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     comment: '用户ID',
     unique: true,
   },
-  username: {
+  identifier: {
     type: mysql.Sequelize.STRING,
     allowNull: false,
-    comment: "用户名",
+    comment: "用户标识",
   },
   passwordHash: {
     type: mysql.Sequelize.STRING,

@@ -4,9 +4,10 @@
 
 /** 第三方模块 */
 import uuid from 'uuid'
-import CONFIG from 'config'
+import crypto from 'crypto'
 
 /** 基础模块 */
+import CONFIG from 'config'
 
 /** 项目模块 */
 
@@ -15,11 +16,7 @@ export const genUUID36 = () => {
   return id36;
 }
 
-export const genUUID = () => {
-  let id36 = uuid.v4()
-  let id32 = id36.replace(/-/g, '')
-  return id32
-}
+export const genUUID = () => uuid.v4().replace(/-/g, '')
 
 
 /**
@@ -50,6 +47,7 @@ export const genRandStr = (len = 32, chars) => {
 export const initRet = () => {
   return {
     err: 0,
+    code: 200,
     msg: ''
   }
 }
@@ -82,4 +80,38 @@ export const genPageInfo = (ctx, result) => {
   }
 
   return pageInfo;
-};
+}
+
+/**
+ * MD5加密
+ */
+export const getMd5 = (str) => crypto.createHash('md5').update(str).digest('hex')
+
+/**
+ * sha1加密
+ */
+export const getSha1 = (str) => crypto.createHash('sha1').update(str).digest('hex')
+
+/**
+ * 获取HMAC-SHA1值
+ *
+ * 参数
+  str <string> 待获取HMAC-SHA1值的字符串
+  key <string> 密钥
+  output <string> 输出格式。`base64`或`hex`，默认`hex`
+ */
+export const getHmacSha1 = (str, key, output) => {
+  let c = crypto.createHash('sha1', key).update(str)
+
+  if (output == 'base64') {
+    return c.digest().toString('base64')
+  } else {
+    return c.digest('hex')
+  }
+}
+
+export const getSaltedPasswordHash = (password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
+  let strToHash = `@${salt}@${password}@${secret}@`
+
+  return getSha1(strToHash)
+}
