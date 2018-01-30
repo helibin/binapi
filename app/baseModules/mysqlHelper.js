@@ -16,7 +16,7 @@ const dbConfig = CONFIG.dbServer.mysql || {}
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
   host: dbConfig.host,
   dialect: 'mysql',
-  logging: CONFIG.env == 'product' ? false : console.log,
+  logging: CONFIG.env == 'production' ? false : console.log,
 
   define: {
     freezeTableName: true,
