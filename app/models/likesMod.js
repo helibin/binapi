@@ -5,14 +5,11 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from './tools'
 
 /** 项目模块 */
 import mysql from '../baseModules/mysqlHelper'
 
-
-export const Auth = mysql.sequelize.define('tb_main_auth', {
+export const Like = mysql.sequelize.define('tb_main_likes', {
   seq: {
     type: mysql.Sequelize.BIGINT,
     primaryKey: true,
@@ -22,24 +19,21 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     type: mysql.Sequelize.CHAR(65),
     allowNull: false,
   },
-  userId: {
-    type: mysql.Sequelize.CHAR(65),
-    allowNull: false,
-    comment: '用户ID',
-    unique: true,
-  },
-  username: {
+  nickname: {
     type: mysql.Sequelize.STRING,
-    allowNull: false,
-    comment: "用户名",
+    comment: "昵称",
   },
-  passwordHash: {
+  name: {
     type: mysql.Sequelize.STRING,
-    comment: "密码",
+    comment: "姓名",
   },
-  uniqueId: {
+  logoURL: {
+    type: mysql.Sequelize.TEXT,
+    comment: "logo",
+  },
+  appName: {
     type: mysql.Sequelize.STRING,
-    comment: "第三方接入ID",
+    comment: "来自app名称",
   },
   createdAt: {
     type: mysql.Sequelize.BIGINT,
@@ -52,6 +46,9 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     comment: "更新时间戳",
   },
 }, {
-  comment: 'auth认证表'
+  comment: '点赞表'
 })
 
+Like.sync()
+
+export default Like

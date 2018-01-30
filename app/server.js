@@ -29,6 +29,7 @@ import indexAPIRouter from './routers/indexAPIRouter'
 import usersAPIRouter from './routers/usersAPIRouter'
 import authAPIRouter from './routers/authAPIRouter'
 import templatesAPIRouter from './routers/templatesAPIRouter'
+import likesAPIRouter from './routers/likesAPIRouter'
 
 const app = new Koa()
 
@@ -69,6 +70,7 @@ app.use(indexPageRouter.routes()).use(indexAPIRouter.routes())
 app.use(usersAPIRouter.routes())
 app.use(authAPIRouter.routes())
 app.use(templatesAPIRouter.routes())
+app.use(likesAPIRouter.routes())
 
 app.on('error', (err) => {
   console.log(err.stack)
@@ -78,6 +80,7 @@ app.use(async(ctx, next) => {
   try {
     await next()
   } catch (err) {
+    console.log('error', ',,,')
     err.status = err.statusCode || err.status || 500
 
     // 错误详情

@@ -47,7 +47,6 @@ export const genRandStr = (len = 32, chars) => {
 export const initRet = () => {
   return {
     err: 0,
-    code: 200,
     msg: ''
   }
 }
@@ -111,7 +110,7 @@ export const getHmacSha1 = (str, key, output) => {
 }
 
 export const getSaltedPasswordHash = (password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
-  let strToHash = `@${salt}@${password}@${secret}@`
+  let strToHash = `@${password}@${secret}@${salt}@`
 
   return getSha1(strToHash)
 }

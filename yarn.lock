@@ -312,6 +312,12 @@ async@^1.4.0:
   version "1.5.2"
   resolved "http://registry.npm.taobao.org/async/download/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
+async@^2.3.0:
+  version "2.6.0"
+  resolved "http://registry.npm.taobao.org/async/download/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
+  dependencies:
+    lodash "^4.14.0"
+
 async@~2.1.2:
   version "2.1.5"
   resolved "http://registry.npm.taobao.org/async/download/async-2.1.5.tgz#e587c68580994ac67fc56ff86d3ac56bdbe810bc"
@@ -813,6 +819,10 @@ babylon@^6.18.0:
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/balanced-match/download/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+
+base-error@^2.0.5:
+  version "2.0.5"
+  resolved "http://registry.npm.taobao.org/base-error/download/base-error-2.0.5.tgz#575f4049af1121ea6e9e2e1ea21d40bfade6c12a"
 
 base@^0.11.1:
   version "0.11.2"
@@ -1968,6 +1978,10 @@ keygrip@~1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/keygrip/download/keygrip-1.0.2.tgz#ad3297c557069dea8bcfe7a4fa491b75c5ddeb91"
 
+keymirror@^0.1.1:
+  version "0.1.1"
+  resolved "http://registry.npm.taobao.org/keymirror/download/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.1.0, kind-of@^3.2.0:
   version "3.2.2"
   resolved "http://registry.npm.taobao.org/kind-of/download/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -2632,6 +2646,15 @@ raw-body@2, raw-body@^2.2.0:
     http-errors "1.6.2"
     iconv-lite "0.4.19"
     unpipe "1.0.0"
+
+rbac@^4.0.2:
+  version "4.0.2"
+  resolved "http://registry.npm.taobao.org/rbac/download/rbac-4.0.2.tgz#65651141a14bde609cca5801717231520914aeb9"
+  dependencies:
+    async "^2.3.0"
+    keymirror "^0.1.1"
+    lodash "^4.17.4"
+    web-error "^4.0.1"
 
 readable-stream@1.1.x:
   version "1.1.14"
@@ -3339,6 +3362,12 @@ walk@2.3.9:
 warning-symbol@^0.1.0:
   version "0.1.0"
   resolved "http://registry.npm.taobao.org/warning-symbol/download/warning-symbol-0.1.0.tgz#bb31dd11b7a0f9d67ab2ed95f457b65825bbad21"
+
+web-error@^4.0.1:
+  version "4.0.1"
+  resolved "http://registry.npm.taobao.org/web-error/download/web-error-4.0.1.tgz#6ac6c5019e8139da1ba3a91c4db067cad3c487c0"
+  dependencies:
+    base-error "^2.0.5"
 
 when@^3.7.7:
   version "3.7.8"

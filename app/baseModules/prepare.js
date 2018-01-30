@@ -17,7 +17,7 @@ import logger from './logger'
 export const response = async(ctx, next) => {
   ctx.state.startTime = Date.now()
 
-  let _clientId = ctx.cookies._clientId || t.genRandStr(24)
+  let _clientId = ctx.cookies.get('_clientId') || t.genRandStr(24)
   let _requestId = t.genUUID()
 
   ctx.state._clientId = _clientId
