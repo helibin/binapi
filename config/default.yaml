@@ -1,0 +1,92 @@
+# 环境变量（debug|development|prodction)
+
+# env: 'debug'
+# env: 'development'
+env: 'production'
+
+# 数据库配置
+dbServer:
+  mysql:
+    host              : '127.0.0.1'
+    port              : '3306'
+    username          : '<username>'
+    password          : null
+    database          : '<database>'
+    connectionLimit   : 5        # 连接池大小
+    acquireTimeout    : 30000    # 超时时间
+    multipleStatements: true     # 允许多条SQL语句
+    timezone          : '+08: 00' # 时区
+
+  redis:
+    host    : '127.0.0.1'
+    port    : 6379
+    db      : 0
+    password: null
+
+# 站点服务
+webServer:
+  host: 'localhost'
+  port: 5080
+
+  pageSize: 20
+  pageSizeMax: 1000
+
+  logLevel: 'ERROR' # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
+
+  xAuthMaxAge: 7200           # 用户认证通用过期时间，秒
+  xAuthHeader: 'x-auth-token' # HTTP Header中用户令牌字段名，`false`为禁用
+  xAuthQuery : 'xAuthToken'   # QueryString中用户令牌字段名，`false`为禁用
+  xAuthCookie: 'xAuthToken'   # Cookie中用户令牌字段名, `false`为禁用
+
+  salt: 'sample-backend'
+
+# API服务
+apiServer:
+  prefix: '/api/v1'
+
+# hbs模板
+hbs:
+  partials:
+    'header.base': 'layouts/header.base'
+    'header'     : 'layouts/header'
+    'footer.base': 'layouts/footer.base'
+    'footer'     : 'layouts/footer'
+
+# 常量
+webConst:
+  respCode:
+    # 正常
+    OK: 0
+
+    # 错误
+    EUser                : -10  ## 用户错误
+    EUserNotSignedIn     : -11  # 未登录
+    EUserNotDataOwner    : -12  # 操作他人数据
+    EUserForbidden       : -13  # 拒绝操作
+    EUserOAuth           : -14  # OAuth错误
+    EUserDisabled        : -15  # 用户已被禁用
+    EUserAuth            : -16  # 认证错误
+
+    EBizRule             : -20  ## 业务逻辑不合规
+    EBizRuleCaptcha      : -21  # 验证码错误
+    EBizRuleCondition    : -22  # 操作条件不满足
+    EBizRuleBadData      : -28  # 业务脏数据
+    EBizRuleBadDataStatus: -29  # 数据状态不正确
+
+    EClient              : -40  ## 客户端错误
+    EClientNotFound      : -41  # 无此内容
+    EClientDuplicated    : -42  # 重复内容
+    EClientBadRequest    : -43  # 请求错误
+
+    ESysData             : -50  ## 系统数据不合规
+
+    EWebServer           : -60  ## Web服务器错误
+    EWebServerApp        : -61  # 应用程序错误
+    EWebServerMail       : -62  # 邮件功能错误
+    EWebServerSocketio   : -63  # socket.io错误
+
+    EDB                  : -70  # 数据库错误
+    EDBMysql             : -71  # Mysql错误
+    EDBRedis             : -72  # Redis错误
+
+    EAliyunAPI                 : -80  ## 阿里云API错误

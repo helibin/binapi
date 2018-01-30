@@ -20,3 +20,4 @@ logs
 
 # 配置文件
 config/*
+!config/default.yaml
