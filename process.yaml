@@ -1,0 +1,16 @@
+apps:
+  - script: './app/app.js'
+    name: 'sample-backend'
+    cwd: '/data/wwwroot/admin.helibin.com'
+    instances: 'max'
+    exec_mode: cluster
+    watch: false
+    log_date_format: 'YYYYMMDD HH:mm:ss(Z)'
+    error_file: './logs/err.log'
+    out_file: './logs/out.log'
+    log_file: './logs/all.log'
+    merge_logs: true
+    max_restarts: 5
+    restart_delay: 1000
+    env:
+      NODE_ENV: 'production'
