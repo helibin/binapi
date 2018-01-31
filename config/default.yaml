@@ -40,6 +40,8 @@ webServer:
 
   salt: 'sample-backend'
 
+  corsWhiteList:
+    - 'admin.helibin.com'
 # API服务
 apiServer:
   prefix: '/api/v1'

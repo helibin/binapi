@@ -14,6 +14,7 @@ import bodyparser from 'koa-bodyparser'
 import colors from 'colors/safe'
 import hbs from 'hbs'
 import helpers from 'handlebars-helpers'
+import cors from 'cors'
 
 /* 基础模块 */
 import CONFIG from 'config'
@@ -52,6 +53,9 @@ app.use(views(path.join(__dirname, '/views'), {
 // 中间初始化
 app.use(userAgent)
 app.use(bodyparser())
+app.use(cors({
+  origin: CONFIG.webServer.corsWhiteList
+}))
 
 app.use(prepare.response)
 app.use(prepare.detectPageSetting)
@@ -76,7 +80,7 @@ app.on('error', (err) => {
   console.log(err.stack)
 })
 
-app.use(async(ctx, next) => {
+app.use(async (ctx, next) => {
   try {
     await next()
   } catch (err) {
