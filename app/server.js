@@ -10,11 +10,11 @@ import server from 'koa-static'
 import views from 'koa-views'
 import userAgent from 'koa-useragent'
 import bodyparser from 'koa-bodyparser'
+import cors from 'koa-cors'
 
 import colors from 'colors/safe'
 import hbs from 'hbs'
 import helpers from 'handlebars-helpers'
-import cors from 'cors'
 
 /* 基础模块 */
 import CONFIG from 'config'
