@@ -80,7 +80,6 @@ app.use(async(ctx, next) => {
   try {
     await next()
   } catch (err) {
-    console.log('error', ',,,')
     err.status = err.statusCode || err.status || 500
 
     // 错误详情
