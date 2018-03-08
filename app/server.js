@@ -34,6 +34,19 @@ import likesAPIRouter from './routers/likesAPIRouter'
 
 const app = new Koa()
 
+//自定义错误处理
+app.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    ctx.status = err.status || 500
+    ctx.body = err.body || err.message
+    console.error(ctx.url);
+    console.error(err.toString());
+    console.error(err.stack + "\n");
+  }
+})
+
 // 靜態服務器
 app.use(server(__dirname + '/static'))
 
@@ -76,24 +89,9 @@ app.use(authAPIRouter.routes())
 app.use(templatesAPIRouter.routes())
 app.use(likesAPIRouter.routes())
 
+
 app.on('error', (err) => {
   console.log(err.stack)
-})
-
-app.use(async (ctx, next) => {
-  try {
-    await next()
-  } catch (err) {
-    err.status = err.statusCode || err.status || 500
-
-    // 错误详情
-    try {
-      ctx.state.logger('error', JSON.stringify(err.toJSON()))
-    } catch (ex) {
-      ctx.state.logger('error', err)
-    }
-    throw err
-  }
 })
 
 try {

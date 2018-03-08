@@ -12,7 +12,7 @@ import _e from '../baseModules/serverError'
 /** 项目模块 */
 import authMod from '../models/authMod'
 
-export const signIn = async (ctx) => {
+export const signIn = async (ctx, next) => {
   let ret = t.initRet()
 
   let body = ctx.request.body
@@ -29,6 +29,12 @@ export const signIn = async (ctx) => {
   }
   try {
     let userInfo = await authMod.findOne(opt)
+
+    if (!userInfo) {
+      return ctx.body = new _e('EUser', 'noSuchUser', {
+        identifier: body.identifier
+      })
+    }
 
     if (userInfo.passwordHash === t.getSaltedPasswordHash(body.password, userInfo.userId)) {
       ret.data = userInfo

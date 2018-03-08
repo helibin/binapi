@@ -1,0 +1,36 @@
+respCode:
+  # 正常
+  OK: 0
+
+  # 错误
+  EUser                      : -10  ## 用户错误
+  EUserNotSignedIn           : -11  # 未登录
+  EUserNotDataOwner          : -12  # 操作他人数据
+  EUserForbidden             : -13  # 拒绝操作
+  EUserOAuth                 : -14  # OAuth错误
+  EUserDisabled              : -15  # 用户已被禁用
+  EUserAuth                  : -16  # 认证错误
+
+  EBizRule                   : -20  ## 业务逻辑不合规
+  EBizRuleCaptcha            : -21  # 验证码错误
+  EBizRuleCondition          : -22  # 操作条件不满足
+  EBizRuleBadData            : -28  # 业务脏数据
+  EBizRuleBadDataStatus      : -29  # 数据状态不正确
+
+  EClient                    : -40  ## 客户端错误
+  EClientNotFound            : -41  # 无此内容
+  EClientDuplicated          : -42  # 重复内容
+  EClientBadRequest          : -43  # 请求错误
+
+  ESysData                   : -50  ## 系统数据不合规
+
+  EWebServer                 : -60  ## Web服务器错误
+  EWebServerApp              : -61  # 应用程序错误
+  EWebServerMail             : -62  # 邮件功能错误
+  EWebServerSocketio         : -63  # socket.io错误
+
+  EDB                        : -70  # 数据库错误
+  EDBMysql                   : -71  # Mysql错误
+  EDBRedis                   : -72  # Redis错误
+
+  EAliyunAPI                 : -80  ## 阿里云API错误

@@ -32,7 +32,7 @@ export const response = async(ctx, next) => {
 
   // 包装日志函数，使日志中包含RequestId
   ctx.state.logger = function loggerWrap() {
-    let args = Array.prototype.slice.call(arguments)
+    let args = Array.from(arguments)
     let logLevel = args.shift()
     args.unshift(colors.yellow(`[ReqId: ${_requestId}]`))
 
@@ -40,7 +40,7 @@ export const response = async(ctx, next) => {
       logLevel = logLevel ? 'error' : 'info'
     }
 
-    logger[logLevel].apply(logger, args)
+    logger[logLevel](...args)
   }
 
   // 包装重定向函数，自动打印日志并包含RequestId

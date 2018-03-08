@@ -109,8 +109,14 @@ export const getHmacSha1 = (str, key, output) => {
   }
 }
 
-export const getSaltedPasswordHash = (password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
-  let strToHash = `@${password}@${secret}@${salt}@`
+/**
+ *
+ * @param {string} md5password
+ * @param {string} secret
+ * @param {string} salt
+ */
+export const getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
+  let strToHash = `@${md5password}@${secret}@${salt}@`
 
   return getSha1(strToHash)
 }

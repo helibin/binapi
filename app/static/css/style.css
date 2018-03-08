@@ -1,0 +1,8 @@
+.text-center {
+  text-align: center;
+}
+.welcome {
+  font-family: fantasy;
+  margin: 10rem auto;
+  font-size: 3rem;
+}
