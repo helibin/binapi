@@ -83,7 +83,9 @@ app.use(authMid.prepareUserInfo)
 //   await next()
 // })
 
-app.use(indexPageRouter.routes()).use(indexAPIRouter.routes())
+app.use(indexPageRouter.routes())
+
+app.use(indexAPIRouter.routes())
 app.use(usersAPIRouter.routes())
 app.use(authAPIRouter.routes())
 app.use(templatesAPIRouter.routes())
