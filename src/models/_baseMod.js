@@ -6,10 +6,10 @@
 
 /** 基础模块 */
 import CONFIG from 'config'
-import * as t from '../baseModules/tools'
+import * as t from '../base_modules/tools'
 
 /** 项目模块 */
-import mysql from '../baseModules/mysqlHelper'
+import mysql from '../base_modules/mysqlHelper'
 
 
 /**

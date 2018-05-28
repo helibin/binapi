@@ -18,10 +18,10 @@ import helpers from 'handlebars-helpers'
 
 /* 基础模块 */
 import CONFIG from 'config'
-import * as t from './baseModules/tools'
+import * as t from './base_modules/tools'
 
 /** 项目模块 */
-import * as prepare from './baseModules/prepare'
+import * as prepare from './base_modules/prepare'
 import * as authMid from './middlewares/authMid'
 
 /** 路由模块 */
@@ -67,7 +67,10 @@ app.use(views(path.join(__dirname, '/views'), {
 app.use(userAgent)
 app.use(bodyparser())
 app.use(cors({
-  origin: CONFIG.webServer.corsWhiteList
+  origin: req => {
+    return !!!req.header.origin ||
+      CONFIG.webServer.corsWhiteList.includes(req.header.origin) ? req.header.origin : false;
+  }
 }))
 
 app.use(prepare.response)

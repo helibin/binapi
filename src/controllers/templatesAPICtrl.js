@@ -6,7 +6,7 @@
 import CONFIG from 'config'
 
 /** 基础模块 */
-import * as t from '../baseModules/tools'
+import * as t from '../base_modules/tools'
 
 /** 项目模块 */
 import templatesMod from '../models/templatesMod'

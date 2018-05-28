@@ -6,8 +6,8 @@
 
 /** 基础模块 */
 import CONFIG from 'config'
-import * as t from '../baseModules/tools'
-import _e from '../baseModules/serverError'
+import * as t from '../base_modules/tools'
+import _e from '../base_modules/serverError'
 
 /** 项目模块 */
 import likesMod from '../models/likesMod'

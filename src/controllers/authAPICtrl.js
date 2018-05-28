@@ -6,8 +6,8 @@
 
 /** 基础模块 */
 import CONFIG from 'config'
-import * as t from '../baseModules/tools'
-import _e from '../baseModules/serverError'
+import * as t from '../base_modules/tools'
+import _e from '../base_modules/serverError'
 
 /** 项目模块 */
 import authMod from '../models/authMod'
@@ -31,9 +31,10 @@ export const signIn = async (ctx, next) => {
     let userInfo = await authMod.findOne(opt)
 
     if (!userInfo) {
-      return ctx.body = new _e('EUser', 'noSuchUser', {
+      ret = new _e('EUser', 'noSuchUser', {
         identifier: body.identifier
       })
+      // ret.toJSON()
     }
 
     if (userInfo.passwordHash === t.getSaltedPasswordHash(body.password, userInfo.userId)) {
