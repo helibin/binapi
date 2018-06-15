@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /** 内建模块 */
 
@@ -9,13 +9,14 @@ import Router from 'koa-router'
 import CONFIG from 'config'
 
 /** 项目模块 */
-import * as templatesAPICtrl from '../controllers/templatesAPICtrl'
+import * as testsAPICtrl from '../controllers/testsAPICtrl'
+
 
 
 const apiRouter = new Router({
   prefix: CONFIG.apiServer.prefix
 })
 
-apiRouter.get('/templates/do/list', templatesAPICtrl.listTemplates)
+apiRouter.get('/tests/do/test', testsAPICtrl.test)
 
 export default apiRouter

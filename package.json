@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node src/app.js"
+  },
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-polyfill": "^6.26.0",

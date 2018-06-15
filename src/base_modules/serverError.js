@@ -50,6 +50,7 @@ export default class ServerError extends Error {
   }
 
   toJSON() {
+    console.log('toJSON', ',,,');
     return {
       err: this.respCode,
       msg: this.respMessage,

@@ -31,13 +31,16 @@ import usersAPIRouter from './routers/usersAPIRouter'
 import authAPIRouter from './routers/authAPIRouter'
 import templatesAPIRouter from './routers/templatesAPIRouter'
 import likesAPIRouter from './routers/likesAPIRouter'
+import testsAPIRouter from './routers/testsAPIRouter'
 
 const app = new Koa()
+
 
 //自定义错误处理
 app.use(async (ctx, next) => {
   try {
     await next()
+    console.log(1111, ',,,');
   } catch (err) {
     ctx.status = err.status || 500
     ctx.body = err.body || err.message
@@ -46,7 +49,6 @@ app.use(async (ctx, next) => {
     console.error(err.stack + "\n");
   }
 })
-
 // 靜態服務器
 app.use(server(__dirname + '/static'))
 
@@ -93,6 +95,7 @@ app.use(usersAPIRouter.routes())
 app.use(authAPIRouter.routes())
 app.use(templatesAPIRouter.routes())
 app.use(likesAPIRouter.routes())
+app.use(testsAPIRouter.routes())
 
 
 app.on('error', (err) => {

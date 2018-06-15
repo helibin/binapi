@@ -29,13 +29,13 @@ export const genUUID = () => uuid.v4().replace(/-/g, '')
  * 返回
  *   <string>
  */
-export const genRandStr = (len = 32, chars) => {
-  let samples = chars || '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+export const genRandStr = (len = 32,
+  chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
 
-  let randStr = ''
-  for (let i = 0; i < len; i++) {
-    let randIndex = Math.floor(Math.random() * samples.length);
-    randStr += samples[randIndex];
+  let randStr = '';
+  while (randStr.length < len) {
+    let randIndex = Math.floor(Math.random() * chars.length);
+    randStr += chars[randIndex];
   }
 
   return randStr;
