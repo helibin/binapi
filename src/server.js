@@ -40,7 +40,6 @@ const app = new Koa()
 app.use(async (ctx, next) => {
   try {
     await next()
-    console.log(1111, ',,,');
   } catch (err) {
     ctx.status = err.status || 500
     ctx.body = err.body || err.message
@@ -70,8 +69,8 @@ app.use(userAgent)
 app.use(bodyparser())
 app.use(cors({
   origin: req => {
-    return !!!req.header.origin ||
-      CONFIG.webServer.corsWhiteList.includes(req.header.origin) ? req.header.origin : false;
+    if (CONFIG.webServer.corsWhiteList == '*') return true
+    return CONFIG.webServer.corsWhiteList.includes(req.header.origin) ? req.header.origin : false;
   }
 }))
 
@@ -167,7 +166,8 @@ try {
       process.exit(1)
     }
 
-    console.log(colors.green('Have fun!'))
+    console.log(colors.green('Have fun @'),
+      colors.blue(`http://${CONFIG.webServer.host}:${CONFIG.webServer.port}!`))
   })
 } catch (ex) {
   console.log(ex)

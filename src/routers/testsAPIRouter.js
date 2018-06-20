@@ -10,13 +10,16 @@ import CONFIG from 'config'
 
 /** 项目模块 */
 import * as testsAPICtrl from '../controllers/testsAPICtrl'
+import headerMid from '../middlewares/headerMid'
 
 
 
 const apiRouter = new Router({
-  prefix: CONFIG.apiServer.prefix
+  // prefix: CONFIG.apiServer.prefix
 })
 
-apiRouter.get('/tests/do/test', testsAPICtrl.test)
+apiRouter.get('/tests/do/test',
+  headerMid.setVersion(CONFIG.apiServer.prefix),
+  testsAPICtrl.test)
 
 export default apiRouter

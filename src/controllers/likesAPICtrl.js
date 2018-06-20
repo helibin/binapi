@@ -23,13 +23,13 @@ export const listLikes = async (ctx) => {
   }
   try {
     let result = await likesMod.findAndCountAll(opt)
-    ret.data = result.rows
 
-    ret.pageInfo = t.genPageInfo(ctx, result)
+    ret = t.genPageInfo(ctx, result.rows)
   } catch (e) {
-    ret = e;
+    throw e
+    ctx.state.logger('error', 'listLikes', e);
   }
-  ctx.body = ret
+  ctx.state.sendJSON(ret)
 }
 
 

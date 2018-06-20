@@ -3,6 +3,7 @@
     "start": "node src/app.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
@@ -12,6 +13,7 @@
     "config": "^1.26.2",
     "crypto": "^1.0.1",
     "ejs": "^2.5.7",
+    "geoip-lite": "^1.2.1",
     "handlebars": "^4.0.11",
     "handlebars-helpers": "^0.10.0",
     "hbs": "^4.0.1",
@@ -26,11 +28,14 @@
     "koa-views": "^6.0.2",
     "lodash": "^4.17.4",
     "log4js": "^2.3.3",
+    "maxmind": "^2.7.0",
     "mysql2": "^1.4.2",
+    "number-precision": "^1.2.0",
     "rbac": "^4.0.2",
     "semantic-ui-css": "^2.2.12",
     "sequelize": "^4.8.4",
     "underscore": "^1.8.3",
+    "unzip": "^0.1.11",
     "uuid": "^3.1.0"
   },
   "devDependencies": {

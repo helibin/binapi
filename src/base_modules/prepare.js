@@ -2,6 +2,8 @@
 
 /** 内建模块 */
 import bytes from 'bytes'
+import os from 'os'
+
 
 /** 第三方模块 */
 import colors from 'colors/safe'
@@ -26,8 +28,8 @@ export const response = async(ctx, next) => {
   ctx.cookies.set('_clientId', _clientId, {
     maxAge: 365 * 24 * 60 * 60 * 1000, // cookie有效时长
     expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // cookie失效时间
-    httpOnly: false, // 是否只用于http请求中获取
-    overwrite: true // 是否允许重写
+    httpOnly: true, // 是否只用于http请求中获取
+    overwrite: false // 是否允许重写
   })
 
   // 包装日志函数，使日志中包含RequestId
@@ -74,8 +76,8 @@ export const response = async(ctx, next) => {
   ctx.state.sendJSON = (data) => {
     data.requestId = ctx.state._requestId
 
-    ctx.type('json')
-    ctx.send(data)
+    ctx.accepts('json')
+    ctx.body = data
   }
 
   await next()
@@ -83,6 +85,7 @@ export const response = async(ctx, next) => {
   // 打印请求
   ctx.state.logger('debug', `收到请求：${JSON.stringify({
     ip      : ctx.ip,
+    location: t.getLocation(ctx),
     referer : ctx.get('referer') || undefined,
     host    : ctx.host,
     browser : ctx.userAgent.browser,

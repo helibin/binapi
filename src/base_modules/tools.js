@@ -1,22 +1,34 @@
 'use strict'
 
 /** 内建模块 */
+import path from 'path'
 
 /** 第三方模块 */
 import uuid from 'uuid'
 import crypto from 'crypto'
+import unzip from 'unzip'
+import zlib from 'zlib'
+import maxmind from 'maxmind'
+import axios from 'axios'
 
 /** 基础模块 */
 import CONFIG from 'config'
+import {
+  promise
+} from 'when';
 
 /** 项目模块 */
 
-export const genUUID36 = () => {
+
+
+let t = module.exports = {};
+
+t.genUUID36 = () => {
   let id36 = uuid.v4()
   return id36;
 }
 
-export const genUUID = () => uuid.v4().replace(/-/g, '')
+t.genUUID = () => uuid.v4().replace(/-/g, '')
 
 
 /**
@@ -29,7 +41,7 @@ export const genUUID = () => uuid.v4().replace(/-/g, '')
  * 返回
  *   <string>
  */
-export const genRandStr = (len = 32,
+t.genRandStr = (len = 32,
   chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
 
   let randStr = '';
@@ -44,7 +56,7 @@ export const genRandStr = (len = 32,
 /**
  * 初始化返回值
  */
-export const initRet = () => {
+t.initRet = () => {
   return {
     err: 0,
     msg: ''
@@ -69,27 +81,29 @@ export const initRet = () => {
       "totalCount"  : <所有记录数>,
     }
 */
-export const genPageInfo = (ctx, result) => {
-  var pageInfo = {
-    pageNumber: ctx.state.pageSetting.pageNumber,
-    pageSize: ctx.state.pageSetting.pageSize,
-    pageCount: Math.ceil(result.count / ctx.state.pageSetting.pageSize),
-    currentCount: result.rows.length,
-    totalCount: result.count,
-  }
+t.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
+  let data = {}
 
-  return pageInfo;
+  data.pageInfo = {
+    count: dataList.length,
+    pageNumber: page,
+    pageSize: pageSize,
+    totalPages: Math.ceil(dataList.length / pageSize),
+  }
+  data.list = dataList.splice((page - 1) * pageSize, pageSize)
+
+  return data;
 }
 
 /**
  * MD5加密
  */
-export const getMd5 = (str) => crypto.createHash('md5').update(str).digest('hex')
+t.getMd5 = (str) => crypto.createHash('md5').update(str).digest('hex')
 
 /**
  * sha1加密
  */
-export const getSha1 = (str) => crypto.createHash('sha1').update(str).digest('hex')
+t.getSha1 = (str) => crypto.createHash('sha1').update(str).digest('hex')
 
 /**
  * 获取HMAC-SHA1值
@@ -99,7 +113,7 @@ export const getSha1 = (str) => crypto.createHash('sha1').update(str).digest('he
   key <string> 密钥
   output <string> 输出格式。`base64`或`hex`，默认`hex`
  */
-export const getHmacSha1 = (str, key, output) => {
+t.getHmacSha1 = (str, key, output) => {
   let c = crypto.createHash('sha1', key).update(str)
 
   if (output == 'base64') {
@@ -111,12 +125,44 @@ export const getHmacSha1 = (str, key, output) => {
 
 /**
  *
- * @param {string} md5password
+ * @param {string} md5(password)
  * @param {string} secret
  * @param {string} salt
  */
-export const getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
+t.getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
   let strToHash = `@${md5password}@${secret}@${salt}@`
 
   return getSha1(strToHash)
+}
+
+t.getLocation = (ctx) => {
+  maxmind.open(path.join(__dirname, '../databases/GeoLite2-City.mmdb'), (err, cityLookup) => {
+    if (err) {
+      ctx.state.logger('error', 'getLocation', err);
+      return null;
+    }
+    return cityLookup.get(ctx.ip);
+  });
+}
+t.getIPInfo = async (ctx, ip = 'myip') => {
+  try {
+    let ipInfo = await t.get(ctx, {
+      url: 'http://ip.taobao.com/service/getIpInfo2.php?ip=' + ip
+    })
+    return ipInfo
+  } catch (e) {
+    ctx.state.logger('error', e, ',,,');
+  }
+}
+
+t.post = async () => {
+
+}
+t.get = async (ctx, param) => {
+  try {
+    let res = await axios.get(param.url)
+    return res.data.data
+  } catch (e) {
+    ctx.state.logger('debug', e, ',,,');
+  }
 }
