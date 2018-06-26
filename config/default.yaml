@@ -52,6 +52,11 @@ webServer:
 apiServer:
   prefix: '/v1'
 
+# 公共API
+openAPI:
+  taobao:
+    ip: 'http://ip.taobao.com/service/getIpInfo2.php?ip='
+
 # hbs模板
 hbs:
   partials:
@@ -59,3 +64,8 @@ hbs:
     'header'     : 'layouts/header'
     'footer.base': 'layouts/footer.base'
     'footer'     : 'layouts/footer'
+
+# AES加密
+AES:
+  key: 'jKDUqUyRezqNyQaY5faKYsZHLADHmD9e'
+  iv: 'dvjMpXLMb8592RZr'

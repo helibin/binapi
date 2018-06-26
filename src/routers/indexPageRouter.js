@@ -1,21 +1,19 @@
-'use strict'
+
 
 /** 内建模块 */
 
 /** 第三方模块 */
-import Router from 'koa-router'
+import Router from 'koa-router';
 
 /** 基础模块 */
 
 /** 项目模块 */
-import * as indexPageCtrl from '../controllers/indexPageCtrl'
+import Ctrl from '../controllers/indexPageCtrl';
 
 
-
-const router = new Router()
+const router = new Router();
 
 router.get('/',
-  indexPageCtrl.index,
-)
+  Ctrl.index);
 
-export default router
+export default router;

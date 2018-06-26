@@ -1,4 +1,4 @@
-'use strict'
+
 
 /** 内建模块 */
 
@@ -7,7 +7,7 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import mysql from '../base_modules/mysqlHelper'
+import mysql from '../base_modules/mysqlHelper';
 
 export const Like = mysql.sequelize.define('tb_main_likes', {
   seq: {
@@ -21,34 +21,32 @@ export const Like = mysql.sequelize.define('tb_main_likes', {
   },
   nickname: {
     type: mysql.Sequelize.STRING,
-    comment: "昵称",
+    comment: '昵称',
   },
   name: {
     type: mysql.Sequelize.STRING,
-    comment: "姓名",
+    comment: '姓名',
   },
   logoURL: {
     type: mysql.Sequelize.TEXT,
-    comment: "logo",
+    comment: 'logo',
   },
   appName: {
     type: mysql.Sequelize.STRING,
-    comment: "来自app名称",
+    comment: '来自app名称',
   },
   createdAt: {
     type: mysql.Sequelize.BIGINT,
     allowNull: false,
-    comment: "创建时间戳",
+    comment: '创建时间戳',
   },
   updatedAt: {
     type: mysql.Sequelize.BIGINT,
     allowNull: false,
-    comment: "更新时间戳",
+    comment: '更新时间戳',
   },
-}, {
-  comment: '点赞表'
-})
+}, { comment: '点赞表' });
 
-Like.sync()
+Like.sync();
 
-export default Like
+export default Like;

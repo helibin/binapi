@@ -1,35 +1,47 @@
-'use strict'
-
 /** 内建模块 */
-import path from 'path'
+import path from 'path';
 
 /** 第三方模块 */
-import uuid from 'uuid'
-import crypto from 'crypto'
-import unzip from 'unzip'
-import zlib from 'zlib'
-import maxmind from 'maxmind'
-import axios from 'axios'
+import uuid from 'uuid';
+import crypto from 'crypto';
+// import unzip from 'unzip';
+// import zlib from 'zlib';
+import maxmind from 'maxmind';
+import axios from 'axios';
+import si from 'systeminformation';
+import math from 'mathjs';
 
 /** 基础模块 */
-import CONFIG from 'config'
-import {
-  promise
-} from 'when';
+import CONFIG from 'config';
 
 /** 项目模块 */
 
 
+const Tools = {};
 
-let t = module.exports = {};
+/**
+ * 初始化返回值
+ */
+Tools.initRet = () => ({
+  err: 0,
+  msg: '',
+});
 
-t.genUUID36 = () => {
-  let id36 = uuid.v4()
-  return id36;
-}
+/**
+ * 生成UUID
+ *
+ * 返回
+ *   <string> DE931ECB-E3DD-4A71-ACD1-746CAE6EF75C
+ */
+Tools.genUUID36 = () => uuid.v4();
 
-t.genUUID = () => uuid.v4().replace(/-/g, '')
-
+/**
+ * 生成UUID v4
+ *
+ * 返回
+ *   <string> DE931ECBE3DD4A71ACD1746CAE6EF75C
+ */
+Tools.genUUID = () => uuid.v4().replace(/-/g, '');
 
 /**
  * 生成随机字符串
@@ -41,27 +53,16 @@ t.genUUID = () => uuid.v4().replace(/-/g, '')
  * 返回
  *   <string>
  */
-t.genRandStr = (len = 32,
+Tools.genRandStr = (len = 32,
   chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
-
   let randStr = '';
   while (randStr.length < len) {
-    let randIndex = Math.floor(Math.random() * chars.length);
+    const randIndex = Math.floor(Math.random() * chars.length);
     randStr += chars[randIndex];
   }
 
   return randStr;
-}
-
-/**
- * 初始化返回值
- */
-t.initRet = () => {
-  return {
-    err: 0,
-    msg: ''
-  }
-}
+};
 
 /**
 生成分页信息
@@ -81,29 +82,29 @@ t.initRet = () => {
       "totalCount"  : <所有记录数>,
     }
 */
-t.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
-  let data = {}
+Tools.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
+  const data = {};
 
   data.pageInfo = {
     count: dataList.length,
     pageNumber: page,
-    pageSize: pageSize,
+    pageSize,
     totalPages: Math.ceil(dataList.length / pageSize),
-  }
-  data.list = dataList.splice((page - 1) * pageSize, pageSize)
+  };
+  data.list = dataList.splice((page - 1) * pageSize, pageSize);
 
   return data;
-}
+};
 
 /**
  * MD5加密
  */
-t.getMd5 = (str) => crypto.createHash('md5').update(str).digest('hex')
+Tools.getMd5 = str => crypto.createHash('md5').update(str).digest('hex');
 
 /**
  * sha1加密
  */
-t.getSha1 = (str) => crypto.createHash('sha1').update(str).digest('hex')
+Tools.getSha1 = str => crypto.createHash('sha1').update(str).digest('hex');
 
 /**
  * 获取HMAC-SHA1值
@@ -113,15 +114,14 @@ t.getSha1 = (str) => crypto.createHash('sha1').update(str).digest('hex')
   key <string> 密钥
   output <string> 输出格式。`base64`或`hex`，默认`hex`
  */
-t.getHmacSha1 = (str, key, output) => {
-  let c = crypto.createHash('sha1', key).update(str)
+Tools.getHmacSha1 = (str, key, output) => {
+  const c = crypto.createHash('sha1', key).update(str);
 
   if (output == 'base64') {
-    return c.digest().toString('base64')
-  } else {
-    return c.digest('hex')
+    return c.digest().toString('base64');
   }
-}
+  return c.digest('hex');
+};
 
 /**
  *
@@ -129,40 +129,202 @@ t.getHmacSha1 = (str, key, output) => {
  * @param {string} secret
  * @param {string} salt
  */
-t.getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
-  let strToHash = `@${md5password}@${secret}@${salt}@`
+Tools.getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
+  const strToHash = `@${md5password}@${secret}@${salt}@`;
 
-  return getSha1(strToHash)
-}
+  return getSha1(strToHash);
+};
 
-t.getLocation = (ctx) => {
-  maxmind.open(path.join(__dirname, '../databases/GeoLite2-City.mmdb'), (err, cityLookup) => {
-    if (err) {
-      ctx.state.logger('error', 'getLocation', err);
-      return null;
-    }
-    return cityLookup.get(ctx.ip);
-  });
-}
-t.getIPInfo = async (ctx, ip = 'myip') => {
+/**
+ * 获取IP信息
+ * http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+ *
+ * @param {*} ctx
+ * @param {*} ip
+ */
+Tools.getIPInfo = (ctx, ip) => {
   try {
-    let ipInfo = await t.get(ctx, {
-      url: 'http://ip.taobao.com/service/getIpInfo2.php?ip=' + ip
-    })
-    return ipInfo
+    return new Promise((resolve, reject) => {
+      maxmind.open(path.join(__dirname, '../databases/GeoLite2-City.mmdb'), (err, cityLookup) => {
+        if (err) return reject(err);
+
+        const ipInfo = cityLookup.get(ip || ctx.ip);
+        return resolve(ipInfo);
+      });
+    });
+  } catch (e) {
+    ctx.state.logger('error', 'Tools.getIPInfo', e);
+    return null;
+  }
+};
+
+Tools.getLocationByIP = async (ctx, ip) => {
+  const ipInfo = await Tools.getIPInfo(ctx, ip);
+
+  let location = null;
+  const locale = ctx.state.locale;
+  if (ipInfo) {
+    const country = ipInfo.country || {
+      names: {},
+    };
+    const province = ipInfo.subdivisions[0] || {
+      names: {},
+    };
+    const city = ipInfo.city || {
+      names: {},
+    };
+    location = {
+      country: country.names[locale],
+      province: province.names[locale],
+      city: city.names[locale],
+      locale,
+    };
+  }
+
+  return location;
+};
+
+Tools.getIPInfoByTaobao = async (ctx, ip = 'myip') => {
+  try {
+    const ipInfo = await Tools.get(ctx, {
+      url: CONFIG.openAPI.taobao.ip + ip,
+    });
+    return ipInfo;
   } catch (e) {
     ctx.state.logger('error', e, ',,,');
   }
-}
+};
 
-t.post = async () => {
+Tools.post = async () => {
 
-}
-t.get = async (ctx, param) => {
+};
+Tools.get = async (ctx, param) => {
   try {
-    let res = await axios.get(param.url)
-    return res.data.data
+    const res = await axios.get(param.url);
+    return res.data.data;
   } catch (e) {
     ctx.state.logger('debug', e, ',,,');
   }
-}
+};
+
+
+/**
+获取HMAC-SHA1值
+
+参数
+  str <string> 待获取HMAC-SHA1值的字符串
+  key <string> 密钥
+  output <string> 输出格式。`base64`或`hex`，默认`hex`
+
+返回
+  <string>
+*/
+exports.getHmacSha1 = function getHmacSha1(str, key, output) {
+  const c = crypto.createHmac('sha1', key);
+  c.update(str);
+
+  let hmacSha1 = null;
+  if (output === 'base64') {
+    hmacSha1 = c.digest().toString('base64');
+  } else {
+    hmacSha1 = c.digest('hex');
+  }
+
+  return hmacSha1;
+};
+
+/**
+AES加密
+
+参数
+  rawText <string> 待加密内容
+
+返回
+  <string>
+*/
+Tools.cipherByAES = (rawText) => {
+  try {
+    const c = crypto.createCipheriv('aes-256-cbc', CONFIG.AES.key, CONFIG.AES.iv);
+    const chunks = [
+      c.update(rawText, 'binary', 'base64'),
+      c.final('base64'),
+    ];
+    return chunks.join('');
+  } catch (ex) {
+    return null;
+  }
+};
+
+/**
+AES解密
+
+参数
+  input <string> 待解密内容
+
+返回
+  <string>
+*/
+Tools.decipherByAES = (base64Output) => {
+  try {
+    const c = crypto.createDecipheriv('aes-256-cbc', CONFIG.AES.key, CONFIG.AES.iv);
+    const chunks = [
+      c.update(base64Output, 'base64', 'binary'),
+      c.final('binary'),
+    ];
+    return chunks.join('');
+  } catch (ex) {
+    return null;
+  }
+};
+
+/**
+ * 获取操作系统信息
+ *
+ * @param {*} ctx
+ * @returns
+ *  { platform: 'darwin',
+ *    distro: 'Mac OS X',
+ *    release: '10.13.2',
+ *    codename: '',
+ *    kernel: '17.3.0',
+ *    arch: 'x64',
+ *    hostname: 'Ly***al',
+ *    logofile: 'ap***le' }
+ */
+Tools.getOSInfo = async () => {
+  await si.osInfo();
+};
+
+/**
+ * 获取系统信息
+ *
+ * @param {*} ctx
+ * @return
+ *  { manufacturer: 'Ap***c.',
+ *    model: 'Ma***,2',
+ *    version: '1.0',
+ *    serial: 'C0***2L',
+ *    uuid: 'E8***E8',
+ *    sku: 'Ma***21' }
+ */
+Tools.getSystem = async () => await si.system();
+
+/**
+ * 数字运算
+ *
+ * @param {*} execStr
+ * @return number
+ */
+Tools.eval = (execStr) => {
+  math.config({
+    number: 'BigNumber', // Default type of number:
+    // 'number' (default), 'BigNumber', or 'Fraction'
+    precision: 20, // Number of significant digits for BigNumbers
+  });
+
+  const unformatVal = math.eval(execStr);
+
+  return Number(math.format(unformatVal));
+};
+
+export default Tools;

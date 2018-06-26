@@ -1,20 +1,16 @@
-'use strict'
-
 /** 内建模块 */
-import bytes from 'bytes'
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from '../base_modules/tools'
 
 /** 项目模块 */
 
 
+const M = {};
 
-export const index = async(ctx) => {
-  await ctx.state.render('index', {
-    body: 'index'
-  })
-}
+M.index = async (ctx) => {
+  await ctx.state.render('index', { body: 'index' });
+};
+
+export default M;

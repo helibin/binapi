@@ -1,5 +1,3 @@
-'use strict'
-
 /** 内建模块 */
 
 /** 第三方模块 */
@@ -124,5 +122,5 @@ module.exports = {
   LOOP_DETECTED: 508,
   NOT_EXTENDED: 510,
   NETWORK_AUTHENTICATION_REQUIRED: 511,
-  NETWORK_CONNECT_TIMEOUT_ERROR: 599
+  NETWORK_CONNECT_TIMEOUT_ERROR: 599,
 };

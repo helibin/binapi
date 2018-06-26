@@ -1,5 +1,3 @@
-'use strict';
-
 /** 内建模块 */
 
 /** 第三方模块 */
@@ -9,12 +7,11 @@
 /** 项目模块 */
 
 
+const headerMid = {};
 
-let api = module.exports = {};
+headerMid.setVersion = version => (ctx, next) => {
+  ctx.set('x-api-version', version);
+  next();
+};
 
-api.setVersion = (version) => {
-  return (ctx, next) => {
-    ctx.set('x-api-version', version)
-    next()
-  }
-}
+export default headerMid;

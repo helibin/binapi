@@ -1,5 +1,3 @@
-'use strict'
-
 /** 内建模块 */
 
 /** 第三方模块 */
@@ -7,8 +5,7 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import mysql from '../base_modules/mysqlHelper'
-
+import mysql from '../base_modules/mysqlHelper';
 
 
 export const User = mysql.sequelize.define('tb_main_users', {
@@ -23,41 +20,37 @@ export const User = mysql.sequelize.define('tb_main_users', {
   },
   nickname: {
     type: mysql.Sequelize.STRING,
-    comment: "昵称",
+    comment: '昵称',
   },
   name: {
     type: mysql.Sequelize.STRING,
-    comment: "姓名",
+    comment: '姓名',
   },
   phone: {
     type: mysql.Sequelize.STRING,
-    comment: "电话",
+    comment: '电话',
   },
   email: {
     type: mysql.Sequelize.STRING,
-    validate: {
-      isEmail: true
-    },
-    comment: "邮箱",
+    validate: { isEmail: true },
+    comment: '邮箱',
   },
   extraInfo: {
     type: mysql.Sequelize.JSON,
-    comment: "额外信息",
+    comment: '额外信息',
   },
   createdAt: {
     type: mysql.Sequelize.BIGINT,
     allowNull: false,
-    comment: "创建时间戳",
+    comment: '创建时间戳',
   },
   updatedAt: {
     type: mysql.Sequelize.BIGINT,
     allowNull: false,
-    comment: "更新时间戳",
+    comment: '更新时间戳',
   },
-}, {
-  comment: '用户信息表'
-})
+}, { comment: '用户信息表' });
 
-User.sync()
+User.sync();
 
-export default User
+export default User;

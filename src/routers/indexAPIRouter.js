@@ -1,30 +1,23 @@
-'use strict'
-
 /** 内建模块 */
 
 /** 第三方模块 */
-import Router from 'koa-router'
-import _ from 'lodash'
+import Router from 'koa-router';
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from '../base_modules/tools'
+import CONFIG from 'config';
 
 /** 项目模块 */
-import * as indexAPICtrl from '../controllers/indexAPICtrl'
 
-const apiRouter = new Router({
-  prefix: CONFIG.apiServer.prefix
-})
+const apiRouter = new Router({ prefix: CONFIG.apiServer.prefix });
 
-apiRouter.get('/test', async (ctx) => {
+apiRouter.get('/index', async (ctx) => {
   ctx.body = [{
     name: 'sdw',
-    sex: 'f'
+    sex: 'f',
   }, {
     name: '2rsa',
-    sex: 'm'
-  }]
-})
+    sex: 'm',
+  }];
+});
 
-export default apiRouter
+export default apiRouter;

@@ -1,17 +1,14 @@
-'use strict'
-
 /** 内建模块 */
 
 /** 第三方模块 */
-import Sequelize from 'sequelize'
+import Sequelize from 'sequelize';
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from './tools'
+import CONFIG from 'config';
 
 /** 项目模块 */
 
-const dbConfig = CONFIG.dbServer.mysql || {}
+const dbConfig = CONFIG.dbServer.mysql || {};
 
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
   host: dbConfig.host,
@@ -26,19 +23,18 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   pool: {
     max: dbConfig.connectionLimit,
     min: 0,
-    idle: 10000
-  }
-})
+    idle: 10000,
+  },
+});
 
 // 测试db连接
 sequelize.authenticate().then(() => {
   console.log('连接成功！');
-})
-.catch(err => {
+}).catch((err) => {
   console.error('无法连接至数据库：', err);
 });
 
 export default {
   sequelize,
-  Sequelize
-}
+  Sequelize,
+};

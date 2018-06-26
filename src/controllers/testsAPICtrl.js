@@ -1,37 +1,54 @@
-'use strict';
-
 /** 内建模块 */
-import path from 'path'
 
 /** 第三方模块 */
-import np from 'number-precision'
 
 /** 基础模块 */
-import CONFIG from 'config'
-import t from '../base_modules/tools'
-import _e from '../base_modules/serverError'
+import CONFIG from 'config';
+import t from '../base_modules/tools';
+import _e from '../base_modules/serverError';
 
 /** 项目模块 */
 
 
+const M = {};
 
-export const test = async (ctx, next) => {
+M.test = async (ctx, next) => {
   try {
-    t.getLocation(ctx)
-    let randStr = t.genRandStr(10, '342121lkdsaf')
-    ctx.state.logger('debug', randStr, ',,,');
-    let err = new _e('xxx', 'xxx', {
-      randStr: randStr
+    // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
+    const randStr = t.genRandStr(10, '342121lkdsaf');
+    const err = new _e('xxx', 'xxx', {
+      randStr,
     });
-    await t.getIPInfo(ctx)
-    // console.log(err.toJSON(), ',,,');
+    // await t.getIPInfo(ctx);
+    console.log(await t.getOSInfo());
+
+    // const data = await si.osInfo()
+    // console.log(data)
+    console.time('math');
+    console.log(t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'), typeof t.eval('0.3 / 0.1'), ',,,');
+    console.timeEnd('math');
+    console.log(err.toJSON(), ',,,');
     // new Error('error from outside')
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    ctx.state.sendJSON(err)
+    ctx.state.sendJSON(err);
   } catch (e) {
-    ctx.state.logger('debug', e, ',,,');
-    throw e;
+    ctx.state.logger('error', e, ',,,');
+    next(e);
   }
-}
+};
+
+M.location = async (ctx, next) => {
+  try {
+    const ip = ctx.query.ip;
+    const location = (await t.getLocationByIP(ctx, ip)) || {};
+
+    ctx.state.sendJSON(location);
+  } catch (e) {
+    ctx.state.logger('error', e, ',,,');
+    next(e);
+  }
+};
+
+export default M;

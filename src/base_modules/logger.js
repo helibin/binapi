@@ -1,15 +1,14 @@
-'use strict'
-
 /** 内建模块 */
-import os from 'os'
+import os from 'os';
 
 /** 第三方模块 */
-import log4js from 'log4js'
+import log4js from 'log4js';
 
 /** 基础模块 */
-import CONFIG from 'config'
+import CONFIG from 'config';
 
 /** 项目模块 */
+
 
 /**
  * 默认情况下：
@@ -18,21 +17,27 @@ import CONFIG from 'config'
 
 // level: [ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF]
 log4js.configure({
-  appenders: {
-    'out': {
-      type: 'stdout'
-    }
-  }, categories: {
+  appenders: { out: { type: 'stdout' } },
+  categories: {
     default: {
       appenders: ['out'],
-      level: CONFIG.webServer.logLevel
-    }
+      level: CONFIG.webServer.logLevel,
+    },
+  },
+});
+
+let hostName = os.hostname();
+hostName = hostName || hostName[0] || 'webServer';
+
+const logger = (...args) => {
+  let logLevel = args.shift();
+
+  if (!['trace', 'debug', 'info', 'warn', 'error', 'fatal'].includes(logLevel)) {
+    logLevel = logLevel ? 'error' : 'info';
   }
-})
 
-let hostName = os.hostname()
-hostName = hostName || hostName[0] || 'webServer'
+  log4js.getLogger(hostName)[logLevel](...args);
+};
 
-let logger = log4js.getLogger(hostName)
 
-export default logger
+export default logger;

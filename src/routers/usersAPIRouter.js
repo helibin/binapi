@@ -1,41 +1,32 @@
-'use strict'
+
 
 /** 内建模块 */
 
 /** 第三方模块 */
-import Router from 'koa-router'
+import Router from 'koa-router';
 
 /** 基础模块 */
-import CONFIG from 'config'
-import * as t from '../base_modules/tools'
+import CONFIG from 'config';
 
 /** 项目模块 */
-import * as userAPICtrl from '../controllers/usersAPICtrl'
+import Ctrl from '../controllers/usersAPICtrl';
 
 
+const apiRouter = new Router({ prefix: CONFIG.apiServer.prefix });
 
-const apiRouter = new Router({
-  prefix: CONFIG.apiServer.prefix
-})
+apiRouter.get('/users',
+  Ctrl.listUsers);
 
-apiRouter.get('/auth/users/do/list'
-  , userAPICtrl.listUsers
-)
+apiRouter.get('/users/:targetId',
+  Ctrl.getUser);
 
-apiRouter.get('/auth/users/:targetId/do/get'
-  , userAPICtrl.getUser
-)
+apiRouter.post('/users',
+  Ctrl.addUser);
 
-apiRouter.post('/auth/users/do/add'
-  , userAPICtrl.addUser
-)
+apiRouter.patch('/users/:targetId',
+  Ctrl.modifyUser);
 
-apiRouter.post('/auth/users/:targetId/do/modify'
-  , userAPICtrl.modifyUser
-)
+apiRouter.delete('/users/:targetId',
+  Ctrl.deleteUser);
 
-apiRouter.get('/auth/users/:targetId/do/delete'
-  , userAPICtrl.deleteUser
-)
-
-export default apiRouter
+export default apiRouter;
