@@ -3,7 +3,7 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import * as t from '../base_modules/tools';
+import t from '../base_modules/tools';
 
 /** 项目模块 */
 import templatesMod from '../models/templatesMod';
@@ -16,7 +16,7 @@ M.listTemplates = async (ctx) => {
 
   const opt = {
     offset: ctx.state.pageSetting.pageStart,
-    limit: ctx.state.pageSetting.pageSize,
+    limit : ctx.state.pageSetting.pageSize,
   };
 
   try {

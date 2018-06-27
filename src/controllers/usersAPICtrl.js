@@ -18,7 +18,7 @@ M.listUsers = async (ctx) => {
 
   const opt = {
     offset: ctx.state.pageSetting.pageStart,
-    limit: ctx.state.pageSetting.pageSize,
+    limit : ctx.state.pageSetting.pageSize,
   };
   try {
     const result = await usersMod.findAndCountAll(opt);
@@ -48,7 +48,7 @@ M.addUser = async (ctx) => {
   let ret = t.initRet();
 
   const newData = {
-    id: t.genUUID(),
+    id       : t.genUUID(),
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };

@@ -3,7 +3,7 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import * as t from '../base_modules/tools';
+import t from '../base_modules/tools';
 import _e from '../base_modules/serverError';
 
 /** 项目模块 */
@@ -18,9 +18,9 @@ AuthAPICtrl.signIn = async (ctx) => {
   const body = ctx.request.body;
   const opt = {
     attributes: { exclude: ['passwordHash'] },
-    where: {
+    where     : {
       $or: {
-        userId: body.identifier,
+        userId    : body.identifier,
         identifier: body.identifier,
       },
     },

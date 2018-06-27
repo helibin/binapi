@@ -3,7 +3,6 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import CONFIG from 'config';
 import t from '../base_modules/tools';
 import _e from '../base_modules/serverError';
 
@@ -16,9 +15,7 @@ M.test = async (ctx, next) => {
   try {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
     const randStr = t.genRandStr(10, '342121lkdsaf');
-    const err = new _e('xxx', 'xxx', {
-      randStr,
-    });
+    const err = new _e('xxx', 'xxx', { randStr });
     // await t.getIPInfo(ctx);
     console.log(await t.getOSInfo());
 
@@ -42,7 +39,7 @@ M.test = async (ctx, next) => {
 M.location = async (ctx, next) => {
   try {
     const ip = ctx.query.ip;
-    const location = (await t.getLocationByIP(ctx, ip)) || {};
+    const location = (await t.getLocationByIP(ip)) || {};
 
     ctx.state.sendJSON(location);
   } catch (e) {

@@ -12,8 +12,8 @@ import Ctrl from '../controllers/likesAPICtrl';
 
 const apiRouter = new Router({ prefix: CONFIG.apiServer.prefix });
 
-apiRouter.get('/likes/do/list', Ctrl.listLikes);
+apiRouter.get('/likes', Ctrl.listLikes);
 
-apiRouter.post('/likes/do/add', Ctrl.addLike);
+apiRouter.post('/likes', Ctrl.addLike);
 
 export default apiRouter;

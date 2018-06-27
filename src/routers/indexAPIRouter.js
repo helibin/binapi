@@ -13,10 +13,10 @@ const apiRouter = new Router({ prefix: CONFIG.apiServer.prefix });
 apiRouter.get('/index', async (ctx) => {
   ctx.body = [{
     name: 'sdw',
-    sex: 'f',
+    sex : 'f',
   }, {
     name: '2rsa',
-    sex: 'm',
+    sex : 'm',
   }];
 });
 

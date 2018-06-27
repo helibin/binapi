@@ -5,14 +5,13 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import yamlData from './yamlCC';
-
+import { CONST } from './yamlCC';
 
 export default class ServerError extends Error {
   constructor(codeName, message, data) {
     super();
 
-    this.err = yamlData.const.respCode[codeName];
+    this.err = CONST.respCode[codeName];
     this.msg = message;
     this.data = data;
 
@@ -45,8 +44,8 @@ export default class ServerError extends Error {
 
   toJSON() {
     return {
-      err: this.respCode,
-      msg: this.respMessage,
+      err : this.respCode,
+      msg : this.respMessage,
       data: this.respData,
     };
   }

@@ -33,3 +33,11 @@ respCode:
   EDBMysql                   : 7010  # Mysql错误
   EDBRedis                   : 7020  # Redis错误
   EAliyunAPI                 : 8000  ## 阿里云API错误
+
+  allLogLevel:
+    - trace
+    - debug
+    - info
+    - warn
+    - error
+    - fatal

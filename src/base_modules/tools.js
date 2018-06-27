@@ -2,27 +2,29 @@
 import path from 'path';
 
 /** 第三方模块 */
+import CONFIG from 'config';
 import uuid from 'uuid';
 import crypto from 'crypto';
-// import unzip from 'unzip';
-// import zlib from 'zlib';
+// import unzip   from 'unzip';
+// import zlib    from 'zlib';
 import maxmind from 'maxmind';
 import axios from 'axios';
 import si from 'systeminformation';
 import math from 'mathjs';
+import logger from './logger';
 
 /** 基础模块 */
-import CONFIG from 'config';
 
 /** 项目模块 */
 
 
-const Tools = {};
+const M = {};
 
 /**
- * 初始化返回值
+ * 初始化响应值
+ * @returns {object} {err: 0, msg: ''}
  */
-Tools.initRet = () => ({
+M.initRet = () => ({
   err: 0,
   msg: '',
 });
@@ -30,30 +32,26 @@ Tools.initRet = () => ({
 /**
  * 生成UUID
  *
- * 返回
- *   <string> DE931ECB-E3DD-4A71-ACD1-746CAE6EF75C
+ * @returns {string} DE931ECB-E3DD-4A71-ACD1-746CAE6EF75C
  */
-Tools.genUUID36 = () => uuid.v4();
+M.genUUID36 = () => uuid.v4();
 
 /**
  * 生成UUID v4
  *
- * 返回
- *   <string> DE931ECBE3DD4A71ACD1746CAE6EF75C
+ * @returns {string} DE931ECBE3DD4A71ACD1746CAE6EF75C
  */
-Tools.genUUID = () => uuid.v4().replace(/-/g, '');
+M.genUUID = () => uuid.v4().replace(/-/g, '');
 
 /**
  * 生成随机字符串
  *
- * 参数
- *   len <integer> 长度。默认32位
- *   chars <string> 随机字符可选内容。默认大小写英文和数字
+ * @param {int} len 长度。默认32位
+ * @param {string} chars 随机字符可选内容。默认大小写英文和数字
  *
- * 返回
- *   <string>
+ * @returns {string} randStr
  */
-Tools.genRandStr = (len = 32,
+M.genRandStr = (len = 32,
   chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let randStr = '';
   while (randStr.length < len) {
@@ -65,118 +63,114 @@ Tools.genRandStr = (len = 32,
 };
 
 /**
-生成分页信息
-!!重要 需要与`detectPageSetting`配合使用
-
-参数
-  ctx <object> 原始响应对象
-  result <JSON> mysql查询结果
-
-返回
-  <JSON> 详细如下：
-    {
-      "pageNumber"  : <页号>,
-      "pageSize"    : <分页大小>,
-      "pageCount"   : <分页数量>
-      "currentCount": <本页记录数>,
-      "totalCount"  : <所有记录数>,
-    }
-*/
-Tools.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
+ *生成分页信息
+ *
+ * @param {object} ctx 原始响应对象
+ * @param {*} dataList 数据
+ * @param {number} [page=1] 页号
+ * @param {*} [pageSize=ctx.state.pageSetting.pageSize] 分页大小
+ * @returns {object} data 分页数据
+ */
+M.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
   const data = {};
 
+  data.list = dataList.splice((page - 1) * pageSize, pageSize);
   data.pageInfo = {
-    count: dataList.length,
-    pageNumber: page,
+    count     : dataList.length,
+    page,
     pageSize,
     totalPages: Math.ceil(dataList.length / pageSize),
   };
-  data.list = dataList.splice((page - 1) * pageSize, pageSize);
 
   return data;
 };
 
 /**
  * MD5加密
+ * @param {string} str md5加密字符串
+ * @returns {string} md5 str
  */
-Tools.getMd5 = str => crypto.createHash('md5').update(str).digest('hex');
+M.getMd5 = str => crypto.createHash('md5').update(str).digest('hex');
 
 /**
  * sha1加密
+ * @param {string} str sha1加密字符串
+ * @returns {string} sha1 str
  */
-Tools.getSha1 = str => crypto.createHash('sha1').update(str).digest('hex');
+M.getSha1 = str => crypto.createHash('sha1').update(str).digest('hex');
 
 /**
  * 获取HMAC-SHA1值
  *
- * 参数
-  str <string> 待获取HMAC-SHA1值的字符串
-  key <string> 密钥
-  output <string> 输出格式。`base64`或`hex`，默认`hex`
+ * @param {string} str 待获取HMAC-SHA1值的字符串
+ * @param {string} key 密钥
+ * @param {string} output 输出格式(hex|base64)
+ * @returns {string} hmac-sha1 str
  */
-Tools.getHmacSha1 = (str, key, output) => {
+M.getHmacSha1 = (str, key, output) => {
   const c = crypto.createHash('sha1', key).update(str);
 
-  if (output == 'base64') {
+  if (output === 'base64') {
     return c.digest().toString('base64');
   }
   return c.digest('hex');
 };
 
 /**
- *
- * @param {string} md5(password)
- * @param {string} secret
- * @param {string} salt
+ * 获取加盐加密字符串
+ * @param {string} md5Str md5字符串
+ * @param {string} secret 加密密钥
+ * @param {string} salt 盐
+ * @returns {string} salted hash str
  */
-Tools.getSaltedPasswordHash = (md5password, secret = ctx.state.userId, salt = CONFIG.webServer.salt) => {
-  const strToHash = `@${md5password}@${secret}@${salt}@`;
+M.getSaltedHashStr = (md5Str, secret, salt = CONFIG.webServer.salt) => {
+  const strToHash = `@${md5Str}@${secret}@${salt}@`;
 
-  return getSha1(strToHash);
+  return M.getSha1(strToHash);
 };
 
 /**
  * 获取IP信息
  * http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
  *
- * @param {*} ctx
- * @param {*} ip
+ * @param {*} ip ip地址
+ * @returns {object} ipInfo
  */
-Tools.getIPInfo = (ctx, ip) => {
+M.getIPInfo = (ip) => {
   try {
     return new Promise((resolve, reject) => {
       maxmind.open(path.join(__dirname, '../databases/GeoLite2-City.mmdb'), (err, cityLookup) => {
         if (err) return reject(err);
 
-        const ipInfo = cityLookup.get(ip || ctx.ip);
+        const ipInfo = cityLookup.get(ip);
         return resolve(ipInfo);
       });
     });
   } catch (e) {
-    ctx.state.logger('error', 'Tools.getIPInfo', e);
     return null;
   }
 };
 
-Tools.getLocationByIP = async (ctx, ip) => {
-  const ipInfo = await Tools.getIPInfo(ctx, ip);
+
+/**
+ * 通过IP获取位置
+ *
+ * @param {string} ip ip地址
+ * @param {string} [locale='zh-CN'] 语言区域
+ * @returns {object} location
+ */
+M.getLocationByIP = async (ip, locale = 'zh-CN') => {
+  const ipInfo = await M.getIPInfo(ip);
 
   let location = null;
-  const locale = ctx.state.locale;
   if (ipInfo) {
-    const country = ipInfo.country || {
-      names: {},
-    };
-    const province = ipInfo.subdivisions[0] || {
-      names: {},
-    };
-    const city = ipInfo.city || {
-      names: {},
-    };
+    const country = ipInfo.country || { names: {} };
+    const province = ipInfo.subdivisions[0] || { names: {} };
+    const city = ipInfo.city || { names: {} };
     location = {
-      country: country.names[locale],
+      country : country.names[locale],
       province: province.names[locale],
-      city: city.names[locale],
+      city    : city.names[locale],
       locale,
     };
   }
@@ -184,67 +178,39 @@ Tools.getLocationByIP = async (ctx, ip) => {
   return location;
 };
 
-Tools.getIPInfoByTaobao = async (ctx, ip = 'myip') => {
+M.getIPInfoByTaobao = async (ip = 'myip') => {
   try {
-    const ipInfo = await Tools.get(ctx, {
-      url: CONFIG.openAPI.taobao.ip + ip,
-    });
+    const ipInfo = await M.get({ url: CONFIG.openAPI.taobao.ip + ip });
     return ipInfo;
   } catch (e) {
-    ctx.state.logger('error', e, ',,,');
+    return null;
   }
 };
 
-Tools.post = async () => {
 
-};
-Tools.get = async (ctx, param) => {
+M.get = async (param) => {
+  const ret = M.initRet();
+
   try {
     const res = await axios.get(param.url);
-    return res.data.data;
+    ret.data = res.data.data;
   } catch (e) {
-    ctx.state.logger('debug', e, ',,,');
+    logger('debug', e, ',,,');
   }
-};
-
-
-/**
-获取HMAC-SHA1值
-
-参数
-  str <string> 待获取HMAC-SHA1值的字符串
-  key <string> 密钥
-  output <string> 输出格式。`base64`或`hex`，默认`hex`
-
-返回
-  <string>
-*/
-exports.getHmacSha1 = function getHmacSha1(str, key, output) {
-  const c = crypto.createHmac('sha1', key);
-  c.update(str);
-
-  let hmacSha1 = null;
-  if (output === 'base64') {
-    hmacSha1 = c.digest().toString('base64');
-  } else {
-    hmacSha1 = c.digest('hex');
-  }
-
-  return hmacSha1;
+  return ret;
 };
 
 /**
-AES加密
-
-参数
-  rawText <string> 待加密内容
-
-返回
-  <string>
-*/
-Tools.cipherByAES = (rawText) => {
+ * AES加密
+ *
+ * @param {string} rawText 待加密内容
+ * @param {string} [key=CONFIG.AES.key] key
+ * @param {string} [iv=CONFIG.AES.iv] iv
+ * @returns {string} base64 str
+ */
+M.encryptoByAES = (rawText, key = CONFIG.AES.key, iv = CONFIG.AES.iv) => {
   try {
-    const c = crypto.createCipheriv('aes-256-cbc', CONFIG.AES.key, CONFIG.AES.iv);
+    const c = crypto.createCipheriv('aes-256-cbc', key, iv);
     const chunks = [
       c.update(rawText, 'binary', 'base64'),
       c.final('base64'),
@@ -256,17 +222,16 @@ Tools.cipherByAES = (rawText) => {
 };
 
 /**
-AES解密
-
-参数
-  input <string> 待解密内容
-
-返回
-  <string>
-*/
-Tools.decipherByAES = (base64Output) => {
+ * AES解密
+ *
+ * @param {string} base64Output 待解密内容
+ * @param {string} [key=CONFIG.AES.key] key
+ * @param {string} [iv=CONFIG.AES.iv] iv
+ * @returns {string} text str
+ */
+M.decryptoByAES = (base64Output, key = CONFIG.AES.key, iv = CONFIG.AES.iv) => {
   try {
-    const c = crypto.createDecipheriv('aes-256-cbc', CONFIG.AES.key, CONFIG.AES.iv);
+    const c = crypto.createDecipheriv('aes-256-cbc', key, iv);
     const chunks = [
       c.update(base64Output, 'base64', 'binary'),
       c.final('binary'),
@@ -280,8 +245,7 @@ Tools.decipherByAES = (base64Output) => {
 /**
  * 获取操作系统信息
  *
- * @param {*} ctx
- * @returns
+ * @returns {object}
  *  { platform: 'darwin',
  *    distro: 'Mac OS X',
  *    release: '10.13.2',
@@ -291,15 +255,14 @@ Tools.decipherByAES = (base64Output) => {
  *    hostname: 'Ly***al',
  *    logofile: 'ap***le' }
  */
-Tools.getOSInfo = async () => {
+M.getOSInfo = async () => {
   await si.osInfo();
 };
 
 /**
  * 获取系统信息
  *
- * @param {*} ctx
- * @return
+ * @return {object}
  *  { manufacturer: 'Ap***c.',
  *    model: 'Ma***,2',
  *    version: '1.0',
@@ -307,17 +270,19 @@ Tools.getOSInfo = async () => {
  *    uuid: 'E8***E8',
  *    sku: 'Ma***21' }
  */
-Tools.getSystem = async () => await si.system();
+M.getSystem = async () => {
+  await si.system();
+};
 
 /**
  * 数字运算
  *
- * @param {*} execStr
- * @return number
+ * @param {string} execStr 运算字符串
+ * @return {int} exec result
  */
-Tools.eval = (execStr) => {
+M.eval = (execStr) => {
   math.config({
-    number: 'BigNumber', // Default type of number:
+    number   : 'BigNumber', // Default type of number:
     // 'number' (default), 'BigNumber', or 'Fraction'
     precision: 20, // Number of significant digits for BigNumbers
   });
@@ -327,4 +292,4 @@ Tools.eval = (execStr) => {
   return Number(math.format(unformatVal));
 };
 
-export default Tools;
+export default M;

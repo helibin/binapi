@@ -7,11 +7,11 @@
 /** 项目模块 */
 
 
-const headerMid = {};
+const M = {};
 
-headerMid.setVersion = version => (ctx, next) => {
+M.setVersion = version => (ctx, next) => {
   ctx.set('x-api-version', version);
   next();
 };
 
-export default headerMid;
+export default M;
