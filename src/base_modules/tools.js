@@ -22,11 +22,16 @@ const M = {};
 
 /**
  * 初始化响应值
+ *
+ * @param {int}    err 错误代码
+ * @param {string} msg 响应内容
+ * @param {object} data 响应数据
  * @returns {object} {err: 0, msg: ''}
  */
-M.initRet = () => ({
-  err: 0,
-  msg: '',
+M.initRet = (err = 0, msg = '', data = {}) => ({
+  err,
+  msg,
+  data,
 });
 
 /**

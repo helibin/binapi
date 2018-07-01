@@ -8,40 +8,39 @@ import _e from '../base_modules/serverError';
 
 /** 项目模块 */
 import authMod from '../models/authMod';
+import Base from './_base';
 
 
-const AuthAPICtrl = {};
+export default new class M extends Base  {
+  async signIn(ctx) {
+    let ret = this.t.initRet();
 
-AuthAPICtrl.signIn = async (ctx) => {
-  let ret = t.initRet();
-
-  const body = ctx.request.body;
-  const opt = {
-    attributes: { exclude: ['passwordHash'] },
-    where     : {
-      $or: {
-        userId    : body.identifier,
-        identifier: body.identifier,
+    const body = ctx.request.body;
+    const opt = {
+      attributes: { exclude: ['passwordHash'] },
+      where     : {
+        $or: {
+          userId    : body.identifier,
+          identifier: body.identifier,
+        },
       },
-    },
-  };
-  try {
-    const userInfo = await authMod.findOne(opt);
+    };
+    try {
+      const userInfo = await authMod.findOne(opt);
 
-    if (!userInfo) {
-      ret = new _e('EUser', 'noSuchUser', { identifier: body.identifier });
+      if (!userInfo) {
+        ret = new _e('EUser', 'noSuchUser', { identifier: body.identifier });
       // ret.toJSON()
-    }
+      }
 
-    if (userInfo.passwordHash === t.getSaltedPasswordHash(body.password, userInfo.userId)) {
-      ret.data = userInfo;
-    } else {
-      ret = new _e('EUserAuth', 'invildUsenameOrPassowrd');
+      if (userInfo.passwordHash === t.getSaltedPasswordHash(body.password, userInfo.userId)) {
+        ret.data = userInfo;
+      } else {
+        ret = new _e('EUserAuth', 'invildUsenameOrPassowrd');
+      }
+    } catch (e) {
+      ret = e;
     }
-  } catch (e) {
-    ret = e;
+    ctx.body = ret;
   }
-  ctx.body = ret;
-};
-
-export default AuthAPICtrl;
+}();

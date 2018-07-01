@@ -4,7 +4,7 @@ import path from 'path';
 
 /** 第三方模块 */
 import yaml from 'js-yaml';
-import colors from 'colors';
+import chalk from 'chalk';
 import logger from './logger';
 
 /** 基础模块 */
@@ -22,7 +22,7 @@ YamlCC.check = () => {
     const constFile = fs.readFileSync(constFilePath);
     yaml.safeLoad(constFile);
 
-    logger(null, '常量文件  ：', colors.cyan(`${constFilePath}`));
+    logger(null, '常量文件  ：', chalk.cyan(`${constFilePath}`));
   } catch (e) {
     logger(e, '常量检测未通过，原因：', e);
   }

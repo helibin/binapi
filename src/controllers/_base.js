@@ -5,3 +5,6 @@
 /** 基础模块 */
 
 /** 项目模块 */
+
+export default class Base {
+}

@@ -8,28 +8,43 @@ import views      from 'koa-views';
 import userAgent  from 'koa-useragent';
 import bodyparser from 'koa-bodyparser';
 import cors       from 'koa-cors';
-import colors     from 'colors';
+import chalk      from 'chalk';
 import helpers    from 'handlebars-helpers';
+import handlebars from  'handlebars';
 
 /* 基础模块 */
 import CONFIG from 'config';
 import yamlCC from './base_modules/yamlCC';
 import logger from './base_modules/logger';
+import t      from './base_modules/tools';
 
 /** 项目模块 */
 import prepare from './base_modules/prepare';
 import authMid from './middlewares/authMid';
 
 /** 路由模块 */
-import indexPageRouter from './routers/indexPageRouter';
-import indexAPIRouter from './routers/indexAPIRouter';
-import usersAPIRouter from './routers/usersAPIRouter';
-import authAPIRouter from './routers/authAPIRouter';
-import templatesAPIRouter from './routers/templatesAPIRouter';
-import likesAPIRouter from './routers/likesAPIRouter';
-import testsAPIRouter from './routers/testsAPIRouter';
+import router from './routers';
 
 const app = new Koa();
+
+// 错误处理
+app.use(async (ctx, next) => {
+  await next();
+  if (ctx.status === 404) {
+    switch (ctx.accepts('json', 'html')) {
+      case 'html':
+        ctx.type = 'html';
+        ctx.state.render('404');
+        break;
+      case 'json':
+        ctx.body = t.initRet(404, 'Not Found');
+        break;
+      default:
+        ctx.type = 'text';
+        ctx.body = 'Page Not Found';
+    }
+  }
+});
 
 // 静态文件服务器
 app.use(server(`${__dirname}/static`));
@@ -70,22 +85,16 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-app.use(indexPageRouter.routes());
-
-app.use(indexAPIRouter.routes());
-app.use(usersAPIRouter.routes());
-app.use(authAPIRouter.routes());
-app.use(templatesAPIRouter.routes());
-app.use(likesAPIRouter.routes());
-app.use(testsAPIRouter.routes());
-
+app.use(router.routes());
 
 try {
   app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
     /* 服务器运行配置 */
-    logger(null, colors.green('服务器已启动'));
-    logger(null, '监听端口  ：', `${colors.cyan(CONFIG.webServer.port)}`);
-    logger(null, '运行环境  ：', `${colors.cyan(CONFIG.env)}`);
+
+    // console.log(chalk.blue('Hello world!'));
+    logger(null, chalk.green('服务器已启动'));
+    logger(null, '监听端口  ：', `${chalk.cyan(CONFIG.webServer.port)}`);
+    logger(null, '运行环境  ：', `${chalk.cyan(CONFIG.env)}`);
 
     /* 常量加载检测 */
     yamlCC.check();
@@ -94,61 +103,61 @@ try {
     for (const k in CONFIG.dbServer.mysql) {
       if (['host', 'port', 'username', 'password', 'database'].includes(k)) continue;
 
-      mysqlExtraConfigs.push(`${k}=${colors.cyan(CONFIG.dbServer.mysql[k])}`);
+      mysqlExtraConfigs.push(`${k}=${chalk.cyan(CONFIG.dbServer.mysql[k])}`);
     }
-    logger(null, 'MySQL     ：', colors.yellow(`mysql://\
-      ${colors.cyan(CONFIG.dbServer.mysql.username)}@\
-      ${colors.cyan(CONFIG.dbServer.mysql.host)}:\
+    logger(null, 'MySQL     ：', chalk.yellow(`mysql://\
+      ${chalk.cyan(CONFIG.dbServer.mysql.username)}@\
+      ${chalk.cyan(CONFIG.dbServer.mysql.host)}:\
       ${CONFIG.dbServer.mysql.port}/\
-      ${colors.cyan(CONFIG.dbServer.mysql.database)}?\
+      ${chalk.cyan(CONFIG.dbServer.mysql.database)}?\
       ${mysqlExtraConfigs.join('&')}`.replace(/ {2}/g, '')));
 
-    logger(null, 'Redis     ：', colors.yellow(`redis://\
-      ${colors.cyan(CONFIG.dbServer.redis.host)}:\
+    logger(null, 'Redis     ：', chalk.yellow(`redis://\
+      ${chalk.cyan(CONFIG.dbServer.redis.host)}:\
       ${CONFIG.dbServer.redis.port}/\
-      ${colors.cyan(CONFIG.dbServer.redis.db)}`.replace(/ {2}/g, '')));
+      ${chalk.cyan(CONFIG.dbServer.redis.db)}`.replace(/ {2}/g, '')));
 
     /* 服务器安全配置 */
     if (CONFIG.dbServer.mysql.password) {
-      logger(null, 'MySQL密码 ：', colors.green('启用'));
+      logger(null, 'MySQL密码 ：', chalk.green('启用'));
     } else {
-      logger(null, 'MySQL密码 ：', colors.red('禁用'), colors.magenta('存在安全风险！'));
+      logger(null, 'MySQL密码 ：', chalk.red('禁用'), chalk.magenta('存在安全风险！'));
     }
 
     if (CONFIG.dbServer.redis.password) {
-      logger(null, 'Redis密码 ：', colors.green('启用'));
+      logger(null, 'Redis密码 ：', chalk.green('启用'));
     } else {
-      logger(null, 'Redis密码 ：', colors.red('禁用'), colors.magenta('存在安全风险！'));
+      logger(null, 'Redis密码 ：', chalk.red('禁用'), chalk.magenta('存在安全风险！'));
     }
 
     /* 用户认证配置 */
     if (CONFIG.webServer.xAuthHeader) {
-      logger(null, 'Header认证：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthHeader)}`));
+      logger(null, 'Header认证：', chalk.yellow(`启用 ${chalk.cyan(CONFIG.webServer.xAuthHeader)}`));
     } else {
-      logger(null, 'Header认证：', colors.white('禁用'));
+      logger(null, 'Header认证：', chalk.white('禁用'));
     }
 
     if (CONFIG.webServer.xAuthQuery) {
-      logger(null, 'Query 认证：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthQuery)}`));
+      logger(null, 'Query 认证：', chalk.yellow(`启用 ${chalk.cyan(CONFIG.webServer.xAuthQuery)}`));
     } else {
-      logger(null, 'Query 认证：', colors.white('禁用'));
+      logger(null, 'Query 认证：', chalk.white('禁用'));
     }
 
     if (CONFIG.webServer.xAuthCookie) {
-      logger(null, 'Cookie认证：', colors.yellow(`启用 ${colors.cyan(CONFIG.webServer.xAuthCookie)}`));
+      logger(null, 'Cookie认证：', chalk.yellow(`启用 ${chalk.cyan(CONFIG.webServer.xAuthCookie)}`));
     } else {
-      logger(null, 'Cookie认证：', colors.white('禁用'));
+      logger(null, 'Cookie认证：', chalk.white('禁用'));
     }
 
     if (!CONFIG.webServer.xAuthHeader
       && !CONFIG.webServer.xAuthQuery
       && !CONFIG.webServer.xAuthCookie) {
-      logger(null, colors.red('未启用任何认证方式，请检查配置中`webServer.xAuth*`部分'));
+      logger(null, chalk.red('未启用任何认证方式，请检查配置中`webServer.xAuth*`部分'));
       process.exit(1);
     }
 
-    logger(null, colors.green('Have fun @'),
-      colors.blue(`http://${CONFIG.webServer.host}:${CONFIG.webServer.port}!`));
+    logger(null, chalk.green('Have fun @'),
+      chalk.blue(`http://${CONFIG.webServer.host}:${CONFIG.webServer.port}!`));
   });
 } catch (ex) {
   logger(null, ex);

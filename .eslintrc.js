@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": "airbnb-base",
+  'extends': 'airbnb-base',
   'rules': {
     'linebreak-style': [
       2,
@@ -29,10 +29,7 @@ module.exports = {
       }
     }],
     'prefer-destructuring': 0,
-    'no-restricted-syntax': [
-      2,
-      'BinaryExpression[operator="in"]'
-    ],
+    'no-restricted-syntax': 0,
     'no-continue': 0,
     'no-console': 0,
     'no-param-reassign': 0,
@@ -43,9 +40,10 @@ module.exports = {
       'afterColon': true,
       'align': 'colon'
     }],
-    "no-multi-spaces": 0,
-    "sort-vars": [0, {
-      "ignoreCase": true
-    }]
+    'no-multi-spaces': 0,
+    'sort-vars': [0, {
+      'ignoreCase': true
+    }],
+    'consistent-return': 0,
   }
 };

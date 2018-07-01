@@ -1,19 +1,10 @@
-/** 内建模块 */
-
-/** 第三方模块 */
-import Router from 'koa-router';
-
-/** 基础模块 */
-import CONFIG from 'config';
 
 /** 项目模块 */
-import Ctrl from '../controllers/likesAPICtrl';
+import Ctrl from '../controllers';
+import router from './_base';
 
+router.get('/likes', Ctrl.likeCtrl.list);
 
-const apiRouter = new Router({ prefix: CONFIG.apiServer.prefix });
+router.post('/likes', Ctrl.likeCtrl.add);
 
-apiRouter.get('/likes', Ctrl.listLikes);
-
-apiRouter.post('/likes', Ctrl.addLike);
-
-export default apiRouter;
+export default router;

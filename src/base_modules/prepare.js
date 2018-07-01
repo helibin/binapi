@@ -2,7 +2,7 @@
 import bytes from 'bytes';
 
 /** 第三方模块 */
-import colors from 'colors';
+import chalk from 'chalk';
 
 /** 基础模块 */
 import CONFIG from 'config';
@@ -35,7 +35,7 @@ Prepare.response = async (ctx, next) => {
     // 包装日志函数，使日志中包含RequestId
     ctx.state.logger = (...args) => {
       const logLevel = args.shift();
-      args.unshift(colors.yellow(`[ReqId: ${requestId}]`));
+      args.unshift(chalk.yellow(`[ReqId: ${requestId}]`));
 
       logger(logLevel, ...args);
     };
