@@ -10,41 +10,24 @@ import bodyparser from 'koa-bodyparser';
 import cors       from 'koa-cors';
 import chalk      from 'chalk';
 import helpers    from 'handlebars-helpers';
-import handlebars from  'handlebars';
 
 /* 基础模块 */
 import CONFIG from 'config';
 import yamlCC from './base_modules/yamlCC';
 import logger from './base_modules/logger';
-import t      from './base_modules/tools';
 
 /** 项目模块 */
 import prepare from './base_modules/prepare';
+import errorHandler from './base_modules/errorHandler';
 import authMid from './middlewares/authMid';
 
 /** 路由模块 */
-import router from './routers';
+import { router, pageRouter } from './routers';
 
 const app = new Koa();
 
 // 错误处理
-app.use(async (ctx, next) => {
-  await next();
-  if (ctx.status === 404) {
-    switch (ctx.accepts('json', 'html')) {
-      case 'html':
-        ctx.type = 'html';
-        ctx.state.render('404');
-        break;
-      case 'json':
-        ctx.body = t.initRet(404, 'Not Found');
-        break;
-      default:
-        ctx.type = 'text';
-        ctx.body = 'Page Not Found';
-    }
-  }
-});
+app.use(errorHandler);
 
 // 静态文件服务器
 app.use(server(`${__dirname}/static`));
@@ -86,6 +69,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(router.routes());
+app.use(pageRouter.routes());
 
 try {
   app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {

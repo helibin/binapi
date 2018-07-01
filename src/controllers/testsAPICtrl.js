@@ -24,7 +24,6 @@ M.test = async (ctx, next) => {
     console.time('math');
     console.log(t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'), typeof t.eval('0.3 / 0.1'), ',,,');
     console.timeEnd('math');
-    console.log(err.toJSON(), ',,,');
     // new Error('error from outside')
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr

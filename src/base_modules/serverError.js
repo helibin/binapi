@@ -21,7 +21,7 @@ export default class ServerError extends Error {
     if (codeName === 'EClientNotFound') {
       this.status = 404;
     } else {
-      const prefix = (`${Math.abs(this.err)}`)[0];
+      const prefix = (`${Math.abs(this.respCode)}`)[0];
       switch (prefix) {
         case '0':
           this.status = 200;
@@ -42,13 +42,5 @@ export default class ServerError extends Error {
           break;
       }
     }
-  }
-
-  toJSON() {
-    return {
-      err : this.respCode,
-      msg : this.respMessage,
-      data: this.respData,
-    };
   }
 }

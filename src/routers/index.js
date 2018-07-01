@@ -5,17 +5,15 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import router from './_base';
-
+import { router, pageRouter } from './_base';
 // API
 require('./indexAPIRouter');
 require('./usersAPIRouter');
 require('./authAPIRouter');
-require('./templatesAPIRouter');
 require('./likesAPIRouter');
 require('./testsAPIRouter');
 
 // PAGE
 require('./indexPageRouter');
 
-export default router;
+export { router, pageRouter };

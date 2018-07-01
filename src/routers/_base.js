@@ -10,6 +10,7 @@ import CONFIG from 'config';
 
 
 const router = new Router({ prefix: CONFIG.apiServer.prefix });
+const pageRouter = new Router();
 
 // index
 router.get('/', (ctx) => {
@@ -28,3 +29,4 @@ router.get('/check-node', (ctx) => {
 });
 
 export default router;
+export { router,  pageRouter };

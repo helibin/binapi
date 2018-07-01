@@ -5,9 +5,9 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import Ctrl from '../controllers/authAPICtrl';
-import router from './_base';
+import { authAPICtrl } from '../controllers';
+import { router }      from './_base';
 
-router.post('/auth/sign-in', Ctrl.signIn);
 
-export default router;
+router.post('/auth/sign-in',
+  authAPICtrl.signIn);

@@ -1,8 +1,8 @@
 /** 内建模块 */
-import bytes from 'bytes';
 
 /** 第三方模块 */
 import chalk from 'chalk';
+import bytes from 'bytes';
 
 /** 基础模块 */
 import CONFIG from 'config';
@@ -14,12 +14,9 @@ import logger from './logger';
 const Prepare = {};
 Prepare.response = async (ctx, next) => {
   try {
-    ctx.state.startTime = Date.now();
-
     const clientId = ctx.cookies.get('_clientId') || t.genRandStr(24);
     const requestId = t.genUUID();
     const locale = ctx.cookies.get('_locale') || 'zh-CN';
-    global.ctxData = { test: 'ctxData', ta: 233 };
 
     ctx.state.clientId = clientId;
     ctx.state.requestId = requestId;
@@ -57,7 +54,6 @@ Prepare.response = async (ctx, next) => {
         query    : ctx.query,
         params   : ctx.params,
         userAgent: ctx.userAgent,
-        time     : Date.now() - ctx.state.startTime,
         pageData : pageData || {},
       };
 
@@ -78,17 +74,14 @@ Prepare.response = async (ctx, next) => {
     await next();
   } catch (e) {
     ctx.state.requestError = true;
-
-    // 自定义错误处理
-    ctx.status = e.status || 500;
-    ctx.body = e.body || e.message;
-    ctx.state.logger(e, ctx.url);
-    ctx.state.logger(e, `${e.stack}`);
+    throw e;
   } finally {
-  // 打印请求
-    ctx.state.logger(ctx.state.requestError, `响应请求：${JSON.stringify({
+    // 请求结束并打印响应数据
+    const xResponseTime = Date.now() - ctx.state.startTime;
+    ctx.set('x-response-time', xResponseTime);
+    ctx.state.logger(ctx.state.requestError, `响应数据：${JSON.stringify({
       ip      : ctx.ip,
-      location: JSON.stringify(await t.getLocationByIP(ctx.ip)),
+      location: await t.getLocationByIP('ctx.ip'),
       referer : ctx.get('referer') || undefined,
       host    : ctx.host,
       browser : ctx.userAgent.browser,
@@ -98,8 +91,9 @@ Prepare.response = async (ctx, next) => {
       method  : ctx.method,
       url     : ctx.originalUrl,
       query   : ctx.query,
+      post    : ctx.request.body,
       type    : ctx.type,
-      time    : `${Date.now() - ctx.state.startTime}ms`,
+      time    : xResponseTime,
       size    : bytes(ctx.length) ? bytes(ctx.length).toLowerCase() : undefined,
     })}`);
   }

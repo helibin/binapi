@@ -5,12 +5,11 @@
 /** 基础模块 */
 
 /** 项目模块 */
+import Base from './_base';
 
 
-const M = {};
-
-M.index = async (ctx) => {
-  await ctx.state.render('index', { body: 'index' });
-};
-
-export default M;
+export default new class M extends Base {
+  async index(ctx) {
+    await ctx.state.render('index', { body: 'index' });
+  }
+}();

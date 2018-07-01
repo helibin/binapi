@@ -11,6 +11,7 @@ import maxmind from 'maxmind';
 import axios from 'axios';
 import si from 'systeminformation';
 import math from 'mathjs';
+import { promises } from 'fs';
 import logger from './logger';
 
 /** 基础模块 */
@@ -199,10 +200,10 @@ M.get = async (param) => {
   try {
     const res = await axios.get(param.url);
     ret.data = res.data.data;
+    return ret;
   } catch (e) {
-    logger('debug', e, ',,,');
+    Promise.reject(e);
   }
-  return ret;
 };
 
 /**
