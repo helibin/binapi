@@ -8,8 +8,9 @@
 import Base from './_base';
 
 
-export default new class M extends Base {
+export default new class extends Base {
   async index(ctx) {
-    await ctx.state.render('index', { body: 'index' });
+    this.pageData = { body: 'index', title: 'Bin API' };
+    await ctx.state.render('index', this.pageData);
   }
 }();

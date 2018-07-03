@@ -3,35 +3,42 @@ import path from 'path';
 
 /** 第三方模块 */
 import Koa        from 'koa';
-import server     from 'koa-static';
-import views      from 'koa-views';
-import userAgent  from 'koa-useragent';
 import bodyparser from 'koa-bodyparser';
-import cors       from 'koa-cors';
 import chalk      from 'chalk';
+import cors       from 'koa-cors';
 import helpers    from 'handlebars-helpers';
+import server     from 'koa-static';
+import userAgent  from 'koa-useragent';
+import views      from 'koa-views';
 
 /* 基础模块 */
-import CONFIG from 'config';
-import yamlCC from './base_modules/yamlCC';
-import logger from './base_modules/logger';
+import {
+  CONFIG, logger, prepare, yamlCC,
+} from './base_modules';
 
 /** 项目模块 */
-import prepare from './base_modules/prepare';
-import errorHandler from './base_modules/errorHandler';
-import authMid from './middlewares/authMid';
+import {
+  authMid, errorHandler, noPageCache,
+} from './middlewares';
 
 /** 路由模块 */
-import { router, pageRouter } from './routers';
+import { pageRouter, router } from './routers';
+
+class binapp extends Koa {
+  constructor(ctx) {
+    super();
+    this.ctx = ctx;
+  }
+}
 
 const app = new Koa();
+
 
 // 错误处理
 app.use(errorHandler);
 
 // 静态文件服务器
 app.use(server(`${__dirname}/static`));
-
 // handlebars, ejs
 app.use(views(path.join(__dirname, '/views'), {
   options: {
@@ -45,7 +52,7 @@ app.use(views(path.join(__dirname, '/views'), {
   },
 }));
 
-// 中间件初始化
+// 通用中间件初始化
 app.use(userAgent);
 app.use(bodyparser());
 app.use(cors({
@@ -55,19 +62,14 @@ app.use(cors({
   },
 }));
 
+// 业务中间件初始化
 app.use(prepare.response);
 app.use(prepare.detectPageSetting);
 app.use(authMid.prepareUserInfo);
+app.use(noPageCache());
 
-// 页面禁止缓存
-app.use(async (ctx, next) => {
-  ctx.set('Cache-Control', 'no-cache,no-store,must-revalidate');
-  ctx.set('Expires', '0');
-  ctx.set('Pragma', 'no-cache');
 
-  await next();
-});
-
+// 路由加载
 app.use(router.routes());
 app.use(pageRouter.routes());
 

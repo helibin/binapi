@@ -10,9 +10,9 @@ import { router }       from './_base';
 
 
 router.get('/likes',
-  likesAPICtrl.list);
+  (...args) => likesAPICtrl.run('list', ...args));
 
 router.post('/likes',
-  likesAPICtrl.add);
+  (...args) => likesAPICtrl.run('add', ...args));
 
 export default router;

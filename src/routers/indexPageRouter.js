@@ -10,4 +10,4 @@ import { pageRouter }    from './_base';
 
 
 pageRouter.get('/',
-  indexPageCtrl.index);
+  (...args) => indexPageCtrl.run('index', ...args));

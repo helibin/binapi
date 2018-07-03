@@ -10,7 +10,7 @@ import { router }       from './_base';
 
 
 router.get('/tests',
-  testsAPICtrl.test);
+  (...args) => testsAPICtrl.run('test', ...args));
 
 router.get('/tests/location',
   testsAPICtrl.location);

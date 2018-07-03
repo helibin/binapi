@@ -3,20 +3,26 @@
 /** 第三方模块 */
 
 /** 基础模块 */
+import {
+  CONFIG, mysql, t, _e,
+} from '../base_modules';
 
 /** 项目模块 */
 
 
-export default class Base {
-  /**
-   * 定义数据模型
-   *
-   * @param {any} tableName 模型名称【数据库表名】
-   * @param {any} attributes 数据字段集合
-   * @returns 数据模型对象
-   */
+export default class {
+  constructor() {
+    this.CONFIG = CONFIG;
+    this._e     = _e;
+    this.mysql  = mysql;
+    this.t      = t;
+  }
 
-  /**
-   * 通用添加方法
-   */
+  async run(func, ctx, next) {
+    try {
+      await this[func](ctx, next);
+    } catch (err) {
+      throw err;
+    }
+  }
 }

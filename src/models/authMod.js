@@ -1,15 +1,14 @@
-
-
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-
-/** 项目模块 */
 import mysql from '../base_modules/mysqlHelper';
 
-export const Auth = mysql.sequelize.define('tb_main_auth', {
+/** 项目模块 */
+
+
+const M = mysql.sequelize.define('tb_main_auth', {
   seq: {
     type         : mysql.Sequelize.BIGINT,
     primaryKey   : true,
@@ -46,6 +45,6 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
   },
 }, { comment: 'auth认证表' });
 
-Auth.sync();
+M.sync();
 
-export default Auth;
+export default M;

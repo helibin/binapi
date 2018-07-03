@@ -3,48 +3,34 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import t from '../base_modules/tools';
-import _e from '../base_modules/serverError';
+import Base from './_base';
 
 /** 项目模块 */
 
 
-const M = {};
-
-M.test = async (ctx, next) => {
-  try {
+export default new class extends Base {
+  async test(ctx) {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
-    const randStr = t.genRandStr(10, '342121lkdsaf');
-    const err = new _e('xxx', 'xxx', { randStr });
+    const randStr = this.t.genRandStr(10, '342121lkdsaf');
+    const err = new this._e('EClientNotFound', 'xxx', { randStr });
     // await t.getIPInfo(ctx);
-    console.log(await t.getOSInfo());
 
     // const data = await si.osInfo()
     // console.log(data)
-    console.time('math');
-    console.log(t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'), typeof t.eval('0.3 / 0.1'), ',,,');
-    console.timeEnd('math');
+    // console.time('math');
+    // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'), typeof this.t.eval('0.3 / 0.1'), ',,,');
+    // console.timeEnd('math');
     // new Error('error from outside')
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
     ctx.state.sendJSON(err);
-  } catch (e) {
-    ctx.state.logger('error', e, ',,,');
-    next(e);
   }
-};
 
-M.location = async (ctx, next) => {
-  try {
+  async location(ctx) {
     const ip = ctx.query.ip;
-    const location = (await t.getLocationByIP(ip)) || {};
+    const location = (await this.t.getLocationByIP(ip)) || {};
 
     ctx.state.sendJSON(location);
-  } catch (e) {
-    ctx.state.logger('error', e, ',,,');
-    next(e);
   }
-};
-
-export default M;
+}();

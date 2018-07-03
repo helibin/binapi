@@ -7,7 +7,6 @@ import usersAPICtrl     from './usersAPICtrl';
 
 import indexPageCtrl from './indexPageCtrl';
 
-
 export {
   authAPICtrl,
   indexAPICtrl,

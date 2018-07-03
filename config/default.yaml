@@ -5,8 +5,8 @@
 env: 'production'
 
 # 管理界面URL
-adminURL:
-  'https://admin.helibin.com'
+manageURL:
+  'https://manage.helibin.com'
 
 # 数据库配置
 dbServer:

@@ -13,8 +13,8 @@ import {
 export default class {
   constructor() {
     this.CONFIG = CONFIG;
-    this._e     = _e;
-    this.t      = t;
+    this._e = _e;
+    this.t = t;
   }
 
   async run(func, ctx, next) {

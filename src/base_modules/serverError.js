@@ -6,14 +6,13 @@
 
 /** 项目模块 */
 import { CONST } from './yamlCC';
+import i18n from '../i18n';
 
 
-export default class ServerError extends Error {
+export default class ServerError {
   constructor(codeName, message, data) {
-    super();
-
-    this.name = 'myError';
-    this.respCode = CONST.respCode[codeName];
+    this.name = '_myError';
+    this.respCode = CONST.respCode[codeName] || CONST.respCode.Unknown;
     this.respMessage = message;
     this.respData = data;
 
@@ -42,5 +41,13 @@ export default class ServerError extends Error {
           break;
       }
     }
+  }
+
+  toJSON(locale) {
+    return {
+      err : this.respCode,
+      msg : i18n[locale].errorMsg[this.respMessage] || this.respMessage,
+      data: this.respData,
+    };
   }
 }

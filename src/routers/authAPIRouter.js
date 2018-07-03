@@ -10,4 +10,7 @@ import { router }      from './_base';
 
 
 router.post('/auth/sign-in',
-  authAPICtrl.signIn);
+  (...args) => authAPICtrl.run('signIn', ...args));
+
+router.post('/auth/sign-up',
+  (...args) => authAPICtrl.run('signUp', ...args));

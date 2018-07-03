@@ -7,9 +7,11 @@ import bytes from 'bytes';
 /** 基础模块 */
 import CONFIG from 'config';
 import t from './tools';
+import logger from './logger';
 
 /** 项目模块 */
-import logger from './logger';
+import pkg from '../../package';
+
 
 const Prepare = {};
 Prepare.response = async (ctx, next) => {
@@ -21,6 +23,8 @@ Prepare.response = async (ctx, next) => {
     ctx.state.clientId = clientId;
     ctx.state.requestId = requestId;
     ctx.state.locale = locale;
+    ctx.state.shortLocale = locale.split('-')[0];
+    ctx.state.accepts = ctx.url.startsWith(CONFIG.apiServer.prefix) ? 'json' : ctx.accepts('json', 'html');
 
     ctx.cookies.set('_clientId', clientId, {
       maxAge   : 365 * 24 * 60 * 60 * 1000, // cookie有效时长
@@ -55,6 +59,7 @@ Prepare.response = async (ctx, next) => {
         params   : ctx.params,
         userAgent: ctx.userAgent,
         pageData : pageData || {},
+        pkg,
       };
 
       await ctx.render(view, renderData);
@@ -64,7 +69,8 @@ Prepare.response = async (ctx, next) => {
     };
 
     // 包装数据发送函数，自动打印日志并包含RequestId
-    ctx.state.sendJSON = (data) => {
+    ctx.state.sendJSON = (data = {}) => {
+      if (data.name === '_myError') data = data.toJSON(ctx.state.shortLocale);
       data.requestId = ctx.state.requestId;
 
       ctx.accepts('json');
@@ -73,7 +79,9 @@ Prepare.response = async (ctx, next) => {
 
     await next();
   } catch (e) {
-    ctx.state.requestError = true;
+    if (e.name !== '_myError') {
+      ctx.state.requestError = true;
+    }
     throw e;
   } finally {
     // 请求结束并打印响应数据

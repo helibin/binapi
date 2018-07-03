@@ -11,10 +11,9 @@ import maxmind from 'maxmind';
 import axios from 'axios';
 import si from 'systeminformation';
 import math from 'mathjs';
-import { promises } from 'fs';
-import logger from './logger';
 
 /** 基础模块 */
+import logger from './logger';
 
 /** 项目模块 */
 
@@ -29,7 +28,7 @@ const M = {};
  * @param {object} data 响应数据
  * @returns {object} {err: 0, msg: ''}
  */
-M.initRet = (err = 0, msg = '', data = {}) => ({
+M.initRet = (err = 0, msg = '', data) => ({
   err,
   msg,
   data,
@@ -57,7 +56,7 @@ M.genUUID = () => uuid.v4().replace(/-/g, '');
  *
  * @returns {string} randStr
  */
-M.genRandStr = (len = 32,
+M.genRandStr =  (len = 32,
   chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
   let randStr = '';
   while (randStr.length < len) {
@@ -77,7 +76,7 @@ M.genRandStr = (len = 32,
  * @param {*} [pageSize=ctx.state.pageSetting.pageSize] 分页大小
  * @returns {object} data 分页数据
  */
-M.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
+M.genPageInfo =  (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageSize) => {
   const data = {};
 
   data.list = dataList.splice((page - 1) * pageSize, pageSize);
@@ -96,14 +95,14 @@ M.genPageInfo = (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.pageS
  * @param {string} str md5加密字符串
  * @returns {string} md5 str
  */
-M.getMd5 = str => crypto.createHash('md5').update(str).digest('hex');
+M.getMd5 =  str => crypto.createHash('md5').update(str).digest('hex');
 
 /**
  * sha1加密
  * @param {string} str sha1加密字符串
  * @returns {string} sha1 str
  */
-M.getSha1 = str => crypto.createHash('sha1').update(str).digest('hex');
+M.getSha1 =  str => crypto.createHash('sha1').update(str).digest('hex');
 
 /**
  * 获取HMAC-SHA1值
@@ -113,7 +112,7 @@ M.getSha1 = str => crypto.createHash('sha1').update(str).digest('hex');
  * @param {string} output 输出格式(hex|base64)
  * @returns {string} hmac-sha1 str
  */
-M.getHmacSha1 = (str, key, output) => {
+M.getHmacSha1 =  (str, key, output) => {
   const c = crypto.createHash('sha1', key).update(str);
 
   if (output === 'base64') {
@@ -129,7 +128,7 @@ M.getHmacSha1 = (str, key, output) => {
  * @param {string} salt 盐
  * @returns {string} salted hash str
  */
-M.getSaltedHashStr = (md5Str, secret, salt = CONFIG.webServer.salt) => {
+M.getSaltedHashStr =  (md5Str, secret, salt = CONFIG.webServer.salt) => {
   const strToHash = `@${md5Str}@${secret}@${salt}@`;
 
   return M.getSha1(strToHash);
@@ -142,7 +141,7 @@ M.getSaltedHashStr = (md5Str, secret, salt = CONFIG.webServer.salt) => {
  * @param {*} ip ip地址
  * @returns {object} ipInfo
  */
-M.getIPInfo = (ip) => {
+M.getIPInfo = async (ip) => {
   try {
     return new Promise((resolve, reject) => {
       maxmind.open(path.join(__dirname, '../databases/GeoLite2-City.mmdb'), (err, cityLookup) => {
@@ -152,8 +151,9 @@ M.getIPInfo = (ip) => {
         return resolve(ipInfo);
       });
     });
-  } catch (e) {
-    return null;
+  } catch (ex) {
+    logger(ex, 'getIPInfo', ex);
+    Promise.reject(ex);
   }
 };
 
@@ -188,8 +188,9 @@ M.getIPInfoByTaobao = async (ip = 'myip') => {
   try {
     const ipInfo = await M.get({ url: CONFIG.openAPI.taobao.ip + ip });
     return ipInfo;
-  } catch (e) {
-    return null;
+  } catch (ex) {
+    logger(ex, 'getIPInfoByTaobao', ex);
+    Promise.reject(ex);
   }
 };
 
@@ -201,8 +202,9 @@ M.get = async (param) => {
     const res = await axios.get(param.url);
     ret.data = res.data.data;
     return ret;
-  } catch (e) {
-    Promise.reject(e);
+  } catch (ex) {
+    logger(ex, 'get', ex);
+    Promise.reject(ex);
   }
 };
 
@@ -223,6 +225,7 @@ M.encryptoByAES = (rawText, key = CONFIG.AES.key, iv = CONFIG.AES.iv) => {
     ];
     return chunks.join('');
   } catch (ex) {
+    logger.error(ex, ex);
     return null;
   }
 };

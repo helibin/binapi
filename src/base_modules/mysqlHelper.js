@@ -29,11 +29,11 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
 });
 
 // 测试db连接
-// sequelize.authenticate().then(() => {
-//   console.log('连接成功！');
-// }).catch((err) => {
-//   console.error('无法连接至数据库：', err);
-// });
+sequelize.authenticate().then(() => {
+  logger('debug', '连接成功！');
+}).catch((err) => {
+  logger(err, '无法连接至数据库：', err);
+});
 
 export default {
   sequelize,

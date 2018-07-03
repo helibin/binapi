@@ -18,13 +18,21 @@ const M = {};
 
 // level: [ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF]
 log4js.configure({
-  appenders : { out: { type: 'stdout' } },
+  appenders: {
+    out: {
+      type      : CONFIG.env === 'production' ? 'file' : 'stdout',
+      filename  : './logs/all.log',
+      maxLogSize: 10240,
+      backups   : 10,
+    },
+  },
   categories: {
     default: {
       appenders: ['out'],
       level    : CONFIG.webServer.logLevel,
     },
   },
+  pm2: true,
 });
 
 let hostName = os.hostname();
