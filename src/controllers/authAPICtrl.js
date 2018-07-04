@@ -18,7 +18,7 @@ export default new class extends Base  {
       attributes: { exclude: ['seq'] },
       where     : {
         $or: {
-          userId    : body.identifier,
+          user_id   : body.identifier,
           identifier: body.identifier,
         },
       },
@@ -28,12 +28,11 @@ export default new class extends Base  {
     if (!authInfo) {
       throw new this._e('EClientNotFound', 'noSuchUser', { identifier: body.identifier });
     }
-    if (authInfo.passwordHash !== this.t.getSaltedHashStr(body.password, authInfo.userId)) {
+    if (authInfo.password !== this.t.getSaltedHashStr(body.password, authInfo.user_id)) {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    authInfo.passwordHash = undefined;
-
+    authInfo.password = undefined;
     ret.data = authInfo;
 
     ctx.state.logger('debug', `用户登录: userId=${authInfo.userId}`);
@@ -44,12 +43,11 @@ export default new class extends Base  {
     const body      = ctx.request.body;
     const ret       = this.t.initRet();
     const newUserId = this.t.genUUID();
-    const now       = Date.now();
 
     const dbCheck = await authMod.findOne({
       where: {
         $or: {
-          userId    : body.identifier,
+          user_id   : body.identifier,
           identifier: body.identifier,
         },
       },
@@ -57,11 +55,9 @@ export default new class extends Base  {
     if (dbCheck) throw new this._e('EUser', 'userIsExisted', { identifier: body.identifier });
 
     const newData = {
-      userId      : newUserId,
-      identifier  : body.identifier,
-      passwordHash: this.t.getSaltedHashStr(body.password, newUserId),
-      createdAt   : now,
-      updatedAt   : now,
+      user_id   : newUserId,
+      identifier: body.identifier,
+      password  : this.t.getSaltedHashStr(body.password, newUserId),
     };
     await authMod.create(newData).catch(async (err) => {
       err = new this._e('EDBMysql', err.message);

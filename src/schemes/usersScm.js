@@ -35,19 +35,21 @@ export const User = mysql.sequelize.define('tb_main_users', {
     validate: { isEmail: true },
     comment : '邮箱',
   },
-  extraInfo: {
+  extra_info: {
     type   : mysql.Sequelize.JSON,
     comment: '额外信息',
   },
-  createdAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '创建时间戳',
+  created_at: {
+    type        : mysql.Sequelize.DATE(3),
+    defaultValue: mysql.Sequelize.NOW,
+    allowNull   : false,
+    comment     : '创建时间戳',
   },
-  updatedAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '更新时间戳',
+  updated_at: {
+    type        : mysql.Sequelize.DATE(3),
+    allowNull   : false,
+    defaultValue: mysql.Sequelize.NOW,
+    comment     : '更新时间戳',
   },
 }, { comment: '用户信息表' });
 

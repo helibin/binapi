@@ -1,5 +1,3 @@
-
-
 /** 内建模块 */
 
 /** 第三方模块 */
@@ -15,7 +13,7 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     primaryKey   : true,
     autoIncrement: true,
   },
-  userId: {
+  user_id: {
     type     : mysql.Sequelize.CHAR(65),
     allowNull: false,
     comment  : '用户ID',
@@ -26,23 +24,25 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     allowNull: false,
     comment  : '用户标识',
   },
-  passwordHash: {
+  password: {
     type   : mysql.Sequelize.STRING,
     comment: '密码',
   },
-  uniqueId: {
+  unique_id: {
     type   : mysql.Sequelize.STRING,
     comment: '第三方接入ID',
   },
-  createdAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '创建时间戳',
+  created_at: {
+    type        : mysql.Sequelize.DATE(3),
+    defaultValue: mysql.Sequelize.NOW,
+    allowNull   : false,
+    comment     : '创建时间戳',
   },
-  updatedAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '更新时间戳',
+  updated_at: {
+    type        : mysql.Sequelize.DATE(3),
+    allowNull   : false,
+    defaultValue: mysql.Sequelize.NOW,
+    comment     : '更新时间戳',
   },
 }, { comment: 'auth认证表' });
 

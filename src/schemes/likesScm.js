@@ -25,23 +25,25 @@ export const Like = mysql.sequelize.define('tb_main_likes', {
     type   : mysql.Sequelize.STRING,
     comment: '姓名',
   },
-  logoURL: {
+  logo_url: {
     type   : mysql.Sequelize.TEXT,
     comment: 'logo',
   },
-  appName: {
+  app_name: {
     type   : mysql.Sequelize.STRING,
     comment: '来自app名称',
   },
-  createdAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '创建时间戳',
+  created_at: {
+    type        : mysql.Sequelize.DATE(3),
+    defaultValue: mysql.Sequelize.NOW,
+    allowNull   : false,
+    comment     : '创建时间戳',
   },
-  updatedAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '更新时间戳',
+  updated_at: {
+    type        : mysql.Sequelize.DATE(3),
+    allowNull   : false,
+    defaultValue: mysql.Sequelize.NOW,
+    comment     : '更新时间戳',
   },
 }, { comment: '点赞表' });
 

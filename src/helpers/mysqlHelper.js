@@ -5,7 +5,7 @@ import Sequelize from 'sequelize';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import { Logger } from './logger';
+import logger from './logger';
 
 /** 项目模块 */
 
@@ -15,11 +15,15 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   host   : dbConfig.host,
   port   : dbConfig.port,
   dialect: 'mysql',
-  logging: CONFIG.env === 'production' ? false : Logger[CONFIG.webServer.logLevel.toLowerCase()],
+  logging: CONFIG.env !== 'production',
 
   define: {
     freezeTableName: true,
-    timestamps     : false,
+    timestamps     : true,
+    underscored    : true,
+    createdAt      : false,
+    updatedAt      : false,
+    deletedAt      : false,
   },
   pool: {
     max : dbConfig.connectionLimit,
@@ -30,9 +34,9 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
 
 // 测试db连接
 sequelize.authenticate().then(() => {
-  Logger.debug('连接成功！');
+  logger('debug', '连接成功！');
 }).catch((err) => {
-  Logger.error('无法连接至数据库：', err);
+  logger(err, '无法连接至数据库：', err);
 });
 
 export default {

@@ -13,15 +13,15 @@ import { usersMod } from '../models';
 
 export default new class extends Base {
   async list(ctx) {
-    const ret = this.t.initRet();
+    let ret = this.t.initRet();
 
     const opt = {
       offset: ctx.state.pageSetting.pageStart,
       limit : ctx.state.pageSetting.pageSize,
     };
     const result = await usersMod.findAndCountAll(opt);
-    ret.data = result.rows;
-    ret.pageInfo = this.t.genPageInfo(ctx, result);
+
+    ret = this.t.genPageInfo(ctx, result.rows);
 
     ctx.state.logger('debug', '列出用户');
     ctx.state.sendJSON(ret);
@@ -41,45 +41,38 @@ export default new class extends Base {
   }
 
   async add(ctx) {
-    let ret = this.t.initRet();
+    const ret   = this.t.initRet();
+    const newData  = ctx.request.body;
+    const newId = this.t.genUUID();
 
-    const newData = {
-      id       : this.t.genUUID(),
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    Object.assign(newData, ctx.request.body);
-    try {
-      await usersMod.create(newData);
-    } catch (e) {
-      ret = e;
-    }
+    newData.id    = newId;
 
-    ret.data = { newDataId: newData.id };
-    ctx.body = ret;
+    await usersMod.create(newData);
+    ret.data = { newDataId: newId };
+
+    ctx.state.logger('debug', `新增用户: id=${newId}`, newData);
+    ctx.state.sendJSON(ret);
   }
 
   async modify(ctx) {
-    const ret = this.t.initRet();
-
+    const ret      = this.t.initRet();
     const targetId = ctx.params.targetId;
-    const nextData = { updatedAt: Date.now() };
-    Object.assign(nextData, ctx.request.body);
 
     const opt = { where: { id: targetId } };
-    await usersMod.update(nextData, opt);
+    await usersMod.update(ctx.request.body, opt);
 
-    ctx.state.logger('debug', `修改用户：userId=${ctx.params.targetId}`);
+    ctx.state.logger('debug', `修改用户：userId=${targetId}`, ctx.request.body);
     ctx.state.sendJSON(ret);
   }
 
   async delete(ctx) {
     const ret = this.t.initRet();
+    const targetId = ctx.params.targetId;
 
-    const opt = { where: { id: ctx.params.targetId } };
+    const opt = { where: { id: targetId } };
     await usersMod.destroy(opt);
 
-    ctx.state.logger('debug', `删除用户：userId=${ctx.params.targetId}`);
+    ctx.state.logger('debug', `删除用户：userId=${targetId}`);
     ctx.state.sendJSON(ret);
   }
 }();

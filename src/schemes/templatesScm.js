@@ -26,20 +26,22 @@ export const Template = mysql.sequelize.define('tb_main_templates', {
     type   : mysql.Sequelize.STRING,
     comment: '路径',
   },
-  isDisabled: {
+  is_disabled: {
     type    : mysql.Sequelize.STRING,
     validate: { isIn: [[0, 1]] },
     comment : '是否禁用',
   },
-  createdAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '创建时间戳',
+  created_at: {
+    type        : mysql.Sequelize.DATE(3),
+    defaultValue: mysql.Sequelize.NOW,
+    allowNull   : false,
+    comment     : '创建时间戳',
   },
-  updatedAt: {
-    type     : mysql.Sequelize.BIGINT,
-    allowNull: false,
-    comment  : '更新时间戳',
+  updated_at: {
+    type        : mysql.Sequelize.DATE(3),
+    allowNull   : false,
+    defaultValue: mysql.Sequelize.NOW,
+    comment     : '更新时间戳',
   },
 }, { comment: '网站模板表' });
 
