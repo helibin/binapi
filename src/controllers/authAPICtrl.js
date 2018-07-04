@@ -15,7 +15,7 @@ export default new class extends Base  {
 
     const body = ctx.request.body;
     const opt = {
-      attributes: { exclude: ['passwordHash'] },
+      attributes: { exclude: ['seq'] },
       where     : {
         $or: {
           userId    : body.identifier,
@@ -23,19 +23,20 @@ export default new class extends Base  {
         },
       },
     };
-    const userInfo = await authMod.findOne(opt);
+    const authInfo = await authMod.findOne(opt);
 
-    if (!userInfo) {
+    if (!authInfo) {
       throw new this._e('EClientNotFound', 'noSuchUser', { identifier: body.identifier });
     }
-
-    if (userInfo.passwordHash === this.t.getSaltedPasswordHash(body.password, userInfo.userId)) {
-      ret.data = userInfo;
-    } else {
+    if (authInfo.passwordHash !== this.t.getSaltedHashStr(body.password, authInfo.userId)) {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    ctx.state.logger('debug', `用户登录: userId=${userInfo.userId}`);
+    authInfo.passwordHash = undefined;
+
+    ret.data = authInfo;
+
+    ctx.state.logger('debug', `用户登录: userId=${authInfo.userId}`);
     ctx.state.sendJSON(ret);
   }
 
@@ -53,7 +54,7 @@ export default new class extends Base  {
         },
       },
     });
-    // if (dbCheck) throw new this._e('EUser', 'userIsExisted', { identifier: body.identifier });
+    if (dbCheck) throw new this._e('EUser', 'userIsExisted', { identifier: body.identifier });
 
     const newData = {
       userId      : newUserId,
@@ -62,8 +63,10 @@ export default new class extends Base  {
       createdAt   : now,
       updatedAt   : now,
     };
-    await authMod.create(newData).catch((err) => {
-      throw new this._e('EDBMysql', err.message);
+    await authMod.create(newData).catch(async (err) => {
+      err = new this._e('EDBMysql', err.message);
+      ctx.state.logger(err, ctx.url, err, '\n\n', newData);
+      throw err;
     });
 
     ctx.state.logger('debug', `用户注册：userId=${newUserId}`);

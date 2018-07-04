@@ -21,6 +21,10 @@ export default class {
     try {
       await this[func](ctx, next);
     } catch (err) {
+      if (err.name !== '_myError') {
+        ctx.state.logger(err, err);
+        throw new this._e('EDBMysql', err.message);
+      }
       throw err;
     }
   }

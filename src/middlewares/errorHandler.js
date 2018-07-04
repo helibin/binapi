@@ -37,8 +37,6 @@ export default async (ctx, next) => {
       }
     }
   } catch (err) {
-    ctx.state.logger('debug', err);
-
     ctx.status = err.status || 500;
     if (err.name === '_myError') { // 自定义异常处理
       if (ctx.state.accepts === 'json') {
@@ -47,7 +45,7 @@ export default async (ctx, next) => {
     } else { // 程序异常
       const stackLines = err.stack.split('\n');
       for (const stackLine of stackLines) {
-        ctx.state.logger('error', stackLine);
+        ctx.state.logger(err, stackLine);
       }
 
       if (ctx.state.accepts === 'json') {
