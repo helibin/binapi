@@ -3,9 +3,9 @@
 /** 第三方模块 */
 
 /** 基础模块 */
+import { router } from './_base';
 
 /** 项目模块 */
-import { router } from './_base';
 
 
 router.get('/index',

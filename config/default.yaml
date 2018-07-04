@@ -57,6 +57,16 @@ openAPI:
   taobao:
     ip: 'http://ip.taobao.com/service/getIpInfo2.php?ip='
 
+# log4js日志等级列表
+logLevels:
+  - all
+  - trace
+  - debug
+  - info
+  - warn
+  - error
+  - fatal
+
 # hbs模板
 hbs:
   partials:

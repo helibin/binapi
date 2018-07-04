@@ -14,7 +14,7 @@ import views      from 'koa-views';
 /* 基础模块 */
 import {
   CONFIG, logger, prepare, yamlCC,
-} from './base_modules';
+} from './helpers';
 
 /** 项目模块 */
 import {
@@ -24,15 +24,8 @@ import {
 /** 路由模块 */
 import { pageRouter, router } from './routers';
 
-class binapp extends Koa {
-  constructor(ctx) {
-    super();
-    this.ctx = ctx;
-  }
-}
 
 const app = new Koa();
-
 
 // 错误处理
 app.use(errorHandler);

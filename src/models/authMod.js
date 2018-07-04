@@ -3,7 +3,7 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import mysql from '../base_modules/mysqlHelper';
+import mysql from '../helpers/mysqlHelper';
 
 /** 项目模块 */
 

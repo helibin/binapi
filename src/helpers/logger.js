@@ -41,17 +41,17 @@ hostName = hostName || hostName[0] || 'webServer';
 M.logger = (...args) => {
   let logLevel = args.shift();
 
-  if (!['trace', 'debug', 'info', 'warn', 'error', 'fatal'].includes(logLevel)) {
+  if (!CONFIG.logLevels.includes(logLevel)) {
     logLevel = logLevel ? 'error' : 'info';
   }
 
   log4js.getLogger(hostName)[logLevel](...args);
 };
 
-for (const logLevel of ['trace', 'debug', 'info', 'warn', 'error', 'fatal']) {
+for (const logLevel of CONFIG.logLevels) {
   M[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
 }
 
 
 export default M.logger;
-exports = M;
+export { M as Logger  };

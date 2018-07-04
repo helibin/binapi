@@ -5,50 +5,46 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import t from '../base_modules/tools';
-
-/** 项目模块 */
-import usersMod from '../models/usersMod';
 import Base from './_base';
 
+/** 项目模块 */
+import { usersMod } from '../models';
 
-export default new class M extends Base {
+
+export default new class extends Base {
   async list(ctx) {
-    let ret = t.initRet();
+    const ret = this.t.initRet();
 
     const opt = {
       offset: ctx.state.pageSetting.pageStart,
       limit : ctx.state.pageSetting.pageSize,
     };
-    try {
-      const result = await usersMod.findAndCountAll(opt);
-      ret.data = result.rows;
+    const result = await usersMod.findAndCountAll(opt);
+    ret.data = result.rows;
+    ret.pageInfo = this.t.genPageInfo(ctx, result);
 
-      ret.pageInfo = t.genPageInfo(ctx, result);
-    } catch (e) {
-      ret = e;
-    }
-    ctx.body = ret;
+    ctx.state.logger('debug', '列出用户');
+    ctx.state.sendJSON(ret);
   }
 
   async get(ctx) {
-    let ret = t.initRet();
+    const ret = this.t.initRet();
+    const targetId = ctx.params.targetId;
 
-    const opt = { where: { id: ctx.params.targetId } };
+    const opt = { where: { id: targetId } };
+    ret.data = await usersMod.findOne(opt);
 
-    try {
-      ret.data = await usersMod.findOne(opt);
-    } catch (e) {
-      ret = e;
-    }
-    ctx.body = ret;
+    if (!ret.data) throw new this._e('EClientNotFound', 'noSuchUser', { userId: targetId });
+
+    ctx.state.logger('debug', `获取用户：userId=${targetId}`);
+    ctx.state.sendJSON(ret);
   }
 
   async add(ctx) {
-    let ret = t.initRet();
+    let ret = this.t.initRet();
 
     const newData = {
-      id       : t.genUUID(),
+      id       : this.t.genUUID(),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
@@ -64,34 +60,26 @@ export default new class M extends Base {
   }
 
   async modify(ctx) {
-    let ret = t.initRet();
+    const ret = this.t.initRet();
 
     const targetId = ctx.params.targetId;
     const nextData = { updatedAt: Date.now() };
     Object.assign(nextData, ctx.request.body);
 
     const opt = { where: { id: targetId } };
+    await usersMod.update(nextData, opt);
 
-    try {
-      await usersMod.update(nextData, opt);
-    } catch (e) {
-      ret = e;
-    }
-
-    ctx.body = ret;
+    ctx.state.logger('debug', `修改用户：userId=${ctx.params.targetId}`);
+    ctx.state.sendJSON(ret);
   }
 
   async delete(ctx) {
-    let ret = t.initRet();
+    const ret = this.t.initRet();
 
     const opt = { where: { id: ctx.params.targetId } };
+    await usersMod.destroy(opt);
 
-    try {
-      await usersMod.destroy(opt);
-    } catch (e) {
-      ret = e;
-    }
-
-    ctx.body = ret;
+    ctx.state.logger('debug', `删除用户：userId=${ctx.params.targetId}`);
+    ctx.state.sendJSON(ret);
   }
 }();

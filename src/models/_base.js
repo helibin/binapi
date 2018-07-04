@@ -5,7 +5,7 @@
 /** 基础模块 */
 import {
   CONFIG, mysql, t, _e,
-} from '../base_modules';
+} from '../helpers';
 
 /** 项目模块 */
 

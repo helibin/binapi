@@ -3,7 +3,7 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import { _e } from '../base_modules';
+import { _e } from '../helpers';
 
 /** 项目模块 */
 import { authMod } from '../models';

@@ -5,7 +5,7 @@
 /** 基础模块 */
 import {
   CONFIG, _e, t,
-} from '../base_modules';
+} from '../helpers';
 
 /** 项目模块 */
 

@@ -7,7 +7,7 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import mysql from '../base_modules/mysqlHelper';
+import mysql from '../helpers/mysqlHelper';
 
 export const Auth = mysql.sequelize.define('tb_main_auth', {
   seq: {

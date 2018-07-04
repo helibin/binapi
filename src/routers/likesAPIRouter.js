@@ -14,5 +14,3 @@ router.get('/likes',
 
 router.post('/likes',
   (...args) => likesAPICtrl.run('add', ...args));
-
-export default router;

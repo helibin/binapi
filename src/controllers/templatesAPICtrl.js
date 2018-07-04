@@ -3,31 +3,29 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import t from '../base_modules/tools';
+import Base from './_base';
 
 /** 项目模块 */
-import templatesMod from '../models/templatesMod';
+import { templatesMod } from '../models';
 
 
-const M = {};
+export default new class extends Base {
+  async listTemplates(ctx) {
+    let ret = this.t.initRet();
 
-M.listTemplates = async (ctx) => {
-  let ret = t.initRet();
+    const opt = {
+      offset: ctx.state.pageSetting.pageStart,
+      limit : ctx.state.pageSetting.pageSize,
+    };
 
-  const opt = {
-    offset: ctx.state.pageSetting.pageStart,
-    limit : ctx.state.pageSetting.pageSize,
-  };
+    try {
+      const result = await templatesMod.findAndCountAll(opt);
+      ret.data = result.rows;
 
-  try {
-    const result = await templatesMod.findAndCountAll(opt);
-    ret.data = result.rows;
-
-    ret.pageInfo = t.genPageInfo(ctx, result);
-  } catch (e) {
-    ret = e;
+      ret.pageInfo = this.t.genPageInfo(ctx, result);
+    } catch (e) {
+      ret = e;
+    }
+    ctx.body = ret;
   }
-  ctx.body = ret;
-};
-
-export default M;
+}();
