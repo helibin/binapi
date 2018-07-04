@@ -18,7 +18,8 @@ export default new class extends Base {
     // const data = await si.osInfo()
     // console.log(data)
     // console.time('math');
-    // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'), typeof this.t.eval('0.3 / 0.1'), ',,,');
+    // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'),
+    //   typeof this.t.eval('0.3 / 0.1'), ',,,');
     // console.timeEnd('math');
     // new Error('error from outside')
     // next(new _e('xxx', 'xxx', {

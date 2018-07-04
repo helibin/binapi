@@ -26,7 +26,7 @@ export default new class extends Base  {
     const authInfo = await authMod.findOne(opt);
 
     if (!authInfo) {
-      throw new this._e('EClientNotFound', 'noSuchUser', { identifier: body.identifier });
+      throw new this._e('EUser', 'noSuchUser', { identifier: body.identifier });
     }
     if (authInfo.password !== this.t.getSaltedHashStr(body.password, authInfo.user_id)) {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');

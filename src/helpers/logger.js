@@ -25,11 +25,21 @@ log4js.configure({
       maxLogSize: 10240,
       backups   : 10,
     },
+    access: {
+      type    : 'dateFile',
+      filename: './logs/access.log',
+      pattern : '-yyyy-MM-dd',
+      category: 'access',
+    },
   },
   categories: {
     default: {
       appenders: ['out'],
       level    : CONFIG.webServer.logLevel,
+    },
+    access: {
+      appenders: ['access'],
+      level    : 'DEBUG',
     },
   },
   pm2: true,

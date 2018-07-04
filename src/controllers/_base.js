@@ -16,6 +16,7 @@ export default class {
     this.CONFIG = CONFIG;
     this._e     = _e;
     this.t      = t;
+    this.name = 'nana';
   }
 
   async run(func, ctx, next) {
@@ -24,5 +25,12 @@ export default class {
     } catch (err) {
       throw err;
     }
+  }
+
+  static distance(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+
+    return Math.hypot(dx, dy);
   }
 }
