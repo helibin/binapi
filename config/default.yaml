@@ -42,11 +42,9 @@ webServer:
   xAuthQuery : 'xAuthToken'   # QueryString中用户令牌字段名，`false`为禁用
   xAuthCookie: 'xAuthToken'   # Cookie中用户令牌字段名, `false`为禁用
 
-  salt: 'bin-admin'
+  salt: 'binapi'
 
-  corsWhiteList:
-    - 'admin.helibin.com'
-    - 'api.helibin.com'
+  corsWhiteList: '*'
 
 # API服务
 apiServer:

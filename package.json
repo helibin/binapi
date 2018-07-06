@@ -1,7 +1,7 @@
 {
   "name": "binapi",
   "version": "1.0.0",
-  "description": "A biz framework base on Koa",
+"description": "A biz framework base on Koa",
   "main": ".eslintrc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
