@@ -7,9 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development nodemon --watch src src/app.js",
     "start": "node src/app.js",
+    "compile": "babel src/ --out-dir app/",
     "lint": "eslint src/**/*.js",
     "prod": "cross-env NODE_ENV=production node src/app.js"
-
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-cli": "^6.26.0",
     "bytes": "^3.0.0",
     "chalk": "^2.4.1",
     "config": "^1.30.0",
@@ -41,14 +42,15 @@
     "mathjs": "^5.0.0",
     "maxmind": "^2.7.0",
     "mysql2": "^1.5.3",
+    "nodemon": "^1.17.5",
     "sequelize": "^4.38.0",
     "systeminformation": "^3.42.0",
-    "uuid": "^3.3.0"
+    "uuid": "^3.3.0",
+    "validator": "^10.4.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "nodemon": "^1.17.5"
+    "eslint-plugin-import": "^2.13.0"
   }
 }
