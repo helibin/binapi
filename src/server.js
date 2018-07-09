@@ -13,16 +13,16 @@ import views      from 'koa-views';
 
 /* 基础模块 */
 import {
-  CONFIG, logger, prepare, yamlCC,
-} from './helpers';
+  CONFIG, logger, prepare, check,
+} from './helper';
 
 /** 项目模块 */
 import {
   authMid, errorHandler, noPageCache,
-} from './middlewares';
+} from './middleware';
 
 /** 路由模块 */
-import { pageRouter, router } from './routers';
+import { pageRouter, router } from './router';
 
 
 const app = new Koa();
@@ -33,7 +33,7 @@ app.use(errorHandler);
 // 静态文件服务器
 app.use(server(`${__dirname}/static`));
 // handlebars, ejs
-app.use(views(path.join(__dirname, '/views'), {
+app.use(views(path.join(__dirname, '/view'), {
   options: {
     helpers : helpers(),
     partials: CONFIG.hbs.partials,
@@ -70,13 +70,12 @@ try {
   app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
     /* 服务器运行配置 */
 
-    // console.log(chalk.blue('Hello world!'));
     logger(null, chalk.green('服务器已启动'));
     logger(null, '监听端口  ：', `${chalk.cyan(CONFIG.webServer.port)}`);
     logger(null, '运行环境  ：', `${chalk.cyan(CONFIG.env)}`);
 
     /* 常量加载检测 */
-    yamlCC.check();
+    check();
 
     const mysqlExtraConfigs = [];
     for (const k in CONFIG.dbServer.mysql) {

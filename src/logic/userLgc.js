@@ -9,7 +9,7 @@ import joi from 'joi';
 
 
 export default {
-  signIn: {
+  list: {
     identifier: joi.string().required(),
     password  : joi.string().length(32).required(),
   },
