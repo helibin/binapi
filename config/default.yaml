@@ -29,7 +29,7 @@ dbServer:
 
 # 站点服务
 webServer:
-  host: 'localhost'
+  host: '127.0.0.1'
   port: 5080
 
   pageSize: 20
@@ -44,11 +44,11 @@ webServer:
 
   salt: 'binapi'
 
-  corsWhiteList: '*'
-
 # API服务
 apiServer:
-  prefix: '/v1'
+  prefix       : '/v1'
+  corsWhiteList: '*'
+  ipWhiteList  : '*'
 
 # 公共API
 openAPI:

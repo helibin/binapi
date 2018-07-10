@@ -7,6 +7,7 @@ import bodyparser from 'koa-bodyparser';
 import chalk      from 'chalk';
 import cors       from 'koa-cors';
 import helpers    from 'handlebars-helpers';
+import ip         from 'ip';
 import server     from 'koa-static';
 import userAgent  from 'koa-useragent';
 import views      from 'koa-views';
@@ -50,8 +51,10 @@ app.use(userAgent);
 app.use(bodyparser());
 app.use(cors({
   origin: (req) => {
-    if (CONFIG.webServer.corsWhiteList === '*') return true;
-    return CONFIG.webServer.corsWhiteList.includes(req.header.origin) ? req.header.origin : false;
+    if (CONFIG.apiServer.corsWhiteList === '*') return true;
+    return CONFIG.apiServer.corsWhiteList.includes(req.header.origin)
+      ? req.header.origin
+      : false;
   },
 }));
 
@@ -135,7 +138,7 @@ try {
     }
 
     logger(null, chalk.green('Have fun @'),
-      chalk.blue(`http://${CONFIG.webServer.host}:${CONFIG.webServer.port}!`));
+      chalk.blue(`http://${ip.address()}:${CONFIG.webServer.port}!`));
   });
 } catch (ex) {
   logger(null, ex);

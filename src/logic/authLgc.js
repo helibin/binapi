@@ -9,8 +9,8 @@ import joi from 'joi';
 
 
 export default {
-  signIn: {
-    identifier: joi.string().required(),
+  signIn: joi.object().keys({
+    identifier: joi.string().invalid('b').required(),
     password  : joi.string().length(32).required(),
-  },
+  }),
 };

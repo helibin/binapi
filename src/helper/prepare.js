@@ -1,13 +1,14 @@
 /** 内建模块 */
 
 /** 第三方模块 */
-import chalk from 'chalk';
 import bytes from 'bytes';
+import chalk from 'chalk';
+import ip    from 'ip';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import t from './tools';
 import logger from './logger';
+import t from './tools';
 
 /** 项目模块 */
 import pkg from '../../package';
@@ -16,15 +17,16 @@ import pkg from '../../package';
 const Prepare = {};
 Prepare.response = async (ctx, next) => {
   try {
-    const clientId = ctx.cookies.get('_clientId') || t.genRandStr(24);
+    const clientId  = ctx.cookies.get('_clientId') || t.genRandStr(24);
     const requestId = t.genUUID();
-    const locale = ctx.cookies.get('_locale') || 'zh-CN';
+    const locale    = ctx.cookies.get('_locale') || 'zh-CN';
 
-    ctx.state.clientId = clientId;
-    ctx.state.requestId = requestId;
-    ctx.state.locale = locale;
+    ctx.state.clientId    = clientId;
+    ctx.state.requestId   = requestId;
+    ctx.state.locale      = locale;
     ctx.state.shortLocale = locale.split('-')[0];
-    ctx.state.accepts = ctx.url.startsWith(CONFIG.apiServer.prefix) ? 'json' : ctx.accepts('json', 'html');
+    ctx.state.accepts     = ctx.url.startsWith(CONFIG.apiServer.prefix)
+      ? 'json' : ctx.accepts('json', 'html');
 
     ctx.cookies.set('_clientId', clientId, {
       maxAge   : 365 * 24 * 60 * 60 * 1000, // cookie有效时长
@@ -85,11 +87,13 @@ Prepare.response = async (ctx, next) => {
     throw e;
   } finally {
     // 请求结束并打印响应数据
+    const clientIP      = ip.isPrivate(ctx.ip) ? ip.address() : ctx.ip;
     const xResponseTime = Date.now() - ctx.state.startTime;
+
     ctx.set('x-response-time', xResponseTime);
     ctx.state.logger(ctx.state.requestError, `响应数据：${JSON.stringify({
-      ip      : ctx.ip,
-      location: await t.getLocationByIP('ctx.ip'),
+      ip      : clientIP,
+      location: await t.getLocationByIP(clientIP),
       referer : ctx.get('referer') || undefined,
       host    : ctx.host,
       browser : ctx.userAgent.browser,

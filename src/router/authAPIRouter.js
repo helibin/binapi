@@ -7,7 +7,7 @@ import { router } from './base';
 
 /** 项目模块 */
 import { authAPICtrl } from '../controller';
-import { paramMid } from '../middleware';
+import { ipMid, paramMid } from '../middleware';
 import { authLgc } from '../logic';
 
 
@@ -16,5 +16,6 @@ router.post('/auth/sign-in',
   (...args) => authAPICtrl.run('signIn', ...args));
 
 router.post('/auth/sign-up',
+  ipMid.allowAccess(),
   paramMid.check(authLgc.signUp),
   (...args) => authAPICtrl.run('signUp', ...args));

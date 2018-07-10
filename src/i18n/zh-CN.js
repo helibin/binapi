@@ -8,4 +8,15 @@ export default {
 
     noSuchPrivilege: '没有此权限',
   },
+
+  joi: {
+    key: '`{{label}}`',
+    any: {
+      required: '不能为空',
+      length  : '长度必须为{{limit}}',
+      empty   : '不允许为空',
+      invalid : '包含不合法内容`{{value}}`',
+    },
+    string: { length: '长度必须为{{limit}}' },
+  },
 };

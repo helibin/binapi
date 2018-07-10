@@ -22,7 +22,7 @@ router.post('/users',
   authMid.requirePrivilege('users_add'),
   (...args) => usersAPICtrl.run('add', ...args));
 
-router.patch('/users/:targetId',
+router.put('/users/:targetId',
   authMid.requirePrivilege('users_modify'),
   (...args) => usersAPICtrl.run('modify', ...args));
 
