@@ -13,9 +13,9 @@ import { authLgc } from '../logic';
 
 router.post('/auth/sign-in',
   paramMid.check(authLgc.signIn),
-  (...args) => authAPICtrl.run('signIn', ...args));
+  authAPICtrl.run('signIn'));
 
 router.post('/auth/sign-up',
   ipMid.allowAccess(),
   paramMid.check(authLgc.signUp),
-  (...args) => authAPICtrl.run('signUp', ...args));
+  authAPICtrl.run('signUp'));

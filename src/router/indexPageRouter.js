@@ -10,4 +10,4 @@ import { indexPageCtrl } from '../controller';
 
 
 pageRouter.get('/',
-  (...args) => indexPageCtrl.run('index', ...args));
+  indexPageCtrl.run('index'));

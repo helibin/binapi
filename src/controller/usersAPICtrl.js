@@ -19,7 +19,7 @@ export default new class extends Base {
       offset: ctx.state.pageSetting.pageStart,
       limit : ctx.state.pageSetting.pageSize,
     };
-    const result = await usersMod.findAndCountAll(opt);
+    const result = await usersMod.findAndCountAlls(opt);
 
     ret = this.t.genPageInfo(ctx, result.rows);
 

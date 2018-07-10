@@ -11,4 +11,4 @@ import { templatesAPICtrl } from '../controller';
 
 
 router.get('/templates',
-  (...args) => templatesAPICtrl.run('list', ...args));
+  templatesAPICtrl.run('list'));

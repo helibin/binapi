@@ -12,20 +12,20 @@ import { authMid } from '../middleware';
 router.get('/users',
   authMid.requireSignIn(),
   authMid.requirePrivilege('users_list'),
-  (...args) => usersAPICtrl.run('list', ...args));
+  usersAPICtrl.run('list'));
 
 router.get('/users/:targetId',
   authMid.requirePrivilege('users_get'),
-  (...args) => usersAPICtrl.run('get', ...args));
+  usersAPICtrl.run('get'));
 
 router.post('/users',
   authMid.requirePrivilege('users_add'),
-  (...args) => usersAPICtrl.run('add', ...args));
+  usersAPICtrl.run('add'));
 
 router.put('/users/:targetId',
   authMid.requirePrivilege('users_modify'),
-  (...args) => usersAPICtrl.run('modify', ...args));
+  usersAPICtrl.run('modify'));
 
 router.delete('/users/:targetId',
   authMid.requirePrivilege('users_delete'),
-  (...args) => usersAPICtrl.run('delete', ...args));
+  usersAPICtrl.run('delete'));
