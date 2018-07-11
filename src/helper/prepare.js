@@ -27,6 +27,9 @@ Prepare.response = async (ctx, next) => {
     ctx.state.shortLocale = locale.split('-')[0];
     ctx.state.accepts     = ctx.url.startsWith(CONFIG.apiServer.prefix)
       ? 'json' : ctx.accepts('json', 'html');
+    ctx.state.clientIP    = (ctx.headers['X-Forwarded-For'] || '').split(',')[0]
+    || (ctx.headers['X-Forwarded-For'] || '').split(',')[0]
+    || ctx.ip;
 
     ctx.cookies.set('_clientId', clientId, {
       maxAge   : 365 * 24 * 60 * 60 * 1000, // cookie有效时长
@@ -87,13 +90,12 @@ Prepare.response = async (ctx, next) => {
     throw e;
   } finally {
     // 请求结束并打印响应数据
-    const clientIP      = ip.isPrivate(ctx.ip) ? ip.address() : ctx.ip;
     const xResponseTime = Date.now() - ctx.state.startTime;
 
     ctx.set('x-response-time', xResponseTime);
     ctx.state.logger(ctx.state.requestError, `响应数据：${JSON.stringify({
-      ip      : clientIP,
-      location: await t.getLocationByIP(clientIP),
+      ip      : ctx.state.clientIP,
+      location: await t.getLocationByIP(ctx.state.clientIP),
       referer : ctx.get('referer') || undefined,
       host    : ctx.host,
       browser : ctx.userAgent.browser,
