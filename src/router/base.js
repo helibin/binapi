@@ -7,15 +7,18 @@ import Router from 'koa-router';
 import CONFIG from 'config';
 
 /** 项目模块 */
+import { ipMid } from '../middleware';
 
 
 const router = new Router({ prefix: CONFIG.apiServer.prefix });
 const pageRouter = new Router();
 
 // index
-router.get('/', (ctx) => {
-  ctx.body = 'Hello BinAPI!';
-});
+router.get('/',
+
+  (ctx) => {
+    ctx.body = 'Hello BinAPI!';
+  });
 
 // env
 router.get('/env', (ctx) => {
@@ -24,9 +27,11 @@ router.get('/env', (ctx) => {
 });
 
 // fix preload
-router.get('/check-node', (ctx) => {
-  ctx.body = 'success';
-});
+router.get('/check-node',
+  ipMid.allowAccess(),
+  (ctx) => {
+    ctx.body = 'success';
+  });
 
 export default router;
 export { router,  pageRouter };
