@@ -27,10 +27,11 @@ Prepare.response = async (ctx, next) => {
     ctx.state.shortLocale = locale.split('-')[0];
     ctx.state.accepts     = ctx.url.startsWith(CONFIG.apiServer.prefix)
       ? 'json' : ctx.accepts('json', 'html');
-    ctx.state.clientIP    = (ctx.headers['X-Forwarded-For'] || '').split(',')[0]
-    || (ctx.headers['X-Forwarded-For'] || '').split(',')[0]
+    ctx.state.clientIP    = (ctx.headers['x-real-ip'] || '').split(',')[0]
+    || (ctx.headers['x-forwarded-for'] || '').split(',')[0]
     || ctx.ip;
 
+    console.log('clientIP', ctx.state.clientIP);
     ctx.cookies.set('_clientId', clientId, {
       maxAge   : 365 * 24 * 60 * 60 * 1000, // cookie有效时长
       expires  : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // cookie失效时间
