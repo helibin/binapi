@@ -9,7 +9,7 @@
     "start": "node src/app.js",
     "compile": "babel src/ --out-dir app/",
     "lint": "eslint src/**/*.js",
-    "prod": "cross-env NODE_ENV=production node src/app.js"
+    "prod": "cross-env NODE_ENV=production node app/app.js"
   },
   "repository": {
     "type": "git",
@@ -46,12 +46,15 @@
     "maxmind": "^2.7.0",
     "mysql2": "^1.5.3",
     "nodemon": "^1.17.5",
+    "redis": "^2.8.0",
     "sequelize": "^4.38.0",
+    "svg-captcha": "^1.3.11",
     "systeminformation": "^3.42.0",
     "uuid": "^3.3.0",
     "validator": "^10.4.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0"

@@ -33,5 +33,15 @@ router.get('/check-node',
     ctx.body = 'success';
   });
 
+router.get('/ua', (ctx) => {
+  ctx.body = {
+    browser : ctx.userAgent.browser,
+    version : ctx.userAgent.version,
+    os      : ctx.userAgent.os,
+    platform: ctx.userAgent.platform,
+    ua      : ctx.userAgent,
+  };
+});
+
 export default router;
 export { router,  pageRouter };

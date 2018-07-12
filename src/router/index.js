@@ -7,11 +7,12 @@
 /** 项目模块 */
 import { router, pageRouter } from './base';
 // API
-require('./indexAPIRouter');
-require('./usersAPIRouter');
 require('./authAPIRouter');
+require('./captchaAPIRouter');
+require('./indexAPIRouter');
 require('./likesAPIRouter');
 require('./testsAPIRouter');
+require('./usersAPIRouter');
 
 // PAGE
 require('./indexPageRouter');

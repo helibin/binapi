@@ -8,7 +8,8 @@ import ip    from 'ip';
 /** 基础模块 */
 import CONFIG from 'config';
 import logger from './logger';
-import t from './tools';
+import Redis  from './redisHelper';
+import t      from './tools';
 
 /** 项目模块 */
 import pkg from '../../package';
@@ -31,7 +32,6 @@ Prepare.response = async (ctx, next) => {
     || (ctx.headers['x-forwarded-for'] || '').split(',')[0]
     || ctx.ip;
 
-    console.log('clientIP', ctx.state.clientIP);
     ctx.cookies.set('_clientId', clientId, {
       maxAge   : 365 * 24 * 60 * 60 * 1000, // cookie有效时长
       expires  : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // cookie失效时间
@@ -74,6 +74,12 @@ Prepare.response = async (ctx, next) => {
       ctx.body += `<!-- requestId=${requestId} -->`;
     };
 
+    // 包装SVG发送函数
+    ctx.state.sendSVG = (svg) => {
+      ctx.accepts('svg');
+      ctx.body = svg;
+    };
+
     // 包装数据发送函数，自动打印日志并包含RequestId
     ctx.state.sendJSON = (data = {}) => {
       if (data.name === '_myError') data = data.toJSON(ctx.state.shortLocale);
@@ -82,6 +88,9 @@ Prepare.response = async (ctx, next) => {
       ctx.accepts('json');
       ctx.body = data;
     };
+
+    // redis初始化
+    ctx.state.redis = new Redis(ctx);
 
     await next();
   } catch (e) {

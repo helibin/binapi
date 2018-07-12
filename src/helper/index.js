@@ -1,9 +1,11 @@
-import CONFIG           from 'config';
-import logger           from './logger';
-import mysqlHelper      from './mysqlHelper';
-import prepare          from './prepare';
-import serverError      from './serverError';
-import tools            from './tools';
+import CONFIG  from 'config';
+import captcha from './captha';
+import logger  from './logger';
+import mysql   from './mysqlHelper';
+import prepare from './prepare';
+import redis   from './redisHelper';
+import _e      from './serverError';
+import t       from './tools';
 import {
   check, CONST, PRIVILEGE,
 } from './yamlCC';
@@ -12,10 +14,12 @@ export {
   CONFIG,
   CONST,
   PRIVILEGE,
+  captcha,
   check,
-  mysqlHelper as mysql,
+  mysql,
   logger,
   prepare,
-  serverError as _e,
-  tools       as t,
+  redis,
+  _e,
+  t,
 };
