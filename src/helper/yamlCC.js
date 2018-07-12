@@ -14,14 +14,16 @@ import logger from './logger';
 
 export const check = () => {
   try {
-    let constFilePath = '../const.yaml';
-    constFilePath = path.join(__dirname, constFilePath);
+    const constFilePath = path.join(__dirname, '../const.yml');
+    const privilegeFilePath = path.join(__dirname, '../privilege.yml');
 
     /* 读取常量文件 */
-    const constFile = fs.readFileSync(constFilePath);
-    yaml.safeLoad(constFile);
+    yaml.safeLoad(fs.readFileSync(constFilePath));
+    /* 读取权限文件 */
+    yaml.safeLoad(fs.readFileSync(privilegeFilePath));
 
     logger(null, '常量文件  ：', chalk.cyan(`${constFilePath}`));
+    logger(null, '权限文件  ：', chalk.cyan(`${privilegeFilePath}`));
   } catch (e) {
     logger(e, '常量检测未通过，原因：', e);
   }
@@ -30,7 +32,7 @@ export const check = () => {
 // 加载常量
 const loadConst = () => {
   try {
-    let constFilePath = '../const.yaml';
+    let constFilePath = '../const.yml';
     constFilePath = path.join(__dirname, constFilePath);
 
     const constFile = fs.readFileSync(constFilePath);
@@ -45,13 +47,13 @@ export const CONST = loadConst();
 // 加载权限
 const loadPrivilege = () => {
   try {
-    let privilegeFilePath = '../privilege.yaml';
+    let privilegeFilePath = '../privilege.yml';
     privilegeFilePath = path.join(__dirname, privilegeFilePath);
 
     const privilegeFile = fs.readFileSync(privilegeFilePath);
     return yaml.safeLoad(privilegeFile);
   } catch (e) {
-    logger(e, '常量加载失败，原因：', e);
+    logger(e, '权限加载失败，原因：', e);
     return {};
   }
 };
