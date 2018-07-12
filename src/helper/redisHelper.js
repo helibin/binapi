@@ -1,20 +1,25 @@
 /** 内建模块 */
-import util from 'util';
+import { isNullOrUndefined } from 'util';
 
 /** 第三方模块 */
-import redis from 'redis';
-import chalk from 'chalk';
+import Promise    from 'bluebird';
+import redis      from 'redis';
+import chalk      from 'chalk';
+import sortedJSON from 'sorted-json';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import t from './tools';
 
 /** 项目模块 */
+
+/** 预处理 */
+Promise.promisifyAll(redis);
+
 
 const redisConf = CONFIG.dbServer.redis;
 const redisClientOpt = {};
 for (const k in redisConf) {
-  if (!util.isNullOrUndefined(redisClientOpt[k])) {
+  if (!isNullOrUndefined(redisClientOpt[k])) {
     redisClientOpt[k] = redisConf[k];
   }
 }
@@ -25,18 +30,32 @@ export default class {
     this.redisClient = redis.createClient(redisClientOpt);
   }
 
-  run(...args) {
+  async run(...args) {
     const command = args.shift();
 
     this.ctx.state.logger('debug',
-      `${chalk.magenta('[REDIS]')} <-
-      ${chalk.yellow(command.toUpperCase())}
-      ${JSON.stringify(args)}`);
+      `${chalk.magenta('[REDIS]')} \`${chalk.yellow(command.toUpperCase())}\` <- `,
+      JSON.stringify(args.toString()));
 
-    this.redisClient(...args);
+    return await this.redisClient[`${command}Async`](...args);
   }
 
-  delByPatten(patten) {
-    this.ctx.logger('debug', `${chalk.magenta('[REDIS]')} 按模式 ${patten} 批量删除`);
+  async addTask(queueName, task, delay = 0) {
+    const timestamp = parseInt(Date.now() / 1000 + delay, 10);
+
+    await this.run('zadd',
+      queueName,
+      timestamp,
+      sortedJSON.stringify(task));
+  }
+
+  async del(patten) {
+    this.ctx.state.logger('debug', `${chalk.magenta('[REDIS]')} 按模式 ${patten} 批量删除`);
+
+    const keys = await this.run('keys', patten);
+
+    if (keys && keys.length) {
+      return await this.run('del', keys);
+    }
   }
 }

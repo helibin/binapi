@@ -24,7 +24,9 @@ M.getSVGCaptha = (type = 'common') => async (ctx, next) => {
     color      : true,
     background : '#fff',
   });
-  // ctx.state.redis.run('setex', captcha, type);
+  await ctx.state.redis.run('setex', type, 111111, captcha.text);
+  await ctx.state.redis.del(type);
+
 
   ctx.state.sendSVG(captcha.data);
   await next();

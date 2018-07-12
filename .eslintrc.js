@@ -45,6 +45,7 @@ module.exports = {
       'ignoreCase': true
     }],
     'consistent-return': 0,
-    'no-underscore-dangle': 0
+    'no-underscore-dangle': 0,
+    'no-return-await': 0
   }
 };
