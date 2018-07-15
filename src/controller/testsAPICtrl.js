@@ -11,9 +11,9 @@ import Base from './base';
 export default new class extends Base {
   async test(ctx) {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
-    const randStr = this.t.genRandStr(10, '342121lkdsaf');
+    const randStr = this.t.genRandStrs(10, '342121lkdsaf');
     const err = new this._e('EClientNotFound', 'xxx', { randStr });
-    // await t.getIPInfo(ctx);
+    await this.t.getIPInfo(ctx.ip);
 
     // const data = await si.osInfo()
     // console.log(data)
@@ -25,7 +25,8 @@ export default new class extends Base {
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    ctx.state.sendJSON(err);
+    // ctx.state.sendJSON(err);
+    throw err;
   }
 
   async location(ctx) {

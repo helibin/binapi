@@ -4,13 +4,16 @@ import os from 'os';
 /** 第三方模块 */
 import log4js from 'log4js';
 import CONFIG from 'config';
+import Raven from 'raven';
 
 /** 基础模块 */
 
 /** 项目模块 */
 
+/** 预处理 */
+Raven.config(CONFIG.apiServer.sentryDSN).install();
 
-const M = {};
+
 /**
  * 默认情况下：
  * 仅输出至控制台
@@ -35,7 +38,7 @@ log4js.configure({
   categories: {
     default: {
       appenders: ['out'],
-      level    : CONFIG.webServer.logLevel,
+      level    : CONFIG.apiServer.logLevel,
     },
     access: {
       appenders: ['access'],
@@ -48,7 +51,7 @@ log4js.configure({
 let hostName = os.hostname();
 hostName = hostName || hostName[0] || 'webServer';
 
-M.logger = (...args) => {
+const logger = (...args) => {
   let logLevel = args.shift();
 
   if (!CONFIG.logLevels.includes(logLevel)) {
@@ -58,10 +61,25 @@ M.logger = (...args) => {
   log4js.getLogger(hostName)[logLevel](...args);
 };
 
+const Logger = {};
 for (const logLevel of CONFIG.logLevels) {
-  M[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
+  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
 }
 
+const rLog = (ex) => {
+  Raven.captureException(ex, (err, eventId) => {
+    if (err) {
+      Logger.error(`发送远程日志失败，err: ${err}`);
+    } else {
+      Logger.error(`发送远程日志，eventId: ${eventId}`);
+    }
+  });
+};
 
-export default M.logger;
-export { M as Logger  };
+
+export default logger;
+export {
+  Logger,
+  logger,
+  rLog,
+};

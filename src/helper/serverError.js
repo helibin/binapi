@@ -10,7 +10,7 @@ import i18n from '../i18n';
 
 export default class ServerError {
   constructor(codeName, message, data) {
-    this.name = '_myError';
+    this.name = 'MyError';
     this.respCode = CONST.respCode[codeName] || CONST.respCode.Unknown;
     this.respMessage = message;
     this.respData = data;

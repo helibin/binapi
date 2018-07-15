@@ -15,6 +15,7 @@ export default async (ctx, next) => {
   try {
     // 请求计时开始
     ctx.state.startTime = Date.now();
+    ctx.state.hasError = false;
 
     await next();
     // 404
@@ -22,7 +23,7 @@ export default async (ctx, next) => {
       switch (ctx.state.accepts) {
         case 'html':
           ctx.type = 'html';
-          await ctx.state.render('404', { title: '404 Not Found' });
+          await ctx.state.render('404', { title: 'o(╥﹏╥)o 404' });
           break;
         case 'json':
           ret = t.initRet('4010', 'Oops! Router Not Found.', {
@@ -36,29 +37,31 @@ export default async (ctx, next) => {
           ctx.body = 'Oops! Nothing Found.';
       }
     }
-  } catch (err) {
-    ctx.status = err.status || 500;
-    if (err.name === '_myError') { // 自定义异常处理
+  } catch (ex) {
+    ctx.status = ex.status || 500;
+    if (ex.name === 'MyError') { // 自定义异常处理
       if (ctx.state.accepts === 'json') {
-        return ctx.state.sendJSON(err);
+        return ctx.state.sendJSON(ex);
       }
     } else { // 程序异常
-      const stackLines = err.stack.split('\n');
+      if (CONFIG.env === 'production') ctx.state.rLog(ex);
+
+      const stackLines = ex.stack.split('\n');
       for (const stackLine of stackLines) {
-        ctx.state.logger(err, stackLine);
+        ctx.state.logger(ex, stackLine);
       }
 
       if (ctx.state.accepts === 'json') {
         if (CONFIG.env === 'production') {
-          const errWrap = new _e('EWebServer', 'unexpectedError');
-          return ctx.state.sendJSON(errWrap);
+          const exWrap = new _e('EWebServer', 'unexpectedError');
+          return ctx.state.sendJSON(exWrap);
         }
-        ret = t.initRet(err.name, err.message);
+        ret = t.initRet(ex.name, ex.message);
         ctx.state.sendJSON(ret);
         return;
       }
     }
     const pageData = { title: 'err-sys' };
-    await ctx.state.render('err-sys', CONFIG.env === 'production' ? pageData : pageData.err = err);
+    await ctx.state.render('err-sys', CONFIG.env === 'production' ? pageData : pageData.err = ex);
   }
 };

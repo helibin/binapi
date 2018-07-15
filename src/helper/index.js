@@ -1,6 +1,8 @@
 import CONFIG  from 'config';
-import captcha from './captha';
-import logger  from './logger';
+import {
+  logger,
+  rLog,
+}  from './logger';
 import mysql   from './mysqlHelper';
 import prepare from './prepare';
 import redis   from './redisHelper';
@@ -14,11 +16,11 @@ export {
   CONFIG,
   CONST,
   PRIVILEGE,
-  captcha,
   check,
   mysql,
   logger,
   prepare,
+  rLog,
   redis,
   _e,
   t,

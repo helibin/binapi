@@ -3,11 +3,10 @@
 /** 第三方模块 */
 import bytes from 'bytes';
 import chalk from 'chalk';
-import ip    from 'ip';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import logger from './logger';
+import { logger, rLog } from './logger';
 import Redis  from './redisHelper';
 import t      from './tools';
 
@@ -47,6 +46,8 @@ Prepare.response = async (ctx, next) => {
       logger(logLevel, ...args);
     };
 
+    ctx.state.rLog = rLog;
+
     // 包装重定向函数，自动打印日志并包含RequestId
     ctx.state.redirect = (nextUrl) => {
       ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`);
@@ -82,7 +83,7 @@ Prepare.response = async (ctx, next) => {
 
     // 包装数据发送函数，自动打印日志并包含RequestId
     ctx.state.sendJSON = (data = {}) => {
-      if (data.name === '_myError') data = data.toJSON(ctx.state.shortLocale);
+      if (data.name === 'MyError') data = data.toJSON(ctx.state.shortLocale);
       data.requestId = ctx.state.requestId;
 
       ctx.accepts('json');
@@ -94,7 +95,7 @@ Prepare.response = async (ctx, next) => {
 
     await next();
   } catch (e) {
-    if (e.name !== '_myError') {
+    if (e.name !== 'MyError') {
       ctx.state.requestError = true;
     }
     throw e;

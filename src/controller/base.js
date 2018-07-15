@@ -21,8 +21,8 @@ export default class {
     return async (ctx, next) => {
       try {
         await this[func](ctx, next);
-      } catch (err) {
-        throw err;
+      } catch (ex) {
+        throw ex;
       }
     };
   }

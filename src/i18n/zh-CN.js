@@ -17,6 +17,10 @@ export default {
       empty   : '不允许为空',
       invalid : '包含不合法内容`{{value}}`',
     },
-    string: { length: '长度必须为{{limit}}' },
+    string: {
+      length: '长度必须为{{limit}}',
+      min   : '长度不能少于{{limit}}',
+      max   : '长度不能大于{{limit}}',
+    },
   },
 };

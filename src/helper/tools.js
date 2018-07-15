@@ -35,6 +35,18 @@ M.initRet = (err = 0, msg = '', data) => ({
 });
 
 /**
+ * 生成缓存key
+ * @param {string} arg1 主题
+ * @param {string} arg2..argn 键值
+ * @returns {string} cacheStr
+ */
+M.genCacheKey = (...args) => {
+  const topic = args.shift();
+  const key = args.join('-');
+  return `cache#:topic=${topic}:key=${key}`;
+};
+
+/**
  * 生成UUID
  *
  * @returns {string} DE931ECB-E3DD-4A71-ACD1-746CAE6EF75C

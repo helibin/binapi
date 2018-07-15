@@ -1,5 +1,6 @@
 import CONFIG       from 'config';
 import authMid      from './authMid';
+import captchaMid   from './capthaMid';
 import errorHandler from './errorHandler';
 import headerMid    from './headerMid';
 import ipMid        from './ipMid';
@@ -10,6 +11,7 @@ import paramMid     from './paramMid';
 export {
   authMid,
   CONFIG,
+  captchaMid,
   errorHandler,
   headerMid,
   ipMid,

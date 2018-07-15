@@ -17,6 +17,7 @@ import {
   CONFIG, logger, prepare, check,
 } from './helper';
 
+
 /** 项目模块 */
 import {
   authMid, errorHandler, noPageCache,
