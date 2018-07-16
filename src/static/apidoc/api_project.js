@@ -1,0 +1,1 @@
+define({  "name": "example-versioning",  "version": "0.2.0",  "description": "apiDoc versioning example",  "sampleUrl": false,  "defaultVersion": "0.0.0",  "apidoc": "0.3.0",  "generator": {    "name": "apidoc",    "time": "2018-07-16T16:37:24.523Z",    "url": "http://apidocjs.com",    "version": "0.17.6"  }});
