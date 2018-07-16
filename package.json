@@ -5,11 +5,11 @@
   "main": ".eslintrc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development nodemon --watch src --watch config src/app.js",
-    "start": "node src/app.js",
-    "compile": "babel src/ --out-dir app/",
+    "dev": "cross-env NODE_ENV=development nodemon --watch src --watch config src/index.js",
+    "start": "node src/index.js",
+    "compile": "cp -rpf $PWD/src $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js $PWD/app/.babelrc",
     "lint": "eslint src/**/*.js",
-    "prod": "cross-env NODE_ENV=production node app/app.js"
+    "prod": "cross-env NODE_ENV=production node app/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "bluebird": "^3.5.1",
     "bytes": "^3.0.0",
     "chalk": "^2.4.1",
@@ -47,7 +45,6 @@
     "mathjs": "^5.0.0",
     "maxmind": "^2.7.0",
     "mysql2": "^1.5.3",
-    "nodemon": "^1.17.5",
     "raven": "^2.6.3",
     "redis": "^2.8.0",
     "sequelize": "^4.38.0",
@@ -59,9 +56,13 @@
     "validator": "^10.4.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-plugin-import": "^2.13.0"
+    "eslint-plugin-import": "^2.13.0",
+    "nodemon": "^1.17.5"
   }
 }

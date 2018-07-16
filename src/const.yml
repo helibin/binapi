@@ -22,6 +22,7 @@ respCode:
   EClientNotFound      : 4010  # 无此内容
   EClientDuplicated    : 4020  # 重复内容
   EClientBadRequest    : 4030  # 请求错误
+  EClientTooManyRequest: 4040  # 请求频繁
 
   ESysData             : 5000  ## 系统数据不合规
 

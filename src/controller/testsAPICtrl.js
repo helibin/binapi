@@ -11,7 +11,7 @@ import Base from './base';
 export default new class extends Base {
   async test(ctx) {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
-    const randStr = this.t.genRandStrs(10, '342121lkdsaf');
+    const randStr = this.t.genRandStr(10, '342121lkdsaf');
     const err = new this._e('EClientNotFound', 'xxx', { randStr });
     await this.t.getIPInfo(ctx.ip);
 
