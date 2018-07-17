@@ -5,13 +5,13 @@
   "main": ".eslintrc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run doc && cross-env NODE_ENV=development nodemon --watch src --watch config src/index.js",
-    "start": "npm run doc && node src/index.js",
+    "dev": "npm run doc-dev && cross-env NODE_ENV=development nodemon --watch src --watch config src/index.js",
+    "start": "node src/index.js",
     "compile": "npm run doc && \\cp -rf $PWD/src/. $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js $PWD/app/.babelrc",
     "lint": "eslint src/**/*.js",
     "prod": "cross-env NODE_ENV=production node app/index.js",
-    "doc": "apidoc -i src/router -o src/static/apidoc",
-    "doc-internal": "apidoc -i src/router -o src/static/apidoc-internal --private true"
+    "doc-dev": "apidoc -i src/router -o src/static/apidoc -c apidoc.dev.json  --private false && apidoc -i src/router -o src/static/apidoc-internal -c apidoc.dev.json",
+    "doc": "apidoc -i src/router -o src/static/apidoc --private false && apidoc -i src/router -o src/static/apidoc-internal"
   },
   "repository": {
     "type": "git",
