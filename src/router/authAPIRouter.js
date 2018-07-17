@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 18:55:02
+ * @Last Modified time: 2018-07-17 23:05:17
  */
 /** 内建模块 */
 
@@ -36,7 +36,6 @@ import { authLgc  } from '../logic';
  * @apiGroup Auth
  *
  * @apiPermission admin
- * @apiPrivate
  *
  * @apiHeader [x-auth-token] 令牌
  *
