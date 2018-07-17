@@ -1,5 +1,6 @@
 /** 内建模块 */
 import path from 'path';
+import util from 'util';
 
 /** 第三方模块 */
 import CONFIG from 'config';
@@ -60,6 +61,15 @@ M.genUUID36 = () => uuid.v4();
  */
 M.genUUID = () => uuid.v4().replace(/-/g, '');
 
+M.isEmpty = (d) => {
+  if (util.isNullOrUndefined(d)) return true;
+  if (util.isBoolean(d)) return false;
+  if (util.isString(d)) return !d.length;
+  if (util.isArray(d)) return !d.length;
+  if (util.isObject(d)) return !Object.keys(d).length;
+
+  return !d;
+};
 /**
  * 生成随机字符串
  *

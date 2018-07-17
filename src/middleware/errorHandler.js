@@ -38,11 +38,16 @@ export default async (ctx, next) => {
       }
     }
   } catch (ex) {
+    ctx.state.logger(ex, '访问发生异常：', ex);
+
     ctx.status = ex.status || 500;
     if (ex.name === 'MyError') { // 自定义异常处理
       if (ctx.state.accepts === 'json') {
         return ctx.state.sendJSON(ex);
       }
+
+      const pageData = { title: 'err-sys', err: ex.format(ctx.state.shortLocale) };
+      await ctx.state.render('err-sys',  pageData);
     } else { // 程序异常
       if (CONFIG.env === 'production') ctx.state.rLog(ex);
 
@@ -58,10 +63,10 @@ export default async (ctx, next) => {
         }
         ret = t.initRet(ex.name, ex.message);
         ctx.state.sendJSON(ret);
-        return;
       }
+
+      const pageData = { title: 'err-sys', err: ex };
+      await ctx.state.render('err-sys',  pageData);
     }
-    const pageData = { title: 'err-sys' };
-    await ctx.state.render('err-sys', CONFIG.env === 'production' ? pageData : pageData.err = ex);
   }
 };

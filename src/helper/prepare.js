@@ -83,7 +83,7 @@ Prepare.response = async (ctx, next) => {
 
     // 包装数据发送函数，自动打印日志并包含RequestId
     ctx.state.sendJSON = (data = {}) => {
-      if (data.name === 'MyError') data = data.toJSON(ctx.state.shortLocale);
+      if (data.name === 'MyError') data = data.format(ctx.state.shortLocale);
       data.requestId = ctx.state.requestId;
 
       ctx.accepts('json');
@@ -94,11 +94,12 @@ Prepare.response = async (ctx, next) => {
     ctx.state.redis = new Redis(ctx);
 
     await next();
-  } catch (e) {
-    if (e.name !== 'MyError') {
+  } catch (ex) {
+    if (ex.name !== 'MyError') {
       ctx.state.requestError = true;
     }
-    throw e;
+
+    throw ex;
   } finally {
     // 请求结束并打印响应数据
     const xResponseTime = Date.now() - ctx.state.startTime;

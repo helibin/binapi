@@ -4,7 +4,9 @@
 /** 第三方模块 */
 
 /** 基础模块 */
-import { _e, PRIVILEGE } from '../helper';
+import {
+  PRIVILEGE, _e, t,
+} from '../helper';
 
 /** 项目模块 */
 
@@ -23,7 +25,7 @@ M.prepareUserInfo = async (ctx, next) => {
  * @returns {*} null
  */
 M.requireSignIn = allowAuthType => async (ctx, next) => {
-  if (!ctx.state.user) throw new _e('EUserNotSignedIn', 'userNotSignedIn');
+  if (t.isEmpty(ctx.state.user)) throw new _e('EUserNotSignedIn', 'userNotSignedIn');
   await next();
 };
 

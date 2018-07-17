@@ -13,4 +13,12 @@ export default new class extends Base {
     this.pageData = { body: 'index', title: 'Bin API' };
     await ctx.state.render('index', this.pageData);
   }
+
+  async apidoc(ctx) {
+    await ctx.state.redirect('/apidoc/index.html');
+  }
+
+  async apidocInternal(ctx) {
+    await ctx.state.redirect('/apidoc-internal/index.html');
+  }
 }();

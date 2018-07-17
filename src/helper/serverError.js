@@ -42,7 +42,7 @@ export default class ServerError {
     }
   }
 
-  toJSON(locale) {
+  format(locale) {
     const errMsg = i18n[locale].errorMsg || {};
     return {
       err       : this.respCode,

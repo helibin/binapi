@@ -34,6 +34,7 @@ app.use(errorHandler);
 
 // 静态文件服务器
 app.use(server(`${__dirname}/static`));
+
 // handlebars, ejs
 app.use(views(path.join(__dirname, '/view'), {
   options: {
