@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "简单的列下API文档，持续更新中……",
   "title": "BinAPIDoc",
-  "url": "http://api.ajaxp.com/v1",
-  "sampleUrl": "http://api.ajaxp.com/v1",
+  "url": "//api.ajaxp.com/v1",
+  "sampleUrl": "//api.ajaxp.com/v1",
   "order": [
     "Auth"
   ]
