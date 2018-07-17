@@ -21,6 +21,7 @@ logs
 # 配置文件
 config/*
 !config/default.*
+!config/*.example
 
 # 编译文件
 app

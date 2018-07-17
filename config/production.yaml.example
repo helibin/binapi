@@ -1,0 +1,24 @@
+env: 'production'
+
+dbServer:
+  mysql:
+    host    : '127.0.0.1'
+    port    : 3306
+    username: 'root'
+    password: ''
+    database: 'db_binapi'
+
+  redis:
+    host: '127.0.0.1'
+    port: 6379
+    db  : 1
+
+webServer:
+  host: '127.0.0.1'
+  port: 5080
+
+apiServer:
+  corsWhiteList: '*'
+  ipWhiteList: '*'
+
+  logLevel: 'ERROR'
