@@ -25,3 +25,6 @@ config/*
 # 编译文件
 app
 build
+
+# 静态文件
+src/static/apidoc*
