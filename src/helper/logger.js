@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 22:29:52
+ * @Last Modified time: 2018-07-17 22:42:01
  */
 /** 内建模块 */
 import os from 'os';
@@ -60,7 +60,7 @@ hostName = hostName || hostName[0] || 'webServer';
 const logger = (...args) => {
   let logLevel = args.shift();
 
-  if (!CONFIG.logLevels.includes(logLevel.toLowerCase())) {
+  if (!CONFIG.logLevels.includes(logLevel)) {
     logLevel = logLevel ? 'error' : 'info';
   }
 
