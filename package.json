@@ -10,7 +10,8 @@
     "compile": "cp -rpf $PWD/src/. $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js $PWD/app/.babelrc",
     "lint": "eslint src/**/*.js",
     "prod": "cross-env NODE_ENV=production node app/index.js",
-    "doc": "apidoc -i src/router -o src/static/apidoc --private true"
+    "doc": "apidoc -i src/router -o src/static/apidoc --private false",
+    "doc-internal": "apidoc -i src/router -o src/static/apidoc --private true"
   },
   "repository": {
     "type": "git",

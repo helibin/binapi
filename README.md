@@ -2,12 +2,13 @@
 - Node.js >= 8.10.0 required.
 - es6/7/8
 - koa2
-- sequlize
+- [sequlize](http://docs.sequelizejs.com/)
 - mysql
-- redis
-- joi
-- yaml
-- eslint
+- [redis](http://redis.cn)
+- [joi](https://github.com/hapijs/joi/blob/v13.4.0/API.md)
+- [yaml](http://yaml.org/)
+- [eslint](https://eslint.org/)
+- [apidoc](http://apidocjs.com/)
 
 ## Installation
 
