@@ -1,12 +1,15 @@
-
+/*
+ * @Author: helibin@139.com
+ * @Date: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-17 18:58:16
+ */
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import {
-  PRIVILEGE, _e, t,
-} from '../helper';
+import {_e, t,} from '../helper';
 
 /** 项目模块 */
 
@@ -24,7 +27,7 @@ M.prepareUserInfo = async (ctx, next) => {
  * @param {string} allowAuthType 允许认证类型
  * @returns {*} null
  */
-M.requireSignIn = allowAuthType => async (ctx, next) => {
+M.requireSignIn = () => async (ctx, next) => {
   if (t.isEmpty(ctx.state.user)) throw new _e('EUserNotSignedIn', 'userNotSignedIn');
   await next();
 };

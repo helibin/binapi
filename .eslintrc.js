@@ -1,3 +1,9 @@
+/*
+ * @Author: helibin@139.com
+ * @Date: 2018-07-17 19:04:38
+ * @Last Modified by:   lybeen
+ * @Last Modified time: 2018-07-17 19:04:38
+ */
 module.exports = {
   'extends': 'airbnb-base',
   'env': {
@@ -49,7 +55,7 @@ module.exports = {
     }],
     'consistent-return': 0,
     'no-underscore-dangle': 0,
-    'no-return-await': 0
+    'no-return-await': 0,
   }
 };
 

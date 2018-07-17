@@ -1,3 +1,9 @@
+/*
+ * @Author: helibin@139.com
+ * @Date: 2018-07-17 19:00:54
+ * @Last Modified by:   lybeen
+ * @Last Modified time: 2018-07-17 19:00:54
+ */
 export default {
   errorMsg: {
     noSuchUser     : '没有此用户',
