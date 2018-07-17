@@ -1,5 +1,5 @@
 apps:
-  - script: './src/app.js'
+  - script: './app/app.js'
     name: 'BinAPI'
     instances: 'max'
     exec_mode: cluster
