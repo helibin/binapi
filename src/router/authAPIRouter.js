@@ -7,10 +7,7 @@ import { router  } from './base';
 
 // /** 项目模块 */
 import { authAPICtrl  } from '../controller';
-import {
-  ipMid,
-  paramMid,
-} from '../middleware';
+import { ipMid, paramMid } from '../middleware';
 import { authLgc  } from '../logic';
 
 
@@ -30,18 +27,30 @@ import { authLgc  } from '../logic';
  *     HTTP/1.1 200 OK
  *     {
  *        "err": 0,
- *        "msg": "",
- *        "data": userInfo
+ *        "msg": "OK",
+ *        "msg_locale": "OK",
+ *        "data": userInfo,
  *        "requestId": "reqesutId"
  *     }
  *
- * @apiError UserNotFound The id of the User was not found.
+ * @apiError noSuchUser 用户不存在
+ * @apiError userIsExisted 用户存在
+ * @apiError invildUsenameOrPassowrd 用户名或密码错误
  *
  * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
+ *     HTTP/1.1 404 用户不存在
+ *     {
+ *        "err": 1000,
+ *        "msg": "noSuchUser",
+ *        "msg_locale": "用户不存在",
+ *        "requestId": "reqesutId"
+ *     }
+ *
+ *     HTTP/1.1 401 未认证
  *     {
  *        "err": 1060,
- *        "msg": "用户名或密码错误",
+ *        "msg": "invildUsenameOrPassowrd",
+ *        "msg_locale": "用户名或密码错误",
  *        "requestId": "reqesutId"
  *     }
  */

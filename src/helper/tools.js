@@ -26,9 +26,9 @@ const M = {};
  * @param {int}    err 错误代码
  * @param {string} msg 响应内容
  * @param {object} data 响应数据
- * @returns {object} {err: 0, msg: ''}
+ * @returns {object} {err: 0, msg: 'OK'}
  */
-M.initRet = (err = 0, msg = '', data) => ({
+M.initRet = (err = 0, msg = 'OK', data) => ({
   err,
   msg,
   data,

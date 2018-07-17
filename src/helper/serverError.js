@@ -43,10 +43,12 @@ export default class ServerError {
   }
 
   toJSON(locale) {
+    const errMsg = i18n[locale].errorMsg || {};
     return {
-      err : this.respCode,
-      msg : i18n[locale].errorMsg[this.respMessage] || this.respMessage,
-      data: this.respData,
+      err       : this.respCode,
+      msg       : this.respMessage,
+      msg_locale: errMsg[this.respMessage] || this.respMessage,
+      data      : this.respData,
     };
   }
 }

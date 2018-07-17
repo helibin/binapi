@@ -19,7 +19,7 @@ Prepare.response = async (ctx, next) => {
   try {
     const clientId  = ctx.cookies.get('_clientId') || t.genRandStr(24);
     const requestId = t.genUUID();
-    const locale    = ctx.cookies.get('_locale') || 'zh-CN';
+    const locale    = ctx.cookies.get('_locale') || CONFIG.webServer.defaultLocale;
 
     ctx.state.clientId    = clientId;
     ctx.state.requestId   = requestId;
