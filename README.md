@@ -20,4 +20,4 @@ $ npm install
 $npm run dev
 ```
 ## Config File
-/config/<env>.yml
+/config/<env>.yaml

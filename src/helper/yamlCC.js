@@ -20,8 +20,8 @@ import logger from './logger';
 
 export const check = () => {
   try {
-    const constFilePath = path.join(__dirname, '../const.yml');
-    const privilegeFilePath = path.join(__dirname, '../privilege.yml');
+    const constFilePath = path.join(__dirname, '../const.yaml');
+    const privilegeFilePath = path.join(__dirname, '../privilege.yaml');
 
     /* 读取常量文件 */
     yaml.safeLoad(fs.readFileSync(constFilePath));
@@ -38,7 +38,7 @@ export const check = () => {
 // 加载常量
 const loadConst = () => {
   try {
-    let constFilePath = '../const.yml';
+    let constFilePath = '../const.yaml';
     constFilePath = path.join(__dirname, constFilePath);
 
     const constFile = fs.readFileSync(constFilePath);
@@ -53,7 +53,7 @@ export const CONST = loadConst();
 // 加载权限
 const loadPrivilege = () => {
   try {
-    let privilegeFilePath = '../privilege.yml';
+    let privilegeFilePath = '../privilege.yaml';
     privilegeFilePath = path.join(__dirname, privilegeFilePath);
 
     const privilegeFile = fs.readFileSync(privilegeFilePath);

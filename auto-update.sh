@@ -35,7 +35,7 @@ log "关闭服务端"
 pm2 delete BinAPI 2>&1 | tee -a $log_file
 
 log '启动服务端'
-pm2 start process.yml 2>&1 | tee -a $log_file
+pm2 start process.yaml 2>&1 | tee -a $log_file
 
 sleep 5
 log '当前服务端状态：'
