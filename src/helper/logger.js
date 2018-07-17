@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-17 22:29:52
  */
 /** 内建模块 */
 import os from 'os';
@@ -44,11 +44,11 @@ log4js.configure({
   categories: {
     default: {
       appenders: ['out'],
-      level    : CONFIG.apiServer.logLevel,
+      level    : CONFIG.apiServer.logLevel.toLowerCase(),
     },
     access: {
       appenders: ['access'],
-      level    : 'DEBUG',
+      level    : 'debug',
     },
   },
   pm2: true,
@@ -60,7 +60,7 @@ hostName = hostName || hostName[0] || 'webServer';
 const logger = (...args) => {
   let logLevel = args.shift();
 
-  if (!CONFIG.logLevels.includes(logLevel)) {
+  if (!CONFIG.logLevels.includes(logLevel.toLowerCase())) {
     logLevel = logLevel ? 'error' : 'info';
   }
 
