@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:05:57
  */
 /** 内建模块 */
 import path from 'path';
@@ -33,9 +33,9 @@ const M = {};
  * @param {int}    err 错误代码
  * @param {string} msg 响应内容
  * @param {object} data 响应数据
- * @returns {object} {err: 0, msg: 'OK'}
+ * @returns {object} {err: 0, msg: 'ok'}
  */
-M.initRet = (err = 0, msg = 'OK', data) => ({
+M.initRet = (err = 0, msg = 'ok', data) => ({
   err,
   msg,
   data,

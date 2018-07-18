@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:34:40
  */
 /** 内建模块 */
 
@@ -52,7 +52,7 @@ export default async (ctx, next) => {
         return ctx.state.sendJSON(ex);
       }
 
-      const pageData = { title: 'err-sys', err: ex.format(ctx.state.shortLocale) };
+      const pageData = { title: 'err-sys', err: ctx.state.i18n(ex.toJSON()) };
       await ctx.state.render('err-sys',  pageData);
     } else { // 程序异常
       if (CONFIG.env === 'production') ctx.state.rLog(ex);
@@ -68,10 +68,10 @@ export default async (ctx, next) => {
           return ctx.state.sendJSON(exWrap);
         }
         ret = t.initRet(ex.name, ex.message);
-        ctx.state.sendJSON(ret);
+        return ctx.state.sendJSON(ret);
       }
 
-      const pageData = { title: 'err-sys', err: ex };
+      const pageData = { title: 'err-sys', err: ex.message };
       await ctx.state.render('err-sys',  pageData);
     }
   }

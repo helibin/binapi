@@ -1,11 +1,14 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:54
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 19:00:54
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:05:42
  */
 export default {
-  errorMsg: {
+  resMsg: {
+    ok       : '成功',
+    okByCache: '成功，来着缓存',
+
     noSuchUser     : '没有此用户',
     userIsExisted  : '用户已存在',
     userNotSignedIn: '用户未登录',

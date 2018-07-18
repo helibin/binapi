@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:23:06
  */
 /** 内建模块 */
 
@@ -12,7 +12,6 @@
 
 /** 项目模块 */
 import { CONST } from './yamlCC';
-import i18n from '../i18n';
 
 export default class ServerError {
   constructor(codeName, message, data) {
@@ -48,13 +47,11 @@ export default class ServerError {
     }
   }
 
-  format(locale) {
-    const errMsg = i18n[locale].errorMsg || {};
+  toJSON() {
     return {
-      err       : this.respCode,
-      msg       : this.respMessage,
-      msg_locale: errMsg[this.respMessage] || this.respMessage,
-      data      : this.respData,
+      err : this.respCode,
+      msg : this.respMessage,
+      data: this.respData,
     };
   }
 }

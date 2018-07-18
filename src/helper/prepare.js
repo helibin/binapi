@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:23:01
  */
 /** 内建模块 */
 
@@ -11,12 +11,13 @@ import bytes from 'bytes';
 import chalk from 'chalk';
 
 /** 基础模块 */
-import CONFIG from 'config';
+import CONFIG           from 'config';
+import Redis            from './redisHelper';
 import { logger, rLog } from './logger';
-import Redis  from './redisHelper';
-import t      from './tools';
+import t                from './tools';
 
 /** 项目模块 */
+import i18n from '../i18n';
 import pkg from '../../package';
 
 
@@ -89,11 +90,18 @@ Prepare.response = async (ctx, next) => {
 
     // 包装数据发送函数，自动打印日志并包含RequestId
     ctx.state.sendJSON = (data = {}) => {
-      if (data.name === 'MyError') data = data.format(ctx.state.shortLocale);
+      if (data.name === 'MyError') data = data.toJSON();
       data.requestId = ctx.state.requestId;
+      data = ctx.state.i18n(data);
 
       ctx.accepts('json');
       ctx.body = data;
+    };
+
+    // 国际化
+    ctx.state.i18n = (data) => {
+      data.msg = i18n[ctx.state.shortLocale].resMsg[data.msg] || data.msg;
+      return data;
     };
 
     // redis初始化
