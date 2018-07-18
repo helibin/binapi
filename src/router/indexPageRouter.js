@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 10:41:23
  */
 /** 内建模块 */
 
@@ -22,6 +22,6 @@ pageRouter.get('/',
 pageRouter.get('/apidoc/index.html',
   indexPageCtrl.run('apidoc'));
 
-pageRouter.get('/apidoc-internal/index.html',
+pageRouter.get('/apidoc-internal/index',
   authMid.requireSignIn(),
   indexPageCtrl.run('apidocInternal'));

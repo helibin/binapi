@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 19:03:53
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 10:40:18
  */
 /* 内建模块 */
 import path from 'path';
@@ -50,7 +50,7 @@ app.use(views(path.join(__dirname, '/view'), {
   extension: 'hbs',
   map      : {
     hbs : 'handlebars',
-    html: 'ejs',
+    html : 'nunjucks',
   },
 }));
 
