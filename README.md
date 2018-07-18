@@ -9,15 +9,17 @@
 - [yaml](http://yaml.org/)
 - [eslint](https://eslint.org/)
 - [apidoc](http://apidocjs.com/)
-
 ## Installation
-
-```bash
+```shell
 $ npm install
 ```
 ## Run
-```bash
-$npm run dev
+```shell
+$ npm run dev
 ```
 ## Config File
-/config/<env>.yaml
+`/config/<env>.yaml`
+## Deploy
+```shell
+$ ./auto-update [分支]
+```
