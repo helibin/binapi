@@ -1,15 +1,15 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:01:05
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 19:01:05
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-18 19:42:59
  */
-import authLgc    from './authLgc';
-import captchaLgc from './captchaLgc';
-import userLgc    from './userLgc';
+import authLogic    from './authLogic';
+import captchaLogic from './captchaLogic';
+import userLogic    from './userLogic';
 
 export {
-  authLgc,
-  captchaLgc,
-  userLgc,
+  authLogic,
+  captchaLogic,
+  userLogic,
 };
