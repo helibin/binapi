@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 15:51:02
+ * @Last Modified time: 2018-07-19 16:44:31
  */
 /** 内建模块 */
 
@@ -20,13 +20,12 @@ export default new class extends Base {
     await ctx.state.render('index', this.pageData);
   }
 
-  async apidoc(ctx, next) {
+  async apidoc(ctx) {
     // await ctx.state.redirect('/apidoc/index.html');
-    await next();
+    await ctx.state.render('apidoc/index.html');
   }
 
-  async apidocInternal(ctx, next) {
-    // await ctx.state.redirect('/apidoc-internal/index');
-    await next();
+  async apidocInternal(ctx) {
+    await ctx.state.redirect('/apidoc-internal/index.html');
   }
 }();

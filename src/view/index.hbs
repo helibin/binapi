@@ -1,0 +1,17 @@
+<!-- {% include "layout/header.base.html" %} -->
+{{> header.base }}
+
+<div class="text-center">
+  <div class="welcome">{{ pkg.description }}!</div>
+</div>
+
+<div class="text-center">
+  <a target="_blank" href="/apidoc/index">公开API文档</a><br>
+  <a target="_blank" href="/apidoc-internal/index">内部API文档（需登录）</a>
+</div>
+
+
+{{> footer }}
+{{> footer.base }}
+
+<script src="/js/index.js"></script>

@@ -10,8 +10,8 @@
     "compile": "npm run doc && \\cp -rf $PWD/src/. $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js $PWD/app/.babelrc",
     "lint": "eslint src/**/*.js",
     "prod": "cross-env NODE_ENV=production node app/index.js",
-    "doc-dev": "apidoc -c config -i src/router -o src/static/apidoc --private false && apidoc -c config -i src/router -o src/static/apidoc-internal",
-    "doc": "apidoc -i src/router -o src/static/apidoc --private false && apidoc -i src/router -o src/static/apidoc-internal"
+    "doc-dev": "apidoc -c config -i src/router -o src/view/apidoc --private false && apidoc -c config -i src/router -o src/view/apidoc-internal",
+    "doc": "apidoc -i src/router -o src/view/apidoc --private false && apidoc -i src/router -o src/view/apidoc-internal"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "cross-env": "^5.2.0",
     "crypto": "^1.0.1",
     "gd-bmp": "^1.2.4",
+    "handlebars-helpers": "^0.10.0",
     "ip": "^1.1.5",
     "joi": "^13.4.0",
     "js-yaml": "^3.12.0",
@@ -41,6 +42,7 @@
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "koa-useragent": "^1.1.0",
+    "koa-views": "^6.1.4",
     "log4js": "^2.10.0",
     "mathjs": "^5.0.0",
     "maxmind": "^2.7.0",
@@ -48,7 +50,6 @@
     "raven": "^2.6.3",
     "redis": "^2.8.0",
     "sequelize": "^4.38.0",
-    "sorted-json": "^0.2.2",
     "svg-captcha": "^1.3.11",
     "systeminformation": "^3.42.0",
     "trek-captcha": "^0.4.0",

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 15:01:56
+ * @Last Modified time: 2018-07-19 16:31:46
  */
 /** 内建模块 */
 
@@ -19,9 +19,9 @@ import { authMid } from '../middleware';
 pageRouter.get('/',
   indexPageCtrl.run('index'));
 
-pageRouter.get('/apidoc/index.html',
+pageRouter.get('/apidoc/index',
   indexPageCtrl.run('apidoc'));
 
-pageRouter.get('/apidoc-internal/index.html',
+pageRouter.get('/apidoc-internal/index',
   authMid.requireSignIn(),
   indexPageCtrl.run('apidocInternal'));
