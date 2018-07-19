@@ -10,8 +10,8 @@
     "compile": "npm run doc && \\cp -rf $PWD/src/. $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js $PWD/app/.babelrc",
     "lint": "eslint src/**/*.js",
     "prod": "cross-env NODE_ENV=production node app/index.js",
-    "doc-dev": "apidoc -c config -i src/router -o src/view/apidoc --private false && apidoc -c config -i src/router -o src/view/apidoc-internal",
-    "doc": "apidoc -i src/router -o src/view/apidoc --private false && apidoc -i src/router -o src/view/apidoc-internal"
+    "doc-dev": "apidoc -c config -i src/router -o src/static/apidoc --private false && apidoc -c config -i src/router -o src/static/apidoc-internal",
+    "doc": "apidoc -i src/router -o src/static/apidoc --private false && apidoc -i src/router -o src/static/apidoc-internal"
   },
   "repository": {
     "type": "git",
