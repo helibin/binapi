@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 13:51:42
+ * @Last Modified time: 2018-07-19 14:06:51
  */
 /* 内建模块 */
 import path from 'path';
@@ -15,7 +15,6 @@ import cors        from 'koa-cors';
 import ip          from 'ip';
 import server      from 'koa-static';
 import userAgent   from 'koa-useragent';
-import views       from 'koa-views';
 import koaNunjucks from 'koa-nunjucks-2';
 
 /* 基础模块 */
