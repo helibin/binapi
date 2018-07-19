@@ -2,21 +2,21 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 10:40:18
+ * @Last Modified time: 2018-07-19 13:51:42
  */
 /* 内建模块 */
 import path from 'path';
 
 /** 第三方模块 */
-import Koa        from 'koa';
-import bodyparser from 'koa-bodyparser';
-import chalk      from 'chalk';
-import cors       from 'koa-cors';
-import helpers    from 'handlebars-helpers';
-import ip         from 'ip';
-import server     from 'koa-static';
-import userAgent  from 'koa-useragent';
-import views      from 'koa-views';
+import Koa         from 'koa';
+import bodyparser  from 'koa-bodyparser';
+import chalk       from 'chalk';
+import cors        from 'koa-cors';
+import ip          from 'ip';
+import server      from 'koa-static';
+import userAgent   from 'koa-useragent';
+import views       from 'koa-views';
+import koaNunjucks from 'koa-nunjucks-2';
 
 /* 基础模块 */
 import {
@@ -38,20 +38,14 @@ const app = new Koa();
 // 错误处理
 app.use(errorHandler);
 
-// 静态文件服务器
-app.use(server(`${__dirname}/static`));
-
 // handlebars, ejs
-app.use(views(path.join(__dirname, '/view'), {
-  options: {
-    helpers : helpers(),
-    partials: CONFIG.hbs.partials,
-  },
-  extension: 'hbs',
-  map      : {
-    hbs : 'handlebars',
-    html : 'nunjucks',
-  },
+app.use(koaNunjucks({
+  ext: 'html',
+  path: path.join(__dirname, 'view'),
+  nunjucksConfig: {
+    trimBlocks: true,
+    noCache: true,
+  }
 }));
 
 // 通用中间件初始化
@@ -76,6 +70,9 @@ app.use(noPageCache());
 // 路由加载
 app.use(router.routes());
 app.use(pageRouter.routes());
+
+// 静态文件服务器
+app.use(server(path.join(__dirname, 'static')));
 
 try {
   app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {

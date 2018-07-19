@@ -1,4 +1,4 @@
-{{> header.base title=pkg.name }}
+{% include "layout/header.base.html" %}
 
 <div class="text-center">
   <div class="welcome">{{ pkg.description }}!</div>
@@ -10,7 +10,7 @@
 </div>
 
 
-{{> footer }}
-{{> footer.base }}
+{% include "layout/footer.html" %}
+{% include "layout/footer.base.html" %}
 
 <script src="/js/index.js"></script>

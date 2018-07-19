@@ -74,10 +74,10 @@ logLevels:
 # hbs模板
 hbs:
   partials:
-    'header.base': 'layouts/header.base'
-    'header'     : 'layouts/header'
-    'footer.base': 'layouts/footer.base'
-    'footer'     : 'layouts/footer'
+    'header.base': 'layout/header.base'
+    'header'     : 'layout/header'
+    'footer.base': 'layout/footer.base'
+    'footer'     : 'layout/footer'
 
 # AES加密
 AES:

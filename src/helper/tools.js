@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 19:05:57
+ * @Last Modified time: 2018-07-18 22:56:32
  */
 /** 内建模块 */
 import path from 'path';
@@ -327,6 +327,23 @@ M.eval = (execStr) => {
   const unformatVal = math.eval(execStr);
 
   return Number(math.format(unformatVal));
+};
+
+/**
+ * 对象排序
+ *
+ * @param {object} obj 运算字符串
+ * @return {object} data
+ */
+M.sortObj = (obj) => {
+  const keys = Object.keys(obj).sort();
+
+  const r = {};
+  for (const d of keys) {
+    r[d] = obj[d];
+  }
+
+  return r;
 };
 
 export default M;

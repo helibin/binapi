@@ -1,5 +1,7 @@
-## 技术栈
+## 前置条件
 - Node.js >= 8.10.0 required.
+- npm i -g apidoc
+## 技术栈
 - es6/7/8
 - koa2
 - [sequlize](http://docs.sequelizejs.com/)

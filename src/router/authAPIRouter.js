@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 19:52:14
+ * @Last Modified time: 2018-07-18 22:29:14
  */
 /** 内建模块 */
 
@@ -16,23 +16,6 @@ import { authAPICtrl  } from '../controller';
 import { ipMid, paramMid } from '../middleware';
 import { authLogic } from '../logic';
 
-/**
- * @apiDefine commonSuccessRes
- *
- * @apiSuccess {String} err 错误代码.
- * @apiSuccess {String} msg  错误消息.
- * @apiSuccess {Object} [data]  额外数据.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *        "err": 0,
- *        "msg": "OK",
- *        "msg_locale": "成功",
- *        "data": data,
- *        "requestId": "reqesutId"
- *      }
- */
 
 /**
  * @api {post} /auth/sign-in 用户登录
