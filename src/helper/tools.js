@@ -20,7 +20,7 @@ import si from 'systeminformation';
 import math from 'mathjs';
 
 /** 基础模块 */
-import logger from './logger';
+import { logger } from './logger';
 
 /** 项目模块 */
 

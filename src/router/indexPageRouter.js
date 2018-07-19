@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 13:50:07
+ * @Last Modified time: 2018-07-19 15:01:56
  */
 /** 内建模块 */
 
@@ -19,7 +19,7 @@ import { authMid } from '../middleware';
 pageRouter.get('/',
   indexPageCtrl.run('index'));
 
-pageRouter.get('/apidoc/index',
+pageRouter.get('/apidoc/index.html',
   indexPageCtrl.run('apidoc'));
 
 pageRouter.get('/apidoc-internal/index.html',

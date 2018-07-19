@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-19 15:40:52
  */
 /** 内建模块 */
 import fs from 'fs';
@@ -11,7 +11,7 @@ import path from 'path';
 /** 第三方模块 */
 import yaml from 'js-yaml';
 import chalk from 'chalk';
-import logger from './logger';
+import { logger } from './logger';
 
 /** 基础模块 */
 

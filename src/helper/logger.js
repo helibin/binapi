@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 22:51:47
+ * @Last Modified time: 2018-07-19 15:39:16
  */
 /** 内建模块 */
 import os from 'os';
@@ -83,7 +83,6 @@ const rLog = (ex) => {
 };
 
 
-export default logger;
 export {
   Logger,
   logger,

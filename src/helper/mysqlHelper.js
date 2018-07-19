@@ -11,7 +11,7 @@ import Sequelize from 'sequelize';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import logger from './logger';
+import { logger } from './logger';
 
 /** 项目模块 */
 

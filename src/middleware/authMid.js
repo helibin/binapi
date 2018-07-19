@@ -2,14 +2,14 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 18:58:16
+ * @Last Modified time: 2018-07-19 15:37:04
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import {_e, t,} from '../helper';
+import { _e, t  } from '../helper';
 
 /** 项目模块 */
 
