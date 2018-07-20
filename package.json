@@ -23,6 +23,7 @@
   "author": "helibin@139.com",
   "license": "ISC",
   "dependencies": {
+    "ava": "^0.25.0",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "bytes": "^3.0.0",
@@ -50,6 +51,7 @@
     "raven": "^2.6.3",
     "redis": "^2.8.0",
     "sequelize": "^4.38.0",
+    "sorted-json": "^0.2.2",
     "svg-captcha": "^1.3.11",
     "systeminformation": "^3.42.0",
     "trek-captcha": "^0.4.0",
