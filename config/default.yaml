@@ -43,7 +43,7 @@ webServer:
   captchaMaxAge: # 验证码过期时间，秒
     svg: 300
 
-  salt: 'binapi'
+  secret: 'secret-binapi-oYfKQsdb8NALAXGR' # 通用密钥：用于Cookie签名、密码加盐等
 
   defaultLocale: 'zh-CN'
 

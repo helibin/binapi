@@ -2,11 +2,12 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 18:56:05
+ * @Last Modified time: 2018-07-24 12:28:46
  */
 /** 内建模块 */
 
 /** 第三方模块 */
+import jwt from 'jsonwebtoken';
 
 /** 基础模块 */
 import Base from './base';
@@ -16,6 +17,33 @@ import { authMod } from '../model';
 
 
 export default new class extends Base  {
+  async createAuthCacheKey(userId = '*', xAuthTokenId = '*') {
+    return `token@xAuthToken#:userId=${userId}:xAuthTokenId=${xAuthTokenId}`;
+  }
+
+  /**
+   *
+   * @param {object} ctx 上下文
+   * @param {string} userId 用户ID
+   * @param {string} type=[authUser] 用户类型
+   * @returns {string} xAuthToken
+   */
+  async genXAuthToken(ctx, userId, type = 'authUser') {
+    const xatId = `xat_${this.t.genUUID()}`;
+    const authType = type.slice(-2).toUpperCase() === 'AK' ? 'AK' : 'web';
+    const xAuthTokenObj = {
+      uid: userId,
+      authType,
+      xatId,
+    };
+
+    const xAuthTokenCacheKey = await this.createAuthCacheKey(userId, xatId);
+    const xAuthToken         = jwt.sign(xAuthTokenObj, this.CONFIG.webServer.secret);
+    await ctx.state.redis.set(xAuthTokenCacheKey, xAuthToken, this.CONFIG.webServer.xAuthMaxAge);
+
+    return xAuthToken;
+  }
+
   async signIn(ctx) {
     const ret = this.t.initRet();
 
@@ -31,17 +59,18 @@ export default new class extends Base  {
     };
     const authInfo = await authMod.findOne(opt);
 
-    if (!authInfo) {
+    if (this.t.isEmpty(authInfo)) {
       throw new this._e('EUser', 'noSuchUser', { identifier: body.identifier });
     }
     if (authInfo.password !== this.t.getSaltedHashStr(body.password, authInfo.user_id)) {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    authInfo.password = undefined;
-    ret.data = authInfo;
+    authInfo.password   = undefined;
+    ret.data            = authInfo;
+    ret.xAuthToken = await this.genXAuthToken(ctx, authInfo.user_id);
 
-    ctx.state.logger('debug', `用户登录: userId=${authInfo.userId}`);
+    ctx.state.logger('debug', `用户登录: userId=${authInfo.user_id}`);
     ctx.state.sendJSON(ret);
   }
 

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 22:56:32
+ * @Last Modified time: 2018-07-23 11:07:41
  */
 /** 内建模块 */
 import path from 'path';
@@ -156,7 +156,7 @@ M.getHmacSha1 =  (str, key, output) => {
  * @param {string} salt 盐
  * @returns {string} salted hash str
  */
-M.getSaltedHashStr =  (md5Str, secret, salt = CONFIG.webServer.salt) => {
+M.getSaltedHashStr =  (md5Str, secret, salt = CONFIG.webServer.secret) => {
   const strToHash = `@${md5Str}@${secret}@${salt}@`;
 
   return M.getSha1(strToHash);

@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-24 12:08:30
  */
 /** 内建模块 */
 import { isNullOrUndefined } from 'util';
@@ -32,18 +32,23 @@ for (const k in redisConf) {
 
 export default class {
   constructor(ctx) {
-    this.ctx = ctx;
-    this.redisClient = redis.createClient(redisClientOpt);
+    this.ctx   = ctx;
+    this.redis = redis.createClient(redisClientOpt);
   }
 
   async run(...args) {
-    const command = args.shift();
+    try {
+      const command = args.shift();
 
-    this.ctx.state.logger('debug',
-      `${chalk.magenta('[REDIS]')} \`${chalk.yellow(command.toUpperCase())}\` <- `,
-      JSON.stringify(args.toString()));
+      this.ctx.state.logger('debug',
+        `${chalk.magenta('[REDIS]')} \`${chalk.yellow(command.toUpperCase())}\` <- `,
+        JSON.stringify(args.toString()));
 
-    return await this.redisClient[`${command}Async`](...args);
+      return await this.redis[`${command}Async`](...args);
+    } catch (ex) {
+      this.ctx.state.logger(ex, `运行Redis任务错误：${ex}`);
+      throw ex;
+    }
   }
 
   async addTask(queueName, task, delay = 0) {
@@ -53,6 +58,18 @@ export default class {
       queueName,
       timestamp,
       sortedJSON.stringify(task));
+  }
+
+  async list(patten) {
+    return await this.run('keys', patten);
+  }
+
+  async get(key) {
+    return await this.run('get', key);
+  }
+
+  async set(key, value, expiredTime = 0) {
+    return await this.run('set', key, value, 'ex', expiredTime);
   }
 
   async del(patten) {

@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:04:38
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 19:04:38
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-23 10:59:46
  */
 module.exports = {
   'extends': 'airbnb-base',
@@ -56,6 +56,7 @@ module.exports = {
     'consistent-return': 0,
     'no-underscore-dangle': 0,
     'no-return-await': 0,
+    'class-methods-use-this': 0,
   }
 };
 
