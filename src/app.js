@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 16:03:00
+ * @Last Modified time: 2018-07-24 20:02:24
  */
 /* 内建模块 */
 import path from 'path';
@@ -34,9 +34,13 @@ import { pageRouter, router } from './router';
 
 
 const app = new Koa();
+app.keys = [CONFIG.webServer.secret];
 
 // 错误处理
 app.use(errorHandler);
+
+// 跨域设置
+app.use(cors(headerMid.setCors()));
 
 // 静态文件服务器
 app.use(server(path.join(__dirname, 'static')));
@@ -63,12 +67,12 @@ app.use(views(path.join(__dirname, 'view'), {
 // 通用中间件初始化
 app.use(userAgent);
 app.use(bodyparser());
-app.use(cors(headerMid.setCors()));
 
 // 业务中间件初始化
+app.use(prepare.xAuthToken)
 app.use(prepare.response);
 app.use(prepare.detectPageSetting);
-app.use(authMid.prepareUserInfo);
+app.use(authMid.prepareUserInfo());
 app.use(noPageCache());
 
 

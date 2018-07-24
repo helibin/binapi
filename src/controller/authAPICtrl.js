@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 14:52:42
+ * @Last Modified time: 2018-07-24 18:51:26
  */
 /** 内建模块 */
 
@@ -31,14 +31,14 @@ export default new class extends Base  {
   async genXAuthToken(ctx, userId, type = 'authUser') {
     const xatId = `xat_${this.t.genUUID()}`;
     const authType = type.slice(-2).toUpperCase() === 'AK' ? 'AK' : 'web';
-    const xAuthTokenObj = {
+    const xAuthTokenInfo = {
       uid: userId,
       authType,
       xatId,
     };
 
     const xAuthTokenCacheKey = await this.createAuthCacheKey(userId, xatId);
-    const xAuthToken         = jwt.sign(xAuthTokenObj, this.CONFIG.webServer.secret);
+    const xAuthToken         = jwt.sign(xAuthTokenInfo, this.CONFIG.webServer.secret);
     await ctx.state.redis.set(xAuthTokenCacheKey, xAuthToken, this.CONFIG.webServer.xAuthMaxAge);
 
     return xAuthToken;

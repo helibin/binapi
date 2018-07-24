@@ -38,7 +38,7 @@ webServer:
   xAuthMaxAge: 7200           # 用户认证通用过期时间，秒
   xAuthHeader: 'x-auth-token' # HTTP Header中用户令牌字段名，`false`为禁用
   xAuthQuery : 'xAuthToken'   # QueryString中用户令牌字段名，`false`为禁用
-  xAuthCookie: 'xAuthToken'   # Cookie中用户令牌字段名, `false`为禁用
+  xAuthCookie: 'xAuthToken'   # Cookie中用户令牌字段名，`false`为禁用
 
   captchaMaxAge: # 验证码过期时间，秒
     svg: 300

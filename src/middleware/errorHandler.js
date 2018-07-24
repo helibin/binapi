@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 19:34:40
+ * @Last Modified time: 2018-07-24 18:58:47
  */
 /** 内建模块 */
 
@@ -44,7 +44,7 @@ export default async (ctx, next) => {
       }
     }
   } catch (ex) {
-    ctx.state.logger(ex, '访问发生异常：', ex);
+    console.log(ex, '访问发生异常：', ex);
 
     ctx.status = ex.status || 500;
     if (ex.name === 'MyError') { // 自定义异常处理

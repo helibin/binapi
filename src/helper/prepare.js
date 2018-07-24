@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 12:28:51
+ * @Last Modified time: 2018-07-24 19:54:07
  */
 /** 内建模块 */
 
@@ -22,6 +22,29 @@ import pkg from '../../package';
 
 
 const Prepare = {};
+
+Prepare.xAuthToken = async (ctx, next) => {
+  // 从HTTP header中获取
+  if (CONFIG.webServer.xAuthHeader
+    && ctx.headers[CONFIG.webServer.xAuthHeader]) {
+    ctx.state.xAuthToken = ctx.headers[CONFIG.webServer.xAuthHeader];
+  } else
+
+  // 从Query String中获取
+  if (CONFIG.webServer.xAuthQuery
+    && ctx.query[CONFIG.webServer.xAuthQuery]) {
+    ctx.state.xAuthToken = ctx.query[CONFIG.webServer.xAuthQuery];
+  } else
+
+  // 从Cookie中获取
+  if (CONFIG.webServer.xAuthCookie
+    && ctx.cookies.get(CONFIG.webServer.xAuthCookie)) {
+    ctx.state.xAuthToken = ctx.cookies.get(CONFIG.webServer.xAuthCookie);
+  }
+
+  await next();
+};
+
 Prepare.response = async (ctx, next) => {
   try {
     const clientId  = ctx.cookies.get('_clientId') || t.genRandStr(24);
@@ -138,7 +161,6 @@ Prepare.response = async (ctx, next) => {
     })}`);
   }
 };
-
 
 /**
  * 判断客户端请求的分页信息，并保存到`ctx.state.pageSetting`
