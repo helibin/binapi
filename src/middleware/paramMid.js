@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 10:28:04
+ * @Last Modified time: 2018-07-24 14:16:26
  */
 /** 内建模块 */
 
@@ -23,8 +23,6 @@ BlueBird.promisifyAll(joi);
 export default new class extends Base {
   check(rules, data) {
     return async (ctx, next) => {
-      const finallyData = {};
-
       try {
         if (rules) {
           const { query, params } = ctx;
@@ -43,12 +41,11 @@ export default new class extends Base {
           });
         }
       } catch (ex) {
-        finallyData.hasError = true;
-        finallyData.ex = ex;
+        ctx.state.hasError = true;
 
         throw ex;
       } finally {
-        ctx.state.logger('debug', `参数校验，是否通过：${!finallyData.hasError}`);
+        ctx.state.logger(ctx.state.hasError, `参数校验，是否通过：${!ctx.state.hasError}`);
       }
       await next();
     };

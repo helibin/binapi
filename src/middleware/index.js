@@ -1,11 +1,11 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:01:35
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 19:01:35
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-24 14:26:10
  */
-import CONFIG       from 'config';
 import authMid      from './authMid';
+import bizMid       from './bizMid';
 import captchaMid   from './capthaMid';
 import errorHandler from './errorHandler';
 import headerMid    from './headerMid';
@@ -16,7 +16,7 @@ import paramMid     from './paramMid';
 
 export {
   authMid,
-  CONFIG,
+  bizMid,
   captchaMid,
   errorHandler,
   headerMid,

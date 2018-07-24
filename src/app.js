@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 17:20:31
+ * @Last Modified time: 2018-07-24 16:03:00
  */
 /* 内建模块 */
 import path from 'path';
@@ -16,7 +16,6 @@ import ip         from 'ip';
 import server     from 'koa-static';
 import userAgent  from 'koa-useragent';
 import views      from 'koa-views';
-import handlebars from 'handlebars';
 import helpers    from 'handlebars-helpers';
 
 /* 基础模块 */
@@ -27,7 +26,7 @@ import {
 
 /** 项目模块 */
 import {
-  authMid, errorHandler, noPageCache,
+  authMid, errorHandler, noPageCache, headerMid,
 } from './middleware';
 
 /** 路由模块 */
@@ -64,14 +63,7 @@ app.use(views(path.join(__dirname, 'view'), {
 // 通用中间件初始化
 app.use(userAgent);
 app.use(bodyparser());
-app.use(cors({
-  origin: (req) => {
-    if (CONFIG.apiServer.corsWhiteList === '*') return true;
-    return CONFIG.apiServer.corsWhiteList.includes(req.header.origin)
-      ? req.header.origin
-      : false;
-  },
-}));
+app.use(cors(headerMid.setCors()));
 
 // 业务中间件初始化
 app.use(prepare.response);

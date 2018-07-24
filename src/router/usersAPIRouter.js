@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-24 14:27:04
  */
 /** 内建模块 */
 
@@ -13,7 +13,7 @@ import { router } from './base';
 
 /** 项目模块 */
 import { usersAPICtrl } from '../controller';
-import { authMid } from '../middleware';
+import { authMid, bizMid } from '../middleware';
 
 router.get('/users',
   authMid.requireSignIn(),
@@ -21,6 +21,7 @@ router.get('/users',
   usersAPICtrl.run('list'));
 
 router.get('/users/:targetId',
+  bizMid.userExists(),
   authMid.requirePrivilege('users_get'),
   usersAPICtrl.run('get'));
 
