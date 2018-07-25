@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 15:40:32
+ * @Last Modified time: 2018-07-25 11:27:47
  */
 /** 内建模块 */
 
@@ -23,14 +23,6 @@ export default new class extends Base {
   }
 
   setCors() {
-    return {
-      origin: (req) => {
-        if (this.CONFIG.apiServer.corsWhiteList === '*') return true;
-        return this.CONFIG.apiServer.corsWhiteList.includes(req.header.origin)
-          ? req.header.origin
-          : false;
-      },
-      expose: ['Date'],
-    };
+    return { expose: ['Date'] };
   }
 }();

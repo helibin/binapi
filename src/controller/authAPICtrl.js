@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 18:51:26
+ * @Last Modified time: 2018-07-25 22:56:45
  */
 /** 内建模块 */
 
@@ -45,8 +45,6 @@ export default new class extends Base  {
   }
 
   async signIn(ctx) {
-    const ret = this.t.initRet();
-
     const body = ctx.request.body;
     const opt = {
       attributes: { exclude: ['seq'] },
@@ -57,7 +55,7 @@ export default new class extends Base  {
         },
       },
     };
-    const authInfo = await authMod.findOne(opt);
+    const authInfo = await authMod.get('user_id', body.identifier);
 
     if (this.t.isEmpty(authInfo)) {
       throw new this._e('EUser', 'noSuchUser', { identifier: body.identifier });
@@ -67,11 +65,11 @@ export default new class extends Base  {
     }
 
     authInfo.password   = undefined;
-    ret.data            = authInfo;
-    ret.xAuthToken = await this.genXAuthToken(ctx, authInfo.user_id);
+    this.ret.data            = authInfo;
+    this.ret.xAuthToken = await this.genXAuthToken(ctx, authInfo.user_id);
 
     ctx.state.logger('debug', `用户登录: userId=${authInfo.user_id}`);
-    ctx.state.sendJSON(ret);
+    ctx.state.sendJSON(this.ret);
   }
 
   async signUp(ctx) {

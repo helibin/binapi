@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 20:08:52
+ * @Last Modified time: 2018-07-24 23:29:30
  */
 /** 内建模块 */
 
@@ -60,7 +60,10 @@ export default new class extends Base {
       const opt = { id: ctx.state.userId };
       const dbRes = await usersMod.findOne(opt);
       if (this.t.isEmpty(dbRes)) {
-        if (this.CONFIG.webServer.xAuthCookie) ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, null);
+        if (this.CONFIG.webServer.xAuthCookie) {
+          ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, null);
+        }
+
         throw new this._e('EUser', 'noSuchUser', { userId: ctx.state.userId });
       }
 

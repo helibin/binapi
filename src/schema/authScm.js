@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-07-25 22:36:48
  */
 /** 内建模块 */
 
@@ -51,7 +51,5 @@ export const Auth = mysql.sequelize.define('tb_main_auth', {
     comment     : '更新时间戳',
   },
 }, { comment: 'auth认证表' });
-
-Auth.sync();
 
 export default Auth;

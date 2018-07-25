@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 12:08:30
+ * @Last Modified time: 2018-07-25 23:33:59
  */
 /** 内建模块 */
 import { isNullOrUndefined } from 'util';
@@ -68,8 +68,10 @@ export default class {
     return await this.run('get', key);
   }
 
-  async set(key, value, expiredTime = 0) {
-    return await this.run('set', key, value, 'ex', expiredTime);
+  async set(key, value, expiredTime) {
+    const args = [key, value];
+    if (expiredTime) args.push('ex', expiredTime);
+    return await this.run('set', ...args);
   }
 
   async del(patten) {

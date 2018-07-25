@@ -53,6 +53,4 @@ export const Like = mysql.sequelize.define('tb_main_likes', {
   },
 }, { comment: '点赞表' });
 
-Like.sync();
-
 export default Like;
