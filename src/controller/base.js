@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 23:36:29
+ * @Last Modified time: 2018-07-26 11:12:28
  */
 /** 内建模块 */
 
@@ -10,7 +10,7 @@
 
 /** 基础模块 */
 import {
-  CONFIG, t, _e,
+  CONFIG, _e, t,
 } from '../helper';
 
 /** 项目模块 */
@@ -29,8 +29,11 @@ export default class {
       try {
         await this[func](ctx, ...args);
       } catch (ex) {
-        ctx.state.logger(ex, `Ctrl调用方法：[${func}]时触发异常。`);
+        ctx.state.hasError = true;
         throw ex;
+      } finally {
+        ctx.state.logger(ctx.state.hasError,
+          `Ctrl调用方法：[${func}] ${ctx.state.hasError ? '失败' : '成功'}。`);
       }
     };
   }

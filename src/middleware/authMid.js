@@ -13,7 +13,7 @@ import jwt from 'jsonwebtoken';
 import Base from './base';
 
 /** 项目模块 */
-import { authAPICtrl } from '../controller';
+import { authCtrl } from '../controller';
 import { usersMod } from '../model';
 
 
@@ -31,7 +31,7 @@ export default new class extends Base {
       const xAuthTokenInfo = jwt.verify(ctx.state.xAuthToken, this.CONFIG.webServer.secret);
       ctx.state.userId       = xAuthTokenInfo.uid || null;
       ctx.state.authType     = xAuthTokenInfo.authType;
-      const xAuthTokenCacheKey = await authAPICtrl.createAuthCacheKey(
+      const xAuthTokenCacheKey = await authCtrl.createAuthCacheKey(
         xAuthTokenInfo.uid,
         xAuthTokenInfo.xatId,
       );

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 10:49:55
+ * @Last Modified time: 2018-07-26 19:52:59
  */
 /** 内建模块 */
 import path from 'path';
@@ -67,6 +67,20 @@ M.genUUID36 = () => uuid.v4();
  */
 M.genUUID = () => uuid.v4().replace(/-/g, '');
 
+M.getDateStr = () => {
+  let dateStr = '';
+
+  const date = new Date();
+  dateStr += date.getFullYear(); // 获取完整的年份(4位,1970-????)
+  dateStr += (date.getMonth() + 1).toString().padStart(2, '0'); // 获取当前月份(01-12)
+  dateStr += date.getDate().toString().padStart(2, '0'); // 获取当前日(01-31)
+  dateStr += date.getHours().toString().padStart(2, '0'); // 获取当前小时数(0-23)
+  dateStr += date.getMinutes().toString().padStart(2, '0'); // 获取当前分钟数(0-59)
+  dateStr += date.getSeconds().toString().padStart(2, '0'); // 获取当前秒数(0-59)
+
+  return dateStr;
+};
+
 M.isEmpty = (d) => {
   if (util.isNullOrUndefined(d)) return true;
   if (util.isBoolean(d)) return false;
@@ -116,6 +130,52 @@ M.genPageInfo =  (ctx, dataList, page = 1, pageSize = ctx.state.pageSetting.page
   };
 
   return data;
+};
+
+/**
+ * 从JSON对象中根据路径查找数据
+ *
+ * @param {object} j 待查找的JSON对象
+ * @param {string} pathString 路径，如`user.id`
+ * @param {boolean} safeTrace 是否适用安全模式。使用安全模式时，无法找到路径时返回`null`而不会抛错
+ * @returns {string} field
+*/
+M.jsonFind = (j, pathString, safeTrace) => {
+  if (j === null || typeof j === 'undefined') {
+    if (safeTrace) {
+      return null;
+    }
+
+    throw new Error('jsonFind() - hit `null`');
+  }
+
+  if (pathString === null) {
+    if (safeTrace) {
+      return null;
+    }
+
+    throw new Error('jsonFind() - `null` pathString');
+  }
+
+  let currPath = '<TOP>';
+  let subJ = j;
+  const steps = pathString.split('.');
+  for (let i = 0; i < steps.length; i += 1) {
+    const step = steps[i];
+    currPath = [currPath, step].join('.');
+
+    if (typeof subJ === 'undefined') {
+      if (safeTrace) {
+        return null;
+      }
+
+      throw new Error(`jsonFind() - hit \`undefined\` at \`${currPath}\``);
+    }
+
+    subJ = subJ[step];
+  }
+
+  return subJ;
 };
 
 /**

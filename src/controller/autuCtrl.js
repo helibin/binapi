@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 22:56:45
+ * @Last Modified time: 2018-07-26 20:42:47
  */
 /** 内建模块 */
 
@@ -13,7 +13,7 @@ import jwt from 'jsonwebtoken';
 import Base from './base';
 
 /** 项目模块 */
-import { authMod } from '../model';
+import { authMod, usersMod } from '../model';
 
 
 export default new class extends Base  {
@@ -55,20 +55,25 @@ export default new class extends Base  {
         },
       },
     };
-    const authInfo = await authMod.get('user_id', body.identifier);
+    const authRes = await authMod.createGetModFunc(ctx, opt);
 
-    if (this.t.isEmpty(authInfo)) {
-      throw new this._e('EUser', 'noSuchUser', { identifier: body.identifier });
+    if (this.t.isEmpty(authRes)) {
+      throw new this._e('EUserAuth', 'noSuchUser', { identifier: body.identifier });
     }
-    if (authInfo.password !== this.t.getSaltedHashStr(body.password, authInfo.user_id)) {
+    if (authRes.password !== this.t.getSaltedHashStr(body.password, authRes.user_id)) {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    authInfo.password   = undefined;
-    this.ret.data            = authInfo;
-    this.ret.xAuthToken = await this.genXAuthToken(ctx, authInfo.user_id);
+    const userRes = await usersMod.createGetModFunc(ctx, { where: { id: authRes.user_id } });
+    if (this.t.isEmpty(userRes)) {
+      throw new this._e('EUser', 'noSuchUser', { userId: authRes.user_id });
+    }
 
-    ctx.state.logger('debug', `用户登录: userId=${authInfo.user_id}`);
+    userRes.username = body.identifier;
+    this.ret.data            = userRes;
+    this.ret.xAuthToken = await this.genXAuthToken(ctx, authRes.user_id);
+
+    ctx.state.logger('debug', `用户登录: userId=${authRes.user_id}`);
     ctx.state.sendJSON(this.ret);
   }
 
@@ -77,26 +82,16 @@ export default new class extends Base  {
     const ret       = this.t.initRet();
     const newUserId = this.t.genUUID();
 
-    const dbCheck = await authMod.findOne({
-      where: {
-        $or: {
-          user_id   : body.identifier,
-          identifier: body.identifier,
-        },
-      },
-    });
-    if (dbCheck) throw new this._e('EUser', 'userIsExisted', { identifier: body.identifier });
-
     const newData = {
-      user_id   : newUserId,
+      id        : newUserId,
       identifier: body.identifier,
       password  : this.t.getSaltedHashStr(body.password, newUserId),
+      nickname  : body.nickname || this.t.getDateStr(),
+      name      : body.name,
+      phone     : body.phone,
+      email     : body.email,
     };
-    await authMod.create(newData).catch(async (err) => {
-      err = new this._e('EDBMysql', err.message);
-      ctx.state.logger(err, ctx.url, err, '\n\n', newData);
-      throw err;
-    });
+    await usersMod.run(ctx, 'addUser', newData);
 
     ctx.state.logger('debug', `用户注册：userId=${newUserId}`);
     ret.data = { newDataId: newUserId };

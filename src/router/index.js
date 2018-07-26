@@ -15,13 +15,13 @@ import { router, pageRouter } from './base';
 
 
 // API
-require('./authAPIRouter');
-require('./captchaAPIRouter');
-require('./dabasesAPIRouter');
-require('./indexAPIRouter');
-require('./likesAPIRouter');
-require('./testsAPIRouter');
-require('./usersAPIRouter');
+require('./authRouter');
+require('./captchaRouter');
+require('./dabasesRouter');
+require('./indexRouter');
+require('./likesRouter');
+require('./testsRouter');
+require('./usersRouter');
 
 // PAGE
 require('./indexPageRouter');

@@ -12,11 +12,11 @@
 import { router }       from './base';
 
 /** 项目模块 */
-import { testsAPICtrl } from '../controller';
+import { testsCtrl } from '../controller';
 
 
 router.get('/tests',
-  testsAPICtrl.run('test'));
+  testsCtrl.run('test'));
 
 router.get('/tests/location',
-  testsAPICtrl.run('location'));
+  testsCtrl.run('location'));

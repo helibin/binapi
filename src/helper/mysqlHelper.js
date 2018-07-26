@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 10:47:45
+ * @Last Modified time: 2018-07-26 11:40:14
  */
 /** 内建模块 */
 
@@ -45,7 +45,7 @@ sequelize.authenticate().then(() => {
   logger(err, '无法连接至数据库：', err);
 });
 
-export default {
+export {
   sequelize,
   Sequelize,
 };

@@ -13,10 +13,10 @@ import { router } from './base';
 
 /** 项目模块 */
 import { authMid } from '../middleware';
-import { databasesAPICtrl } from '../controller';
+import { databasesCtrl } from '../controller';
 
 
 router.get('/databases/init',
   authMid.requireSignIn(),
   authMid.requirePrivilege('dba_databasesInit'),
-  databasesAPICtrl.run('init'));
+  databasesCtrl.run('init'));

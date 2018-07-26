@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 12:16:01
+ * @Last Modified time: 2018-07-26 20:06:25
  */
 /** 内建模块 */
 
@@ -12,8 +12,10 @@
 import { router  } from './base';
 
 /** 项目模块 */
-import { authAPICtrl  } from '../controller';
-import { ipMid, paramMid } from '../middleware';
+import { authCtrl  } from '../controller';
+import {
+  bizMid, ipMid, paramMid,
+} from '../middleware';
 import { authLogic } from '../logic';
 
 
@@ -59,9 +61,40 @@ import { authLogic } from '../logic';
  */
 router.post('/auth/sign-in',
   paramMid.check(authLogic.signIn),
-  authAPICtrl.run('signIn'));
+  authCtrl.run('signIn'));
 
+/**
+ * @api {post} /auth/sign-up 用户注册
+ * @apiVersion 0.1.0
+ * @apiDescription 用户注册接口
+ * @apiName signUp
+ * @apiGroup Auth
+ *
+ * @apiParam {String} identifier 用户名.
+ * @apiParam {String} password密码(md5值).
+ * @apiParam {String} [nickname].
+ * @apiParam {String} name.
+ * @apiParam {String} [phone].
+ * @apiParam {String} [email].
+ *
+ *
+ * @apiUse commonSuccessRes
+ *
+ * @apiError userIsExisted 用户已存在
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 401 Unauthorized
+ *     {
+ *        "err": 1000,
+ *        "msg": "userIsExisted",
+ *        "msg_locale": "用户已存在",
+ *        "requestId": "reqesutId"
+ *     }
+ *
+ * @apiSampleRequest /auth/sign-up
+ */
 router.post('/auth/sign-up',
   ipMid.allowAccess(),
   paramMid.check(authLogic.signUp),
-  authAPICtrl.run('signUp'));
+  bizMid.run('userNotExists', 'request.body.identifier'),
+  authCtrl.run('signUp'));

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-17 19:00:22
+ * @Last Modified time: 2018-07-26 19:33:05
  */
 /** 内建模块 */
 
@@ -73,8 +73,7 @@ export default new class extends Base {
     const ret = this.t.initRet();
     const targetId = ctx.params.targetId;
 
-    const opt = { where: { id: targetId } };
-    await usersMod.destroy(opt);
+    await usersMod.run(ctx, 'delUser', targetId);
 
     ctx.state.logger('debug', `删除用户：userId=${targetId}`);
     ctx.state.sendJSON(ret);
