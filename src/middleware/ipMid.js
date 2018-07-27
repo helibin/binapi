@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-24 15:56:37
+ * @Last Modified time: 2018-07-27 14:45:04
  */
 /** 内建模块 */
 
@@ -16,7 +16,7 @@ import Base from './base';
 
 
 export default new class extends Base {
-  check(options = {}) {
+  intercept(options = {}) {
     return async (ctx, next) => {
       const clientIP = ctx.state.clientIP;
 

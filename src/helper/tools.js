@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 19:52:59
+ * @Last Modified time: 2018-07-27 10:15:46
  */
 /** 内建模块 */
 import path from 'path';
@@ -100,11 +100,13 @@ M.isEmpty = (d) => {
  */
 M.genRandStr =  (len = 32,
   chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
+  console.time('str');
   let randStr = '';
   while (randStr.length < len) {
     const randIndex = Math.floor(Math.random() * chars.length);
     randStr += chars[randIndex];
   }
+  console.timeEnd('str');
 
   return randStr;
 };

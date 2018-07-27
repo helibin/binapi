@@ -63,13 +63,13 @@ openAPI:
 
 # log4js日志等级列表
 logLevels:
-  - all
-  - trace
-  - debug
-  - info
-  - warn
-  - error
-  - fatal
+  all: 'cyan'
+  trace: 'blue'
+  debug: 'white'
+  info: 'white'
+  warn: 'yellow'
+  error: 'red'
+  fatal: 'magenta'
 
 # hbs模板
 hbs:

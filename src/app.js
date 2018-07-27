@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 11:19:53
+ * @Last Modified time: 2018-07-27 14:44:12
  */
 /* 内建模块 */
 import path from 'path';
@@ -20,7 +20,7 @@ import helpers    from 'handlebars-helpers';
 
 /* 基础模块 */
 import {
-  CONFIG, logger, prepare, check,
+  CONFIG, logger, prepare, yamlCheck,
 } from './helper';
 
 
@@ -89,7 +89,7 @@ try {
     logger(null, '运行环境  ：', `${chalk.cyan(CONFIG.env)}`);
 
     /* 常量加载检测 */
-    check();
+    yamlCheck();
 
     const mysqlExtraConfigs = [];
     for (const k in CONFIG.dbServer.mysql) {

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 11:55:42
+ * @Last Modified time: 2018-07-27 10:41:44
  */
 /** 内建模块 */
 
@@ -50,7 +50,5 @@ export const Template = sequelize.define('tb_main_templates', {
     comment     : '更新时间戳',
   },
 }, { comment: '网站模板表' });
-
-Template.sync();
 
 export default Template;

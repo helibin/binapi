@@ -2,15 +2,16 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 15:39:16
+ * @Last Modified time: 2018-07-27 11:53:32
  */
 /** 内建模块 */
 import os from 'os';
 
 /** 第三方模块 */
-import log4js from 'log4js';
 import CONFIG from 'config';
 import Raven from 'raven';
+import chalk from 'chalk';
+import log4js from 'log4js';
 
 /** 基础模块 */
 
@@ -60,16 +61,18 @@ hostName = hostName || hostName[0] || 'webServer';
 const logger = (...args) => {
   let logLevel = args.shift();
 
-  if (!CONFIG.logLevels.includes(logLevel)) {
+  if (!Object.keys(CONFIG.logLevels).includes(logLevel)) {
     logLevel = logLevel ? 'error' : 'info';
   }
 
-  log4js.getLogger(hostName)[logLevel](...args);
+  const loggerColor = chalk[CONFIG.logLevels[logLevel]];
+  log4js.getLogger(hostName)[logLevel](loggerColor(...args));
 };
 
 const Logger = {};
-for (const logLevel of CONFIG.logLevels) {
-  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
+for (const logLevel of Object.keys(CONFIG.logLevels)) {
+  const loggerColor = chalk[CONFIG.logLevels[logLevel]];
+  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](loggerColor(...args));
 }
 
 const rLog = (ex) => {

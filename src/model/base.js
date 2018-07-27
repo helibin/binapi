@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 19:11:18
+ * @Last Modified time: 2018-07-27 14:33:00
  */
 /** 内建模块 */
 
@@ -25,22 +25,26 @@ export default class {
   }
 
   async run(ctx, func, ...args) {
+    const now = Date.now();
     try {
       return await this[func](ctx, ...args).catch(async (ex) => {
         throw new this._e('EDBMysql', ex.message.toString());
       });
     } catch (ex) {
       ctx.state.hasError = true;
-      await this.trans.rollback();
+      if (!this.t.isEmpty(this.trans)) await this.trans.rollback();
 
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Model调用方法：[${func}] ，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Model调用方法：[${func}]，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 
   async createListModFunc(ctx, options) {
+    const now = Date.now();
     try {
       return await this.model.findAll(options).catch(async (err) => {
         throw new this._e('EDBMysql', err.message);
@@ -51,11 +55,14 @@ export default class {
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Mod调用通用LIST方法，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Mod调用通用LIST方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 
   async createGetModFunc(ctx, options) {
+    const now = Date.now();
     try {
       return await this.model.findOne(options).catch(async (err) => {
         throw new this._e('EDBMysql', err.message);
@@ -66,11 +73,14 @@ export default class {
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Mod调用通用GET方法，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Mod调用通用GET方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 
   async createAddModFunc(ctx, data) {
+    const now = Date.now();
     try {
       this.trans = await this.sequelize.transaction();
 
@@ -86,11 +96,14 @@ export default class {
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Mod调用通用ADD方法，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Mod调用通用ADD方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 
   async createModifiyModFunc(ctx, data, options) {
+    const now = Date.now();
     try {
       this.trans = await this.sequelize.transaction();
 
@@ -106,11 +119,14 @@ export default class {
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Mod调用通用MODIFY方法，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Mod调用通用MODIFY方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 
   async createDeleteModFunc(ctx, options) {
+    const now = Date.now();
     try {
       this.trans = this.sequelize.transaction();
 
@@ -126,7 +142,9 @@ export default class {
       throw ex;
     } finally {
       ctx.state.logger(ctx.state.hasError,
-        `Mod调用通用DELETE方法，是否开启事务：${!!this.trans}, 结果：${ctx.state.hasError ? '失败' : '成功'}。`);
+        `Mod调用通用DELETE方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
     }
   }
 }

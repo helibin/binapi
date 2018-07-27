@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 11:56:02
+ * @Last Modified time: 2018-07-27 10:41:39
  */
 /** 内建模块 */
 
@@ -32,9 +32,9 @@ export const User = sequelize.define('tb_main_users', {
     type   : Sequelize.STRING,
     comment: '姓名',
   },
-  phone: {
+  mobile: {
     type   : Sequelize.STRING,
-    comment: '电话',
+    comment: '手机',
   },
   email: {
     type    : Sequelize.STRING,
@@ -58,7 +58,5 @@ export const User = sequelize.define('tb_main_users', {
     comment     : '更新时间戳',
   },
 }, { comment: '用户信息表' });
-
-User.sync();
 
 export default User;

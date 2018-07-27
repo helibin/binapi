@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 11:12:28
+ * @Last Modified time: 2018-07-27 14:33:49
  */
 /** 内建模块 */
 
@@ -26,6 +26,7 @@ export default class {
 
   run(func, ...args) {
     return async (ctx) => {
+      const now = Date.now();
       try {
         await this[func](ctx, ...args);
       } catch (ex) {
@@ -33,7 +34,9 @@ export default class {
         throw ex;
       } finally {
         ctx.state.logger(ctx.state.hasError,
-          `Ctrl调用方法：[${func}] ${ctx.state.hasError ? '失败' : '成功'}。`);
+          `Ctrl调用方法：[${func}],`,
+          `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+          `用时：${Date.now() - now}ms。`);
       }
     };
   }

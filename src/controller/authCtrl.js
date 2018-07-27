@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 20:42:47
+ * @Last Modified time: 2018-07-27 14:11:39
  */
 /** 内建模块 */
 
@@ -45,6 +45,10 @@ export default new class extends Base  {
   }
 
   async signIn(ctx) {
+    await authMod.run(ctx, 'query', 'selec').then((res) => {
+      console.log(res, ',,,');
+    });
+    return;
     const body = ctx.request.body;
     const opt = {
       attributes: { exclude: ['seq'] },
@@ -88,7 +92,7 @@ export default new class extends Base  {
       password  : this.t.getSaltedHashStr(body.password, newUserId),
       nickname  : body.nickname || this.t.getDateStr(),
       name      : body.name,
-      phone     : body.phone,
+      mobile    : body.mobile,
       email     : body.email,
     };
     await usersMod.run(ctx, 'addUser', newData);

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:54
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 19:24:44
+ * @Last Modified time: 2018-07-27 15:13:54
  */
 export default {
   resMsg: {
@@ -30,6 +30,7 @@ export default {
       length: '长度必须为{{limit}}',
       min   : '长度不能少于{{limit}}',
       max   : '长度不能大于{{limit}}',
+      regex : { base: '无效的值：{{value}}' },
       email : '必须为合法的电子邮箱地址',
     },
   },

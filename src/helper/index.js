@@ -12,7 +12,7 @@ import redis            from './redisHelper';
 import _e               from './serverError';
 import t                from './tools';
 import {
-  CONST, PRIVILEGE, check,
+  CONST, PRIVILEGE, yamlCheck,
 } from './yamlCC';
 
 
@@ -21,7 +21,7 @@ export {
   CONST,
   PRIVILEGE,
   _e,
-  check,
+  yamlCheck,
   mysql,
   logger,
   prepare,

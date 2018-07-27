@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 20:06:25
+ * @Last Modified time: 2018-07-27 14:47:07
  */
 /** 内建模块 */
 
@@ -60,7 +60,7 @@ import { authLogic } from '../logic';
  * @apiSampleRequest /auth/sign-in
  */
 router.post('/auth/sign-in',
-  paramMid.check(authLogic.signIn),
+  paramMid.run('joiCheck', authLogic.signIn),
   authCtrl.run('signIn'));
 
 /**
@@ -74,7 +74,7 @@ router.post('/auth/sign-in',
  * @apiParam {String} password密码(md5值).
  * @apiParam {String} [nickname].
  * @apiParam {String} name.
- * @apiParam {String} [phone].
+ * @apiParam {String} [mobile].
  * @apiParam {String} [email].
  *
  *
@@ -94,7 +94,7 @@ router.post('/auth/sign-in',
  * @apiSampleRequest /auth/sign-up
  */
 router.post('/auth/sign-up',
-  ipMid.allowAccess(),
-  paramMid.check(authLogic.signUp),
+  ipMid.run('allowAccess'),
+  paramMid.run('joiCheck', authLogic.signUp),
   bizMid.run('userNotExists', 'request.body.identifier'),
   authCtrl.run('signUp'));

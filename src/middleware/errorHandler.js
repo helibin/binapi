@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 17:52:43
+ * @Last Modified time: 2018-07-27 11:32:59
  */
 /** 内建模块 */
 
@@ -45,7 +45,7 @@ export default async (ctx, next) => {
       }
     }
   } catch (ex) {
-    ctx.state.logger(ex, chalk.red('访问发生异常：'), `${ex.name === 'MyError'
+    ctx.state.logger(ex, `访问发生异常：${ex.name === 'MyError'
       ? `自定义异常 => ${JSON.stringify(ctx.state.i18n(ex.toJSON()))}`
       : '系统异常 =>'}`);
 

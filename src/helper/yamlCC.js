@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 15:40:52
+ * @Last Modified time: 2018-07-27 14:43:50
  */
 /** 内建模块 */
 import fs from 'fs';
@@ -18,7 +18,7 @@ import { logger } from './logger';
 /** 项目模块 */
 
 
-export const check = () => {
+export const yamlCheck = () => {
   try {
     const constFilePath = path.join(__dirname, '../const.yaml');
     const privilegeFilePath = path.join(__dirname, '../privilege.yaml');

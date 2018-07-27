@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-25 22:26:18
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 23:48:06
+ * @Last Modified time: 2018-07-27 10:44:41
  */
 /** 内建模块 */
 
@@ -12,11 +12,10 @@
 import { router } from './base';
 
 /** 项目模块 */
-import { authMid } from '../middleware';
+import { ipMid } from '../middleware';
 import { databasesCtrl } from '../controller';
 
 
 router.get('/databases/init',
-  authMid.requireSignIn(),
-  authMid.requirePrivilege('dba_databasesInit'),
+  ipMid.allowAccess(),
   databasesCtrl.run('init'));
