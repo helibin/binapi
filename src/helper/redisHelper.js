@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 23:33:59
+ * @Last Modified time: 2018-07-29 21:11:33
  */
 /** 内建模块 */
 import { isNullOrUndefined } from 'util';
@@ -17,6 +17,7 @@ import sortedJSON from 'sorted-json';
 import CONFIG from 'config';
 
 /** 项目模块 */
+import { logger } from './logger';
 
 /** 预处理 */
 Promise.promisifyAll(redis);
@@ -25,15 +26,24 @@ Promise.promisifyAll(redis);
 const redisConf = CONFIG.dbServer.redis;
 const redisClientOpt = {};
 for (const k in redisConf) {
-  if (!isNullOrUndefined(redisClientOpt[k])) {
+  if (!isNullOrUndefined(redisConf[k])) {
     redisClientOpt[k] = redisConf[k];
   }
 }
+const client = redis.createClient(redisClientOpt);
+client.on('error', ex => ex);
+
+// 测试db连接
+client.authAsync(redisClientOpt.password).then((res) => {
+  logger('debug', `Redis连接成功！${res}`);
+}).catch((ex) => {
+  logger('error', `无法连接至Redis数据库：${ex}`);
+});
 
 export default class {
   constructor(ctx) {
     this.ctx   = ctx;
-    this.redis = redis.createClient(redisClientOpt);
+    this.client = client;
   }
 
   async run(...args) {
@@ -44,7 +54,7 @@ export default class {
         `${chalk.magenta('[REDIS]')} \`${chalk.yellow(command.toUpperCase())}\` <- `,
         JSON.stringify(args.toString()));
 
-      return await this.redis[`${command}Async`](...args);
+      return await this.client[`${command}Async`](...args);
     } catch (ex) {
       this.ctx.state.logger(ex, `运行Redis任务错误：${ex}`);
       throw ex;

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 11:39:55
+ * @Last Modified time: 2018-07-29 22:08:26
  */
 /** 内建模块 */
 
@@ -21,7 +21,7 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   host   : dbConfig.host,
   port   : dbConfig.port,
   dialect: 'mysql',
-  logging: CONFIG.env !== 'production' ? Logger.debug : false,
+  logging: CONFIG.env !== 'production' ? Logger.sql : false,
 
   define: {
     freezeTableName: true,
@@ -32,17 +32,20 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
     deletedAt      : false,
   },
   pool: {
-    max : dbConfig.connectionLimit,
     min : 0,
+    max : dbConfig.connectionLimit,
     idle: 10000,
   },
+
+  // 在打印执行的SQL日志时输出执行时间（毫秒）
+  benchmark: true,
 });
 
 // 测试db连接
 sequelize.authenticate().then(() => {
-  logger('debug', '连接成功！');
+  logger('debug', 'Mysql连接成功！');
 }).catch((err) => {
-  logger(err, '无法连接至数据库：', err);
+  logger(err, '无法连接至Mysql数据库：', err);
 });
 
 export {

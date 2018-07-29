@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 11:53:32
+ * @Last Modified time: 2018-07-29 22:16:07
  */
 /** 内建模块 */
 import os from 'os';
@@ -72,8 +72,20 @@ const logger = (...args) => {
 const Logger = {};
 for (const logLevel of Object.keys(CONFIG.logLevels)) {
   const loggerColor = chalk[CONFIG.logLevels[logLevel]];
-  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](loggerColor(...args));
+  Logger[logLevel] = (...args) => {
+    log4js.getLogger(hostName)[logLevel](loggerColor(args));
+  };
 }
+
+Logger.sql = (execSql, execTime) => {
+  let logStr = `执行SQL语句：
+    ${execSql}`;
+  if (typeof execTime === 'number') {
+    logStr += `，
+    用时：${execTime}ms`;
+  }
+  log4js.getLogger('Mysql.execDetail').debug(logStr);
+};
 
 const rLog = (ex) => {
   Raven.captureException(ex, (err, eventId) => {

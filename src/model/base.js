@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:33:00
+ * @Last Modified time: 2018-07-29 21:41:30
  */
 /** 内建模块 */
 
@@ -27,6 +27,12 @@ export default class {
   async run(ctx, func, ...args) {
     const now = Date.now();
     try {
+      if (typeof this[func] !== 'function') {
+        return await this.sequelize[func](...args).catch(async (ex) => {
+          throw new this._e('EDBMysql', ex.message.toString());
+        });
+      }
+
       return await this[func](ctx, ...args).catch(async (ex) => {
         throw new this._e('EDBMysql', ex.message.toString());
       });
