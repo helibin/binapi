@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 21:43:16
+ * @Last Modified time: 2018-07-29 22:30:49
  */
 /** 内建模块 */
 
@@ -45,10 +45,6 @@ export default new class extends Base  {
   }
 
   async signIn(ctx) {
-    // await authMod.run(ctx, 'query', 'select * from tb_main_users').then((res) => {
-    //   console.log(res, ',,,');
-    // });
-    // return;
     const body = ctx.request.body;
     const opt = {
       attributes: { exclude: ['seq'] },
