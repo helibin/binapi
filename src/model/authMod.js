@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 18:54:16
+ * @Last Modified time: 2018-07-29 23:20:38
  */
 /** 内建模块 */
 
@@ -24,6 +24,9 @@ export default new class extends Base {
   async get(ctx, options) {
     options = options || { user_id: null };
 
-    return await authScm.findOne(options);
+    this.ret.data = await authScm.findOne(options);
+
+    this.ret.data = this.ret.data.get();
+    return this.ret;
   }
 }();

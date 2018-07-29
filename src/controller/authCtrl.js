@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 22:30:49
+ * @Last Modified time: 2018-07-29 23:22:23
  */
 /** 内建模块 */
 
@@ -70,8 +70,8 @@ export default new class extends Base  {
     }
 
     userRes.username = body.identifier;
+    userRes.xAuthToken = await this.genXAuthToken(ctx, authRes.user_id);
     this.ret.data            = userRes;
-    this.ret.xAuthToken = await this.genXAuthToken(ctx, authRes.user_id);
 
     ctx.state.logger('debug', `用户登录: userId=${authRes.user_id}`);
     ctx.state.sendJSON(this.ret);

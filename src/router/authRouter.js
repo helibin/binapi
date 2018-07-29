@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:47:07
+ * @Last Modified time: 2018-07-30 00:00:53
  */
 /** 内建模块 */
 
@@ -60,7 +60,7 @@ import { authLogic } from '../logic';
  * @apiSampleRequest /auth/sign-in
  */
 router.post('/auth/sign-in',
-  paramMid.run('joiCheck', authLogic.signIn),
+  paramMid.joiCheck(authLogic.signIn),
   authCtrl.run('signIn'));
 
 /**
@@ -95,6 +95,6 @@ router.post('/auth/sign-in',
  */
 router.post('/auth/sign-up',
   ipMid.run('allowAccess'),
-  paramMid.run('joiCheck', authLogic.signUp),
+  paramMid.joiCheck(authLogic.signUp),
   bizMid.run('userNotExists', 'request.body.identifier'),
   authCtrl.run('signUp'));

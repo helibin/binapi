@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 21:41:30
+ * @Last Modified time: 2018-07-29 23:35:46
  */
 /** 内建模块 */
 
@@ -27,15 +27,18 @@ export default class {
   async run(ctx, func, ...args) {
     const now = Date.now();
     try {
+      let dbRes = null;
       if (typeof this[func] !== 'function') {
-        return await this.sequelize[func](...args).catch(async (ex) => {
+        dbRes = await this.sequelize[func](...args).catch(async (ex) => {
           throw new this._e('EDBMysql', ex.message.toString());
         });
       }
 
-      return await this[func](ctx, ...args).catch(async (ex) => {
+      dbRes = await this[func](ctx, ...args).catch(async (ex) => {
         throw new this._e('EDBMysql', ex.message.toString());
       });
+
+      return dbRes ? dbRes.toJSON() : dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
       if (!this.t.isEmpty(this.trans)) await this.trans.rollback();
@@ -52,9 +55,10 @@ export default class {
   async createListModFunc(ctx, options) {
     const now = Date.now();
     try {
-      return await this.model.findAll(options).catch(async (err) => {
+      const dbRes = await this.model.findAll(options).catch(async (err) => {
         throw new this._e('EDBMysql', err.message);
       });
+      return dbRes ? dbRes.toJSON() : dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
 
@@ -70,9 +74,11 @@ export default class {
   async createGetModFunc(ctx, options) {
     const now = Date.now();
     try {
-      return await this.model.findOne(options).catch(async (err) => {
+      const dbRes = await this.model.findOne(options).catch(async (err) => {
         throw new this._e('EDBMysql', err.message);
       });
+
+      return dbRes ? dbRes.toJSON() : dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
 

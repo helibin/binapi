@@ -16,5 +16,5 @@ import { captchaLogic } from '../logic';
 /** 项目模块 */
 
 router.get('/captcha/sign-up/:token.svg',
-  paramMid.run('joiCheck', captchaLogic.getSVGCaptcha),
+  paramMid.joiCheck(captchaLogic.getSVGCaptcha),
   captchaMid.getSVGCaptcha('sign-up'));
