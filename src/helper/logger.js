@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:13:06
+ * @Last Modified time: 2018-07-30 12:04:14
  */
 /** 内建模块 */
 import os from 'os';
@@ -78,11 +78,9 @@ for (const logLevel of Object.keys(CONFIG.logLevels)) {
 }
 
 Logger.sql = (execSql, execTime) => {
-  let logStr = `执行SQL语句：
-    ${execSql}`;
+  let logStr = `执行SQL语句：${execSql}`;
   if (typeof execTime === 'number') {
-    logStr += `，
-    用时：${execTime}ms`;
+    logStr += chalk.green(` => 用时：${execTime}ms`);
   }
   log4js.getLogger('Mysql.execDetail').debug(logStr);
 };

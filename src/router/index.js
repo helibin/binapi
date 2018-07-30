@@ -19,7 +19,6 @@ require('./authRouter');
 require('./captchaRouter');
 require('./dabasesRouter');
 require('./indexRouter');
-require('./likesRouter');
 require('./testsRouter');
 require('./usersRouter');
 

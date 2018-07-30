@@ -2,12 +2,11 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:57:59
+ * @Last Modified time: 2018-07-30 13:55:41
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import sleep from 'sleep';
 
 /** 基础模块 */
 import {
@@ -28,8 +27,7 @@ export default class {
     return async (ctx, next) => {
       const now = Date.now();
       try {
-        await this[func](ctx, ...args);
-        sleep.msleep(109);
+        await this[func](...args);
       } catch (ex) {
         ctx.state.hasError = true;
         throw ex;

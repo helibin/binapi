@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 19:32:58
+ * @Last Modified time: 2018-07-30 14:00:51
  */
 /** 内建模块 */
 
@@ -23,7 +23,7 @@ export default new class extends Base {
 
   async addUser(ctx, data) {
     this.trans = await this.sequelize.transaction();
-    await authScm.create({
+    const dbRes = await authScm.create({
       user_id   : data.id,
       identifier: data.identifier,
       password  : data.password,
@@ -31,15 +31,17 @@ export default new class extends Base {
 
     await usersScm.create(data, { transaction: this.trans });
 
-    return await this.trans.commit();
+    await this.trans.commit();
+    return dbRes;
   }
 
   async delUser(ctx, targetId) {
     this.trans = await this.sequelize.transaction();
 
-    await authScm.destroy({ where: { user_id: targetId } }, { transaction: this.trans });
-    await usersScm.destroy({ where: { id: targetId } }, { transaction: this.trans });
+    let dbRes = await authScm.destroy({ where: { user_id: targetId } }, { transaction: this.trans });
+    dbRes     = await usersScm.destroy({ where: { id: targetId } }, { transaction: this.trans });
 
-    return await this.trans.commit();
+    await this.trans.commit();
+    return dbRes;
   }
 }();

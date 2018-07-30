@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:44:12
+ * @Last Modified time: 2018-07-30 14:14:32
  */
 /* 内建模块 */
 import path from 'path';
@@ -69,10 +69,10 @@ app.use(userAgent);
 app.use(bodyparser());
 
 // 业务中间件初始化
-app.use(prepare.xAuthToken)
 app.use(prepare.response);
+app.use(prepare.xAuthToken)
 app.use(prepare.detectPageSetting);
-app.use(authMid.prepareUserInfo());
+app.use(authMid.initUserInfo());
 app.use(noPageCache());
 
 

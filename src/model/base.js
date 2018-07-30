@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:35:46
+ * @Last Modified time: 2018-07-30 15:15:48
  */
 /** 内建模块 */
 
@@ -28,15 +28,17 @@ export default class {
     const now = Date.now();
     try {
       let dbRes = null;
+
       if (typeof this[func] !== 'function') {
         dbRes = await this.sequelize[func](...args).catch(async (ex) => {
           throw new this._e('EDBMysql', ex.message.toString());
         });
       }
 
-      dbRes = await this[func](ctx, ...args).catch(async (ex) => {
-        throw new this._e('EDBMysql', ex.message.toString());
-      });
+      dbRes = await this[func](ctx, ...args)
+        .catch(async (ex) => {
+          throw new this._e('EDBMysql', ex.message.toString());
+        });
 
       return dbRes ? dbRes.toJSON() : dbRes;
     } catch (ex) {
@@ -49,16 +51,20 @@ export default class {
         `Model调用方法：[${func}]，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Model调用方法：[${func}]，详情: ${JSON.stringify(...args)}`);
     }
   }
 
-  async createListModFunc(ctx, options) {
+  async list(ctx, whereOpt, extraOpt = {}) {
     const now = Date.now();
     try {
-      const dbRes = await this.model.findAll(options).catch(async (err) => {
-        throw new this._e('EDBMysql', err.message);
-      });
-      return dbRes ? dbRes.toJSON() : dbRes;
+      const dbRes = await this.model
+        .findAndCountAll(Object.assign({ where: whereOpt }, extraOpt, { raw: true }))
+        .catch(async (err) => {
+          throw new this._e('EDBMysql', err.message);
+        });
+
+      return this.t.genPageInfo(ctx, dbRes.rows, extraOpt.page, extraOpt.pageSize);
     } catch (ex) {
       ctx.state.hasError = true;
 
@@ -68,17 +74,20 @@ export default class {
         `Mod调用通用LIST方法，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用LIST方法，详情: ${JSON.stringify(whereOpt)}`);
     }
   }
 
-  async createGetModFunc(ctx, options) {
+  async get(ctx, whereOpt, extraOpt = {}) {
     const now = Date.now();
     try {
-      const dbRes = await this.model.findOne(options).catch(async (err) => {
-        throw new this._e('EDBMysql', err.message);
-      });
+      const dbRes = await this.model
+        .findOne(Object.assign({ where: whereOpt }, extraOpt, { raw: true }))
+        .catch(async (err) => {
+          throw new this._e('EDBMysql', err.message);
+        });
 
-      return dbRes ? dbRes.toJSON() : dbRes;
+      return dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
 
@@ -88,19 +97,23 @@ export default class {
         `Mod调用通用GET方法，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用GET方法，详情: ${JSON.stringify(whereOpt)}`);
     }
   }
 
-  async createAddModFunc(ctx, data) {
+  async add(ctx, newData, extraOpt = {}) {
     const now = Date.now();
     try {
       this.trans = await this.sequelize.transaction();
 
-      await this.model.create(data, { transaction: this.trans }).catch(async (err) => {
-        throw new this._e('EDBMysql', err.message);
-      });
+      const dbRes = await this.model
+        .create(newData, Object.assign(extraOpt, { transaction: this.trans }))
+        .catch(async (err) => {
+          throw new this._e('EDBMysql', err.message);
+        });
 
-      return await this.trans.commit();
+      await this.trans.commit();
+      return dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
       await this.trans.rollback();
@@ -111,19 +124,50 @@ export default class {
         `Mod调用通用ADD方法，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用ADD方法，data: ${JSON.stringify(newData)}`);
     }
   }
 
-  async createModifiyModFunc(ctx, data, options) {
+  async batchAdd(ctx, newDataList, extraOpt = {}) {
     const now = Date.now();
     try {
       this.trans = await this.sequelize.transaction();
 
-      await this.model.update(data, options).catch(async (err) => {
-        throw new this._e('EDBMysql', err.message);
-      });
+      const dbRes = await this.model
+        .bulkCreate(newDataList, Object.assign(extraOpt, { transaction: this.trans }))
+        .catch(async (err) => {
+          throw new this._e('EDBMysql', err.message);
+        });
 
-      return await this.trans.commit();
+      await this.trans.commit();
+      return dbRes;
+    } catch (ex) {
+      ctx.state.hasError = true;
+      await this.trans.rollback();
+
+      throw ex;
+    } finally {
+      ctx.state.logger(ctx.state.hasError,
+        `Mod调用通用批量ADD方法，是否开启事务：${!!this.trans},`,
+        `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+        `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用批量ADD方法，data: ${JSON.stringify(newDataList)}`);
+    }
+  }
+
+  async modify(ctx, data, whereOpt, extraOpt) {
+    const now = Date.now();
+    try {
+      this.trans = await this.sequelize.transaction();
+
+      const dbRes = await this.model
+        .update(data, Object.assign({ where: whereOpt }, extraOpt, { transaction: this.trans }))
+        .catch(async (err) => {
+          throw new this._e('EDBMysql', err.message);
+        });
+
+      await this.trans.commit();
+      return dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
       await this.trans.rollback();
@@ -134,19 +178,21 @@ export default class {
         `Mod调用通用MODIFY方法，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用MODIFY方法，data: ${JSON.stringify(data)}, options: ${JSON.stringify(whereOpt)}`);
     }
   }
 
-  async createDeleteModFunc(ctx, options) {
+  async delete(ctx, whereOpt) {
     const now = Date.now();
     try {
       this.trans = this.sequelize.transaction();
 
-      await this.model.destroy(options).catch(async (err) => {
+      const dbRes = await this.model.destroy({ where: whereOpt }).catch(async (err) => {
         throw new this._e('EDBMysql', err.message);
       });
 
-      return await this.trans.commit();
+      await this.trans.commit();
+      return dbRes;
     } catch (ex) {
       ctx.state.hasError = true;
       await this.trans.rollback();
@@ -157,6 +203,7 @@ export default class {
         `Mod调用通用DELETE方法，是否开启事务：${!!this.trans},`,
         `结果：${ctx.state.hasError ? '失败' : '成功'},`,
         `用时：${Date.now() - now}ms。`);
+      ctx.state.logger('debug', `Mod调用通用DELETE方法，options: ${JSON.stringify(whereOpt)}`);
     }
   }
 }

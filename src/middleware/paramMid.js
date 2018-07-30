@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 00:00:10
+ * @Last Modified time: 2018-07-30 11:45:31
  */
 /** 内建模块 */
 
@@ -33,19 +33,17 @@ export default new class extends Base {
             language    : i18n[ctx.state.shortLocale].joi,
             abortEarly  : true, // 是否有错就报
             allowUnknown: true, // 是否允许未知参数
-          }).catch((err) => {
-            if (err.name !== 'ValidationError')  throw err;
-
-            const errData = this.CONFIG.env === 'production' ? err._object : err;
-            throw new this._e('EClient', err.details[0].message, errData);
           });
         }
       } catch (ex) {
         ctx.state.hasError = true;
 
-        throw ex;
+        if (ex.name !== 'ValidationError')  throw ex;
+
+        const errData = this.CONFIG.env === 'production' ? ex._object : ex;
+        throw new this._e('EClient', ex.details[0].message, errData);
       } finally {
-        ctx.state.logger(ctx.state.hasError, `参数校验，是否通过：${!ctx.state.hasError}`);
+        ctx.state.logger(ctx.state.hasError, `Mid调用 [joiCheck]：参数校验是否通过：${!ctx.state.hasError}`);
       }
       await next();
     };

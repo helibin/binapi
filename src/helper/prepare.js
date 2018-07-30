@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 15:12:37
+ * @Last Modified time: 2018-07-30 14:11:31
  */
 /** 内建模块 */
 
@@ -22,28 +22,6 @@ import pkg from '../../package';
 
 
 const Prepare = {};
-
-Prepare.xAuthToken = async (ctx, next) => {
-  // 从HTTP header中获取
-  if (CONFIG.webServer.xAuthHeader
-    && ctx.headers[CONFIG.webServer.xAuthHeader]) {
-    ctx.state.xAuthToken = ctx.headers[CONFIG.webServer.xAuthHeader];
-  } else
-
-  // 从Query String中获取
-  if (CONFIG.webServer.xAuthQuery
-    && ctx.query[CONFIG.webServer.xAuthQuery]) {
-    ctx.state.xAuthToken = ctx.query[CONFIG.webServer.xAuthQuery];
-  } else
-
-  // 从Cookie中获取
-  if (CONFIG.webServer.xAuthCookie
-    && ctx.cookies.get(CONFIG.webServer.xAuthCookie)) {
-    ctx.state.xAuthToken = ctx.cookies.get(CONFIG.webServer.xAuthCookie);
-  }
-
-  await next();
-};
 
 Prepare.response = async (ctx, next) => {
   try {
@@ -162,6 +140,28 @@ Prepare.response = async (ctx, next) => {
   }
 };
 
+Prepare.xAuthToken = async (ctx, next) => {
+  // 从HTTP header中获取
+  if (CONFIG.webServer.xAuthHeader
+    && ctx.headers[CONFIG.webServer.xAuthHeader]) {
+    ctx.state.xAuthToken = ctx.headers[CONFIG.webServer.xAuthHeader];
+  } else
+
+  // 从Query String中获取
+  if (CONFIG.webServer.xAuthQuery
+    && ctx.query[CONFIG.webServer.xAuthQuery]) {
+    ctx.state.xAuthToken = ctx.query[CONFIG.webServer.xAuthQuery];
+  } else
+
+  // 从Cookie中获取
+  if (CONFIG.webServer.xAuthCookie
+    && ctx.cookies.get(CONFIG.webServer.xAuthCookie)) {
+    ctx.state.xAuthToken = ctx.cookies.get(CONFIG.webServer.xAuthCookie);
+  }
+
+  await next();
+};
+
 /**
  * 判断客户端请求的分页信息，并保存到`ctx.state.pageSetting`
  * @param {object} ctx ctx
@@ -182,7 +182,7 @@ Prepare.detectPageSetting = async (ctx, next) => {
     pageSize,
   };
 
-  return next();
+  return await next();
 };
 
 export default Prepare;

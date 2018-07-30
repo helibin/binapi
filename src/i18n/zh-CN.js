@@ -2,20 +2,23 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:54
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 15:13:54
+ * @Last Modified time: 2018-07-30 15:11:23
  */
 export default {
   resMsg: {
     ok       : '成功',
     okByCache: '成功，来着缓存',
 
-    noSuchUser     : '没有此用户',
-    userIsExisted  : '用户已存在',
-    userNotSignedIn: '用户未登录',
+    noSuchUser       : '没有此用户',
+    userIsExisted    : '用户已存在',
+    userNotSignedIn  : '用户未登录',
+    xAuthTokenExpired: '令牌已过期',
 
     invildUsenameOrPassowrd: '用户名或密码错误',
 
     noSuchPrivilege: '没有此权限',
+
+    databaseInited: '数据库已初始化',
   },
 
   joi: {

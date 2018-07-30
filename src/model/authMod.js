@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:20:38
+ * @Last Modified time: 2018-07-30 15:13:45
  */
 /** 内建模块 */
 
@@ -19,14 +19,5 @@ export default new class extends Base {
   constructor() {
     super();
     this.model = authScm;
-  }
-
-  async get(ctx, options) {
-    options = options || { user_id: null };
-
-    this.ret.data = await authScm.findOne(options);
-
-    this.ret.data = this.ret.data.get();
-    return this.ret;
   }
 }();

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 00:00:53
+ * @Last Modified time: 2018-07-30 22:50:10
  */
 /** 内建模块 */
 
@@ -94,7 +94,7 @@ router.post('/auth/sign-in',
  * @apiSampleRequest /auth/sign-up
  */
 router.post('/auth/sign-up',
-  ipMid.run('allowAccess'),
+  ipMid.allowAccess(),
   paramMid.joiCheck(authLogic.signUp),
-  bizMid.run('userNotExists', 'request.body.identifier'),
+  bizMid.userNotExists('request.body.identifier'),
   authCtrl.run('signUp'));

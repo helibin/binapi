@@ -7,7 +7,6 @@
 /** 内建模块 */
 
 /** 第三方模块 */
-import chalk from 'chalk';
 
 /** 基础模块 */
 import {

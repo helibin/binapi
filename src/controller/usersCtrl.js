@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 19:33:05
+ * @Last Modified time: 2018-07-30 15:13:13
  */
 /** 内建模块 */
 
@@ -23,7 +23,7 @@ export default new class extends Base {
       offset: ctx.state.pageSetting.pageStart,
       limit : ctx.state.pageSetting.pageSize,
     };
-    const result = await usersMod.findAndCountAll(opt);
+    const result = await usersMod.list(opt);
 
     ret = this.t.genPageInfo(ctx, result.rows);
 

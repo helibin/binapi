@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 10:41:39
+ * @Last Modified time: 2018-07-30 14:42:02
  */
 /** 内建模块 */
 
@@ -40,6 +40,16 @@ export const User = sequelize.define('tb_main_users', {
     type    : Sequelize.STRING,
     validate: { isEmail: true },
     comment : '邮箱',
+  },
+  last_seen_at: {
+    type     : Sequelize.DATE(3),
+    allowNull: true,
+    comment  : '最后访问时间戳',
+  },
+  last_sign_at: {
+    type     : Sequelize.DATE(3),
+    allowNull: true,
+    comment  : '最后登录时间戳',
   },
   extra_info: {
     type   : Sequelize.JSON,

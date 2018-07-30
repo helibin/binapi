@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-26 20:42:00
+ * @Last Modified time: 2018-07-30 22:44:15
  */
 /** 内建模块 */
 
@@ -29,17 +29,17 @@ router.get('/users/:targetId',
 router.post('/users',
   authMid.requireSignIn(),
   authMid.requirePrivilege('users_add'),
-  bizMid.run('userNotExists', 'request.body.identifier'),
+  bizMid.userNotExists('request.body.identifier'),
   usersCtrl.run('add'));
 
 router.put('/users/:targetId',
   authMid.requireSignIn(),
   authMid.requirePrivilege('users_modify'),
-  bizMid.run('userExists'),
+  bizMid.userExists(),
   usersCtrl.run('modify'));
 
 router.delete('/users/:targetId',
   authMid.requireSignIn(),
   authMid.requirePrivilege('users_delete'),
-  bizMid.run('userExists'),
+  bizMid.userExists(),
   usersCtrl.run('delete'));

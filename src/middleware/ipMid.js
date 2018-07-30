@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:45:04
+ * @Last Modified time: 2018-07-30 22:46:28
  */
 /** 内建模块 */
 
@@ -36,7 +36,7 @@ export default new class extends Base {
   }
 
   allowAccess(ipWhiteList = this.CONFIG.apiServer.ipWhiteList) {
-    return  async (ctx, next) => {
+    return async (ctx, next) => {
       const clientIP = ctx.state.clientIP;
 
       if (ipWhiteList
@@ -50,7 +50,7 @@ export default new class extends Base {
   }
 
   denyAccess(ipBlackList = this.CONFIG.apiServer.ipBlackList) {
-    return  async (ctx, next) => {
+    return async (ctx, next) => {
       const clientIP = ctx.state.clientIP;
 
       if (ipBlackList

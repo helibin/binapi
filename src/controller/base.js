@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:33:49
+ * @Last Modified time: 2018-07-30 11:46:26
  */
 /** 内建模块 */
 
@@ -35,7 +35,7 @@ export default class {
       } finally {
         ctx.state.logger(ctx.state.hasError,
           `Ctrl调用方法：[${func}],`,
-          `结果：${ctx.state.hasError ? '失败' : '成功'},`,
+          `响应：${ctx.state.hasError ? '异常' : '正常'},`,
           `用时：${Date.now() - now}ms。`);
       }
     };

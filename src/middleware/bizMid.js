@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:40:31
+ * @Last Modified time: 2018-07-30 22:37:58
  */
 /** 内建模块 */
 
@@ -43,13 +43,16 @@ export default new class extends Base {
     return this.commonExists(usersMod.model, dataIdPostion);
   }
 
-  async userNotExists(ctx, dataIdPosition) {
-    let dataId = ctx.params.targetId;
-    if (dataIdPosition) {
-      dataId = this.t.jsonFind(ctx, dataIdPosition, true);
-    }
-    const authCheck = await authMod.model.findOne({ where: { identifier: dataId } });
+  userNotExists(dataIdPosition) {
+    return async (ctx, next) => {
+      let dataId = ctx.params.targetId;
+      if (dataIdPosition) {
+        dataId = this.t.jsonFind(ctx, dataIdPosition, true);
+      }
+      const authCheck = await authMod.model.findOne({ where: { identifier: dataId } });
 
-    if (authCheck) throw new this._e('EBizRuleCondition', 'userIsExisted', { identifier: dataId });
+      if (authCheck) throw new this._e('EBizRuleCondition', 'userIsExisted', { identifier: dataId });
+      await next();
+    };
   }
 }();

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:22:23
+ * @Last Modified time: 2018-07-30 15:15:27
  */
 /** 内建模块 */
 
@@ -46,16 +46,13 @@ export default new class extends Base  {
 
   async signIn(ctx) {
     const body = ctx.request.body;
-    const opt = {
-      attributes: { exclude: ['seq'] },
-      where     : {
-        $or: {
-          user_id   : body.identifier,
-          identifier: body.identifier,
-        },
+    const whereOpt =  {
+      $or: {
+        user_id   : body.identifier,
+        identifier: body.identifier,
       },
     };
-    const authRes = await authMod.createGetModFunc(ctx, opt);
+    const authRes = await authMod.get(ctx, whereOpt);
 
     if (this.t.isEmpty(authRes)) {
       throw new this._e('EUserAuth', 'noSuchUser', { identifier: body.identifier });
@@ -64,7 +61,7 @@ export default new class extends Base  {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    const userRes = await usersMod.createGetModFunc(ctx, { where: { id: authRes.user_id } });
+    const userRes = await usersMod.get(ctx, { where: { id: authRes.user_id } });
     if (this.t.isEmpty(userRes)) {
       throw new this._e('EUser', 'noSuchUser', { userId: authRes.user_id });
     }

@@ -5,14 +5,10 @@
  * @Last Modified time: 2018-07-25 22:37:26
  */
 import authScm      from './authScm';
-import likesScm     from './likesScm';
-import templatesScm from './templatesScm';
 import usersScm     from './usersScm';
 
 
 export {
   authScm,
-  likesScm,
-  templatesScm,
   usersScm,
 };

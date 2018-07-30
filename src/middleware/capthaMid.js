@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 14:48:55
+ * @Last Modified time: 2018-07-30 13:55:56
  */
 /** 内建模块 */
 import fs from 'fs';
@@ -98,7 +98,7 @@ export default new class extends Base {
     };
   }
 
-  verifySVGCaptha(type = 'common') {
+  verifySVGCaptha() {
     return async (ctx, next) => {
       await next();
     };
