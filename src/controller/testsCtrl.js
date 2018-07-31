@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 19:30:52
+ * @Last Modified time: 2018-07-31 22:33:53
  */
 /** 内建模块 */
 
@@ -20,6 +20,8 @@ export default new class extends Base {
     const randStr = this.t.genRandStr(10, '342121lkdsaf');
     const err = new this._e('EClientNotFound', 'xxx', { randStr });
     await this.t.getIPInfo(ctx.ip);
+
+    console.log(await ctx.state.alySMS.queryDetail('1517931618'), ',,,');
 
     // const data = await si.osInfo()
     // console.log(data)

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 21:11:33
+ * @Last Modified time: 2018-07-31 17:30:57
  */
 /** 内建模块 */
 import { isNullOrUndefined } from 'util';
@@ -21,7 +21,6 @@ import { logger } from './logger';
 
 /** 预处理 */
 Promise.promisifyAll(redis);
-
 
 const redisConf = CONFIG.dbServer.redis;
 const redisClientOpt = {};

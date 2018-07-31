@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 14:11:31
+ * @Last Modified time: 2018-07-31 18:54:34
  */
 /** 内建模块 */
 
@@ -13,6 +13,7 @@ import chalk from 'chalk';
 /** 基础模块 */
 import CONFIG           from 'config';
 import Redis            from './redisHelper';
+import AlySMS           from './alySMSHelper';
 import { logger, rLog } from './logger';
 import t                from './tools';
 
@@ -107,6 +108,7 @@ Prepare.response = async (ctx, next) => {
 
     // redis初始化
     ctx.state.redis = new Redis(ctx);
+    ctx.state.alySMS = new AlySMS(ctx);
 
     await next();
   } catch (ex) {

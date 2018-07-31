@@ -42,6 +42,10 @@ webServer:
 
   captchaMaxAge: # 验证码过期时间，秒
     svg: 300
+  smsCodeMaxAge: # 短信验证码过期时间，秒
+    aly: 900
+  smsCodRetryTimeout: # 短信验证码重试时间间隔，秒
+    aly: 60
 
   secret: 'secret-binapi-oYfKQsdb8NALAXGR' # 通用密钥：用于Cookie签名、密码加盐等
 
@@ -83,3 +87,13 @@ hbs:
 AES:
   key: 'jKDUqUyRezqNyQaY5faKYsZHLADHmD9e'
   iv: 'dvjMpXLMb8592RZr'
+
+# 阿里云服务
+alyServer:
+  sms:
+    accessKeyId: null
+    accessKeySecret: null
+    signName: null
+    template:
+      default: null
+

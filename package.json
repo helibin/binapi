@@ -23,6 +23,7 @@
   "author": "helibin@139.com",
   "license": "ISC",
   "dependencies": {
+    "@alicloud/sms-sdk": "^1.1.2",
     "@koa/cors": "^2.2.2",
     "ava": "^0.25.0",
     "axios": "^0.18.0",
@@ -32,6 +33,7 @@
     "config": "^1.30.0",
     "cross-env": "^5.2.0",
     "crypto": "^1.0.1",
+    "dayjs": "^1.7.4",
     "gd-bmp": "^1.2.4",
     "handlebars-helpers": "^0.10.0",
     "ip": "^1.1.5",
