@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 22:30:04
+ * @Last Modified time: 2018-07-31 22:50:17
  */
 /** 内建模块 */
 
@@ -41,7 +41,13 @@ export default class {
     const code = t.genRandStr(6, '1234567890');
     const cache = t.genCacheKey('alySMS', mobile, type);
     const retryCacheKey = t.genCacheKey('alySMS@retryTimeout', mobile);
-    this.ctx.state.logger('debug', chalk.magenta('[ALYSMS]'), `${mobile}获取${type}类型验证码：${code}`);
+
+    const smsOpt = {
+      PhoneNumbers : mobile,
+      TemplateParam: JSON.stringify({ code }),
+      SignName     : smsConf.signName,
+      TemplateCode : smsConf.template[type],
+    };
 
     try {
       // 查询重试标记
@@ -50,14 +56,7 @@ export default class {
         throw new _e('EAliyunAPI', 'EClientTooManyRequest');
       }
 
-      const opt = {
-        PhoneNumbers : mobile,
-        TemplateParam: JSON.stringify({ code }),
-        SignName     : smsConf.signName,
-        TemplateCode : smsConf.template[type],
-      };
-
-      const smsRes = await smsClient.sendSMS(opt);
+      const smsRes = await smsClient.sendSMS(smsOpt);
       if (smsRes.Code !== 'OK') {
         if (smsRes.code === 'isv.BUSINESS_LIMIT_CONTROL') {
           throw new _e('EAliyunAPI', 'EClientTooManyRequest');
@@ -74,7 +73,7 @@ export default class {
       this.ctx.state.logger('debug', chalk.magenta('[ALYSMS]'), `${mobile}获取${type}类型验证码：${code}`);
       return this.ret;
     } catch (ex) {
-      this.ctx.state.logger(ex, '获取阿里云短信验证码失败', ex);
+      this.ctx.state.logger(ex, '获取阿里云短信验证码失败', ex, `参数：${JSON.stringify(smsOpt)}`);
       throw ex;
     }
   }
@@ -88,18 +87,24 @@ export default class {
    * @param {number} [page=1] 页数
    * @returns {object} alyRes
    */
-  async queryDetail(mobile, sendDate = day().format('YYYYMMDD'), pageSize = 10, page = 1) {
+  async queryDetail(mobile, sendDate = day().format('YYYYMM'), pageSize = 10, page = 1) {
     pageSize = pageSize > 50 ? 50 : pageSize;
-    const alyRes = await smsClient.queryDetail({
+    const queryOpt = {
       PhoneNumber: `${mobile}`,
       SendDate   : `${sendDate}`,
       PageSize   : `${pageSize}`,
       CurrentPage: `${page}`,
-    });
-    const { Code, SmsSendDetailDTOs } = alyRes;
-    if (Code !== 'OK') { throw new _e('EAliyunAPI', 'querySMSSendDetailFailed', alyRes); }
+    };
+    try {
+      const alyRes = await smsClient.queryDetail(queryOpt);
+      const { Code, SmsSendDetailDTOs } = alyRes;
+      if (Code !== 'OK') { throw new _e('EAliyunAPI', 'querySMSSendDetailFailed', alyRes); }
 
-    this.ctx.state.logger('debug', '查询短信发送详情：', JSON.stringify(alyRes));
-    return SmsSendDetailDTOs.SmsSendDetailDTO;
+      this.ctx.state.logger('debug', '查询短信发送详情：', JSON.stringify(alyRes));
+      return SmsSendDetailDTOs.SmsSendDetailDTO;
+    } catch (ex) {
+      this.ctx.state.logger(ex, `查询短信发送详情异常：${ex},`, `参数：${JSON.stringify(queryOpt)}`);
+      throw ex;
+    }
   }
 }
