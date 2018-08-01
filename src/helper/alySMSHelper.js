@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 22:50:17
+ * @Last Modified time: 2018-08-01 18:03:40
  */
 /** 内建模块 */
 
@@ -87,7 +87,7 @@ export default class {
    * @param {number} [page=1] 页数
    * @returns {object} alyRes
    */
-  async queryDetail(mobile, sendDate = day().format('YYYYMM'), pageSize = 10, page = 1) {
+  async queryDetail(mobile, sendDate = day().format('YYYYMMDD'), pageSize = 10, page = 1) {
     pageSize = pageSize > 50 ? 50 : pageSize;
     const queryOpt = {
       PhoneNumber: `${mobile}`,
