@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-01 23:46:15
+ * @Last Modified time: 2018-08-02 22:46:07
  */
 /** 内建模块 */
 
@@ -28,6 +28,7 @@ export default class {
   constructor(ctx) {
     this.ctx = ctx;
     this.ret = t.initRet();
+    this.smsClient = smsClient;
   }
 
   /**
@@ -56,7 +57,7 @@ export default class {
         throw new _e('EAliyunAPI', 'EClientTooManyRequest');
       }
 
-      const smsRes = await smsClient.sendSMS(smsOpt);
+      const smsRes = await this.smsClient.sendSMS(smsOpt);
       if (smsRes.Code !== 'OK') {
         if (smsRes.code === 'isv.BUSINESS_LIMIT_CONTROL') {
           throw new _e('EAliyunAPI', 'EClientTooManyRequest');
@@ -96,7 +97,7 @@ export default class {
       CurrentPage: `${page}`,
     };
     try {
-      const alyRes = await smsClient.queryDetail(queryOpt);
+      const alyRes = await this.smsClient.queryDetail(queryOpt);
       const { Code, SmsSendDetailDTOs } = alyRes;
       if (Code !== 'OK') { throw new _e('EAliyunAPI', 'querySMSSendDetailFailed', alyRes); }
 

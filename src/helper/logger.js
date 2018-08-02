@@ -9,9 +9,9 @@ import os from 'os';
 
 /** 第三方模块 */
 import chalk from 'chalk';
+import log4js from 'log4js';
 import CONFIG from 'config';
 import Raven from 'raven';
-import log4js from 'log4js';
 
 /** 基础模块 */
 

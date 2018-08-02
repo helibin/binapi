@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-27 10:15:46
+ * @Last Modified time: 2018-08-02 22:38:18
  */
 /** 内建模块 */
 import path from 'path';
@@ -10,12 +10,12 @@ import util from 'util';
 
 /** 第三方模块 */
 import crypto from 'crypto';
+import axios from 'axios';
 import CONFIG from 'config';
 import uuid from 'uuid';
 // import unzip   from 'unzip';
 // import zlib    from 'zlib';
 import maxmind from 'maxmind';
-import axios from 'axios';
 import si from 'systeminformation';
 import math from 'mathjs';
 
@@ -407,5 +407,7 @@ M.sortObj = (obj) => {
 
   return r;
 };
+
+M.strPlus = (...args) => `${args.join('')}`;
 
 export default M;

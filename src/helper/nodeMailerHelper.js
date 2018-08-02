@@ -2,12 +2,11 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-01 23:12:54
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 09:48:58
+ * @Last Modified time: 2018-08-02 22:44:38
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import chalk  from 'chalk';
 import mailer from 'nodemailer';
 
 /** 基础模块 */
@@ -17,25 +16,34 @@ import t      from './tools';
 /** 项目模块 */
 
 /** 预处理 */
+const transportOpt = {
+  host  : CONFIG.nodeMailer.host,
+  port  : CONFIG.nodeMailer.port,
+  secure: CONFIG.nodeMailer.secure, // true for 465, false for other ports
+  auth  : {
+    user: CONFIG.nodeMailer.user, // generated ethereal user
+    pass: CONFIG.nodeMailer.password, // generated ethereal password
+  },
+};
+const transporter = mailer.createTransport(transportOpt);
 
+transporter.verify((ex) => {
+  if (ex) {
+    console.log(ex);
+  } else {
+    console.log('Server is ready to take our messages');
+  }
+});
 
 export default class {
   constructor(ctx) {
-    this.ctx = ctx;
-    this.ret = t.initRet();
+    this.ctx         = ctx;
+    this.ret         = t.initRet();
+    this.transporter = transporter;
   }
 
   async sendMail(receivers, subject = 'Hello ✔', template = 'hellow, world!') {
     const now = Date.now();
-    const transportOpt = {
-      host  : CONFIG.nodeMailer.host,
-      port  : CONFIG.nodeMailer.port,
-      secure: CONFIG.nodeMailer.secure, // true for 465, false for other ports
-      auth  : {
-        user: CONFIG.nodeMailer.user, // generated ethereal user
-        pass: CONFIG.nodeMailer.password, // generated ethereal password
-      },
-    };
     const mailOptions = {
       from: `${CONFIG.nodeMailer.name} ${CONFIG.nodeMailer.sender}`, // sender address
       to  : receivers, // list of receivers
@@ -43,7 +51,6 @@ export default class {
       html: template, // html body
     };
     try {
-      const transporter = mailer.createTransport(transportOpt);
       await transporter.sendMail(mailOptions);
 
       return this.ret;

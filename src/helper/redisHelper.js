@@ -9,9 +9,9 @@ import { isNullOrUndefined } from 'util';
 
 /** 第三方模块 */
 import chalk      from 'chalk';
+import sortedJSON from 'sorted-json';
 import Promise    from 'bluebird';
 import redis      from 'redis';
-import sortedJSON from 'sorted-json';
 
 /** 基础模块 */
 import CONFIG from 'config';

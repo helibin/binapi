@@ -106,3 +106,10 @@ nodeMailer:
   password: null
   sender: null
   name: null
+
+# 赛邮
+subMailServer:
+  mail:
+    host: null,
+    appId: null,
+    appKey: null,
