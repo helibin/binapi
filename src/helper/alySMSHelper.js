@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-01 18:03:40
+ * @Last Modified time: 2018-08-01 23:46:15
  */
 /** 内建模块 */
 
@@ -11,10 +11,10 @@ import SMS from '@alicloud/sms-sdk';
 import day from 'dayjs';
 
 /** 基础模块 */
+import chalk from 'chalk';
 import CONFIG     from 'config';
 import _e         from './serverError';
 import t          from './tools';
-import chalk from '../../node_modules/chalk';
 
 /** 项目模块 */
 

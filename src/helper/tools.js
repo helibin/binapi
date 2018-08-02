@@ -9,9 +9,9 @@ import path from 'path';
 import util from 'util';
 
 /** 第三方模块 */
+import crypto from 'crypto';
 import CONFIG from 'config';
 import uuid from 'uuid';
-import crypto from 'crypto';
 // import unzip   from 'unzip';
 // import zlib    from 'zlib';
 import maxmind from 'maxmind';

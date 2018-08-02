@@ -2,18 +2,19 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 18:54:34
+ * @Last Modified time: 2018-08-02 09:57:25
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import bytes from 'bytes';
 import chalk from 'chalk';
+import bytes from 'bytes';
 
 /** 基础模块 */
 import CONFIG           from 'config';
 import Redis            from './redisHelper';
 import AlySMS           from './alySMSHelper';
+import NodeMailer       from './nodeMailerHelper';
 import { logger, rLog } from './logger';
 import t                from './tools';
 
@@ -108,7 +109,10 @@ Prepare.response = async (ctx, next) => {
 
     // redis初始化
     ctx.state.redis = new Redis(ctx);
+    // alySMS初始化
     ctx.state.alySMS = new AlySMS(ctx);
+    // nodeMailer初始化
+    ctx.state.nodeMailer = new NodeMailer(ctx);
 
     await next();
   } catch (ex) {

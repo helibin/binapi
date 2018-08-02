@@ -58,7 +58,7 @@ apiServer:
   ipWhiteList  : '*'
 
   logLevel: 'ERROR' # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
-  sentryDSN: ''
+  sentryDSN: null
 
 # 公共API
 openAPI:
@@ -97,3 +97,12 @@ alyServer:
     template:
       default: null
 
+# NodeMailer
+nodeMailer:
+  host: 'smtp.mxhichina.com'
+  port: 465
+  secure: true
+  user: null
+  password: null
+  sender: null
+  name: null

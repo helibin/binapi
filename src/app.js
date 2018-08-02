@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-01 23:02:53
+ * @Last Modified time: 2018-08-02 09:28:48
  */
 /* 内建模块 */
 import http from 'http'
@@ -88,8 +88,6 @@ const server = http.createServer(app.callback());
 // socket.io
 const io = new socketIO(server)
 
-//设置日志级别
-io.set('log level', 1);
 // 添加一个连接监听器
 io.on('connection', socket(io))
 

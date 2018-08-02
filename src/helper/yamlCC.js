@@ -9,8 +9,8 @@ import fs from 'fs';
 import path from 'path';
 
 /** 第三方模块 */
-import yaml from 'js-yaml';
 import chalk from 'chalk';
+import yaml from 'js-yaml';
 import { logger } from './logger';
 
 /** 基础模块 */

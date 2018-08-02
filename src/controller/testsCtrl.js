@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 22:50:30
+ * @Last Modified time: 2018-08-02 09:57:57
  */
 /** 内建模块 */
 
@@ -22,7 +22,7 @@ export default new class extends Base {
     await this.t.getIPInfo(ctx.ip);
 
     console.log(await ctx.state.alySMS.queryDetail('1517931618'), ',,,');
-
+    await ctx.state.nodeMailer.sendMail('helibin@139.com');
     // const data = await si.osInfo()
     // console.log(data)
     // console.time('math');

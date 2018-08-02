@@ -2,15 +2,15 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 12:04:14
+ * @Last Modified time: 2018-08-01 23:33:33
  */
 /** 内建模块 */
 import os from 'os';
 
 /** 第三方模块 */
+import chalk from 'chalk';
 import CONFIG from 'config';
 import Raven from 'raven';
-import chalk from 'chalk';
 import log4js from 'log4js';
 
 /** 基础模块 */

@@ -51,6 +51,7 @@
     "mathjs": "^5.0.0",
     "maxmind": "^2.7.0",
     "mysql2": "^1.5.3",
+    "nodemailer": "^4.6.7",
     "raven": "^2.6.3",
     "redis": "^2.8.0",
     "sequelize": "^4.38.0",
