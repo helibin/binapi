@@ -46,6 +46,10 @@ webServer:
     aly: 900
   smsCodRetryTimeout: # 短信验证码重试时间间隔，秒
     aly: 60
+  mailCodeMaxAge: # 邮件验证码过期时间，秒
+    aly: 900
+  mailCodRetryTimeout: # 邮件验证码重试时间间隔，秒
+    aly: 60
 
   secret: 'secret-binapi-oYfKQsdb8NALAXGR' # 通用密钥：用于Cookie签名、密码加盐等
 
@@ -109,7 +113,12 @@ nodeMailer:
 
 # 赛邮
 subMailServer:
+  sms:
+    host: null
+    appId: null
+    appKey: null
   mail:
-    host: null,
-    appId: null,
-    appKey: null,
+    host: null
+    appId: null
+    appKey: null
+

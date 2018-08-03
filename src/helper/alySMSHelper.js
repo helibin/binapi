@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 22:46:07
+ * @Last Modified time: 2018-08-03 16:16:01
  */
 /** 内建模块 */
 
@@ -63,6 +63,7 @@ export default class {
           throw new _e('EAliyunAPI', 'EClientTooManyRequest');
         }
 
+        this.ctx.state.logger('error', '获取阿里云短信异常：', JSON.stringify(smsRes));
         throw new _e('EAliyunAPI', 'senSMSFailed', smsRes);
       }
 
