@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-03 16:18:17
+ * @Last Modified time: 2018-08-03 16:43:52
  */
 /** 内建模块 */
 
@@ -22,7 +22,7 @@ export default new class extends Base {
     await this.t.getIPInfo(ctx.ip);
 
     // console.log(await ctx.state.alySMS.queryDetail('15179316184'), ',,,');
-    // console.log(await ctx.state.subMailer.sendSMS('15179316184'));
+    // this.ret = await ctx.state.subMailer.queryDetail('15179316184');
     // const data = await si.osInfo()
     // console.log(data)
     // console.time('math');
@@ -33,8 +33,8 @@ export default new class extends Base {
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    // ctx.state.sendJSON(err);
-    throw err;
+    ctx.state.sendJSON(this.ret);
+    // throw err;
   }
 
   async location(ctx) {

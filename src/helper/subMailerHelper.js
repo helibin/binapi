@@ -2,12 +2,13 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-02 21:26:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-03 16:17:50
+ * @Last Modified time: 2018-08-03 16:42:41
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 import axios from 'axios';
+import day   from 'dayjs';
 
 /** 基础模块 */
 import CONFIG from 'config';
@@ -66,6 +67,32 @@ export default class {
       throw ex;
     } finally {
       this.ctx.state.logger('info', `发送短信用时：${Date.now() - now}ms`);
+    }
+  }
+
+  async queryDetail(mobile) {
+    const now = parseInt(Date.now(), 10);
+    const queryOpt = {
+      recipient: mobile,
+      project  : 'Dy4dH3',
+      appid    : CONFIG.subMailServer.sms.appId,
+      signature: CONFIG.subMailServer.sms.appKey,
+    };
+    try {
+      const smsRes = await axios.post('https://api.mysubmail.com/log/message', queryOpt);
+      if (smsRes.data.status === 'error') {
+        this.ctx.state.logger('error', '查询赛邮短信异常：', JSON.stringify(smsRes.data));
+        throw new _e('ESubMailAPI', smsRes.data.msg);
+      }
+
+      console.log(smsRes.data, ',,,');
+      this.ret.data = smsRes.data.results;
+      return this.ret;
+    } catch (ex) {
+      this.ctx.state.logger(ex, ex, queryOpt);
+      throw ex;
+    } finally {
+      this.ctx.state.logger('info', `查询短信用时：${Date.now() - now}ms`);
     }
   }
 }
