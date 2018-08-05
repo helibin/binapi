@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 22:50:10
+ * @Last Modified time: 2018-08-05 15:29:05
  */
 /** 内建模块 */
 
@@ -17,6 +17,7 @@ import {
   bizMid, ipMid, paramMid,
 } from '../middleware';
 import { authLogic } from '../logic';
+import capthaMid from '../middleware/capthaMid';
 
 
 /**
@@ -61,6 +62,7 @@ import { authLogic } from '../logic';
  */
 router.post('/auth/sign-in',
   paramMid.joiCheck(authLogic.signIn),
+  capthaMid.verifySVGCaptha('sign-in'),
   authCtrl.run('signIn'));
 
 /**
@@ -96,5 +98,6 @@ router.post('/auth/sign-in',
 router.post('/auth/sign-up',
   ipMid.allowAccess(),
   paramMid.joiCheck(authLogic.signUp),
+  capthaMid.verifySVGCaptha('sign-up'),
   bizMid.userNotExists('request.body.identifier'),
   authCtrl.run('signUp'));

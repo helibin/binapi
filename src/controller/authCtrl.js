@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 15:15:27
+ * @Last Modified time: 2018-08-05 15:28:01
  */
 /** 内建模块 */
 
@@ -61,7 +61,7 @@ export default new class extends Base  {
       throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
     }
 
-    const userRes = await usersMod.get(ctx, { where: { id: authRes.user_id } });
+    const userRes = await usersMod.get(ctx, { id: authRes.user_id });
     if (this.t.isEmpty(userRes)) {
       throw new this._e('EUser', 'noSuchUser', { userId: authRes.user_id });
     }

@@ -1,8 +1,8 @@
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
- * @Last Modified by:   lybeen
- * @Last Modified time: 2018-07-17 15:55:47
+ * @Last Modified by: lybeen
+ * @Last Modified time: 2018-08-05 13:49:33
  */
 /** 内建模块 */
 
@@ -22,5 +22,6 @@ export default {
       .min(6)
       .max(128)
       .required(),
+
   }),
 };

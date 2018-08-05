@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-02 21:26:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-03 16:42:41
+ * @Last Modified time: 2018-08-05 13:33:12
  */
 /** 内建模块 */
 
@@ -45,12 +45,12 @@ export default class {
     }
   }
 
-  async sendSMS(to = '15179316184', project = 'Dy4dH3', code = t.genRandStr(6, '1234567890')) {
+  async sendSMS(to = '15179316184', project = 'Dy4dH3', options) {
     const now = parseInt(Date.now(), 10);
     const opt = {
       to,
       project,
-      vars     : { code },
+      vars     : options || { code: t.genRandStr(6, '1234567890') },
       appid    : CONFIG.subMailServer.sms.appId,
       signature: CONFIG.subMailServer.sms.appKey,
     };
@@ -79,13 +79,12 @@ export default class {
       signature: CONFIG.subMailServer.sms.appKey,
     };
     try {
-      const smsRes = await axios.post('https://api.mysubmail.com/log/message', queryOpt);
+      const smsRes = await axios.post(CONFIG.subMailServer.sms.queryHost, queryOpt);
       if (smsRes.data.status === 'error') {
         this.ctx.state.logger('error', '查询赛邮短信异常：', JSON.stringify(smsRes.data));
         throw new _e('ESubMailAPI', smsRes.data.msg);
       }
 
-      console.log(smsRes.data, ',,,');
       this.ret.data = smsRes.data.results;
       return this.ret;
     } catch (ex) {

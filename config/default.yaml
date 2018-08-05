@@ -55,6 +55,8 @@ webServer:
 
   defaultLocale: 'zh-CN'
 
+  skipCaptcha: false
+
 # API服务
 apiServer:
   prefix       : '/v1'
@@ -115,6 +117,7 @@ nodeMailer:
 subMailServer:
   sms:
     host: null
+    queryHost: null
     appId: null
     appKey: null
   mail:

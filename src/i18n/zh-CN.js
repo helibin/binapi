@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:54
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 21:58:36
+ * @Last Modified time: 2018-08-05 13:52:55
  */
 export default {
   resMsg: {
@@ -24,7 +24,7 @@ export default {
   joi: {
     key: '`{{label}}`',
     any: {
-      required: '不能为空',
+      required: '不可缺少',
       length  : '长度必须为{{limit}}',
       empty   : '不允许为空',
       invalid : '包含不合法内容`{{value}}`',

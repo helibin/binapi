@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 22:38:18
+ * @Last Modified time: 2018-08-05 11:44:54
  */
 /** 内建模块 */
 import path from 'path';
@@ -401,13 +401,23 @@ M.sortObj = (obj) => {
   const keys = Object.keys(obj).sort();
 
   const r = {};
-  for (const d of keys) {
-    r[d] = obj[d];
+  for (const k of keys) {
+    r[k] = obj[k];
   }
 
   return r;
 };
 
 M.strPlus = (...args) => `${args.join('')}`;
+
+M.getSignStr = (o) => {
+  const keys = Object.keys(o).sort();
+
+  let signStr = '';
+  for (const k of keys) {
+    signStr += `&${k}=${o[k]}`;
+  }
+  return signStr.substr(1);
+};
 
 export default M;
