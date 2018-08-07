@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-18 19:23:06
+ * @Last Modified time: 2018-08-07 15:31:26
  */
 /** 内建模块 */
 
@@ -13,9 +13,9 @@
 /** 项目模块 */
 import { CONST } from './yamlCC';
 
-export default class ServerError {
+export default class CustomError {
   constructor(codeName, message, data) {
-    this.name = 'MyError';
+    this.name = 'CustomError';
     this.respCode = CONST.respCode[codeName] || CONST.respCode.Unknown;
     this.respMessage = message;
     this.respData = data;

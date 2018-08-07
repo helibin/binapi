@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-03 16:43:52
+ * @Last Modified time: 2018-08-07 15:38:13
  */
 /** 内建模块 */
 
@@ -33,8 +33,8 @@ export default new class extends Base {
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    ctx.state.sendJSON(this.ret);
-    // throw err;
+    // ctx.state.sendJSON(this.ret);
+    throw err;
   }
 
   async location(ctx) {

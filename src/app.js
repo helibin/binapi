@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 20:17:51
+ * @Last Modified time: 2018-08-06 17:51:26
  */
 /* 内建模块 */
 import http from 'http'
@@ -15,7 +15,7 @@ import chalk      from 'chalk';
 import cors       from 'koa-cors';
 import ip         from 'ip';
 import koaStatic  from 'koa-static';
-import socketIO   from 'socket.io';
+import socketIO   from 'socket.io/lib';
 import userAgent  from 'koa-useragent';
 import views      from 'koa-views';
 import helpers    from 'handlebars-helpers';
@@ -28,7 +28,7 @@ import {
 
 /** 项目模块 */
 import {
-  authMid, errorHandler, noPageCache, headerMid,
+  authMid, errorHandler, noPageCache, headerMid, sessionMid,
 } from './middleware';
 
 /** 路由模块 */
@@ -36,11 +36,9 @@ import { pageRouter, router } from './router';
 
 
 const app = new Koa();
+app.proxy = true;
 
 app.keys = [CONFIG.webServer.secret];
-
-// 错误处理
-app.use(errorHandler);
 
 // 跨域设置
 app.use(cors(headerMid.setCors()));
@@ -70,6 +68,9 @@ app.use(views(path.join(__dirname, 'view'), {
 // 通用中间件初始化
 app.use(userAgent);
 app.use(bodyparser());
+
+// 错误处理
+app.use(errorHandler);
 
 // 业务中间件初始化
 app.use(prepare.response);

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 22:46:50
+ * @Last Modified time: 2018-08-07 15:40:42
  */
 /** 内建模块 */
 
@@ -14,9 +14,13 @@ import bytes from 'bytes';
 import CONFIG           from 'config';
 import Redis            from './redisHelper';
 import AlySMS           from './alySMSHelper';
+import Axios            from './axiosHelper';
 import NodeMailer       from './nodeMailerHelper';
-import SubMailer          from './subMailerHelper';
+import SubMailer        from './subMailerHelper';
+
 import { logger, rLog } from './logger';
+
+import _e               from './CustomError';
 import t                from './tools';
 
 /** 项目模块 */
@@ -94,7 +98,7 @@ Prepare.response = async (ctx, next) => {
 
     // 包装数据发送函数，自动打印日志并包含RequestId
     ctx.state.sendJSON = (data = {}) => {
-      if (data.name === 'MyError') data = data.toJSON();
+      if (data instanceof _e) data = data.toJSON();
       data.requestId = ctx.state.requestId;
       data = ctx.state.i18n(data);
 
@@ -103,7 +107,7 @@ Prepare.response = async (ctx, next) => {
     };
 
     // 国际化
-    ctx.state.i18n = (data) => {
+    ctx.state.i18n = (data = {}) => {
       data.msg = i18n[ctx.state.shortLocale].resMsg[data.msg] || data.msg;
       return data;
     };
@@ -116,10 +120,12 @@ Prepare.response = async (ctx, next) => {
     ctx.state.nodeMailer = new NodeMailer(ctx);
     // submail初始化
     ctx.state.subMailer = new SubMailer(ctx);
+    // axios初始化
+    ctx.state.axios = new Axios(ctx);
 
     await next();
   } catch (ex) {
-    if (ex.name !== 'MyError') {
+    if (ex instanceof _e) {
       ctx.state.requestError = true;
     }
 

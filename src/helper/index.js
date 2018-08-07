@@ -2,10 +2,10 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:29
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 22:44:11
+ * @Last Modified time: 2018-08-07 15:31:25
  */
 import CONFIG     from 'config';
-import _e         from './serverError';
+import _e         from './CustomError';
 import * as mysql from './mysqlHelper';
 import nodeMailer from './nodeMailerHelper';
 import prepare    from './prepare';

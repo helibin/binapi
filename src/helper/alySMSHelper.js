@@ -13,7 +13,7 @@ import day from 'dayjs';
 /** 基础模块 */
 import chalk from 'chalk';
 import CONFIG     from 'config';
-import _e         from './serverError';
+import _e         from './CustomError';
 import t          from './tools';
 
 /** 项目模块 */

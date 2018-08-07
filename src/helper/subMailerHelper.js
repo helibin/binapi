@@ -2,18 +2,17 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-02 21:26:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-05 13:33:12
+ * @Last Modified time: 2018-08-06 14:29:22
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 import axios from 'axios';
-import day   from 'dayjs';
 
 /** 基础模块 */
 import CONFIG from 'config';
 import t from './tools';
-import { _e } from '.';
+import _e from './CustomError';
 
 /** 项目模块 */
 
