@@ -12,7 +12,7 @@ import axios from 'axios';
 /** 基础模块 */
 import CONFIG from 'config';
 import t from './tools';
-import _e from './CustomError';
+import _e from './customError';
 
 /** 项目模块 */
 

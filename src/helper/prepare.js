@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-07 15:40:42
+ * @Last Modified time: 2018-08-15 12:17:43
  */
 /** 内建模块 */
 
@@ -13,6 +13,7 @@ import bytes from 'bytes';
 /** 基础模块 */
 import CONFIG           from 'config';
 import Redis            from './redisHelper';
+import AlyHelper        from './alyHelper';
 import AlySMS           from './alySMSHelper';
 import Axios            from './axiosHelper';
 import NodeMailer       from './nodeMailerHelper';
@@ -20,7 +21,7 @@ import SubMailer        from './subMailerHelper';
 
 import { logger, rLog } from './logger';
 
-import _e               from './CustomError';
+import _e               from './customError';
 import t                from './tools';
 
 /** 项目模块 */
@@ -112,16 +113,18 @@ Prepare.response = async (ctx, next) => {
       return data;
     };
 
+    // alyHelper初始化
+    ctx.state.aly        = new AlyHelper(ctx);
     // redis初始化
-    ctx.state.redis = new Redis(ctx);
+    ctx.state.redis      = new Redis(ctx);
     // alySMS初始化
-    ctx.state.alySMS = new AlySMS(ctx);
+    ctx.state.alySMS     = new AlySMS(ctx);
     // nodeMailer初始化
     ctx.state.nodeMailer = new NodeMailer(ctx);
     // submail初始化
-    ctx.state.subMailer = new SubMailer(ctx);
+    ctx.state.subMailer  = new SubMailer(ctx);
     // axios初始化
-    ctx.state.axios = new Axios(ctx);
+    ctx.state.axios      = new Axios(ctx);
 
     await next();
   } catch (ex) {

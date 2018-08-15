@@ -96,12 +96,21 @@ AES:
 
 # 阿里云服务
 alyServer:
+  accessKeyId: null
+  accessKeySecret: null
   sms:
     accessKeyId: null
     accessKeySecret: null
     signName: null
     template:
       default: null
+  oss:
+    accessKeyId: null
+    accessKeySecret: null
+    endpoint: 'https://oss-cn-shenzhen.aliyuncs.com'
+    apiVersion: '2013-10-15'
+    bucketName: null
+    cacheExpire: 900 # 缓存时间，秒
 
 # NodeMailer
 nodeMailer:
@@ -124,4 +133,3 @@ subMailServer:
     host: null
     appId: null
     appKey: null
-

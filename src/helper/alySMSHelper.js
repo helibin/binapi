@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-03 16:27:52
+ * @Last Modified time: 2018-08-08 21:54:19
  */
 /** 内建模块 */
 
@@ -13,7 +13,7 @@ import day from 'dayjs';
 /** 基础模块 */
 import chalk from 'chalk';
 import CONFIG     from 'config';
-import _e         from './CustomError';
+import _e         from './customError';
 import t          from './tools';
 
 /** 项目模块 */

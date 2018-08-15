@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-07 15:38:13
+ * @Last Modified time: 2018-08-15 13:20:33
  */
 /** 内建模块 */
 
@@ -21,6 +21,9 @@ export default new class extends Base {
     const err = new this._e('EClientNotFound', 'xxx', { randStr });
     await this.t.getIPInfo(ctx.ip);
 
+    // await ctx.state.aly.upload('static/img/test.png', new Buffer('1334'));
+    const ossRes = await ctx.state.aly.download('static/img/test.png');
+    console.log(ossRes, ',,,');
     // console.log(await ctx.state.alySMS.queryDetail('15179316184'), ',,,');
     // this.ret = await ctx.state.subMailer.queryDetail('15179316184');
     // const data = await si.osInfo()
@@ -33,8 +36,8 @@ export default new class extends Base {
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    // ctx.state.sendJSON(this.ret);
-    throw err;
+    ctx.state.sendJSON(ossRes);
+    // throw err;
   }
 
   async location(ctx) {

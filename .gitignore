@@ -10,7 +10,7 @@
 
 # node包相关文件
 node_modules/
-npm-debug.log
+npm-debug.logs
 
 # Redis dump文件
 dump.rdb

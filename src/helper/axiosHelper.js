@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-06 14:25:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-06 14:27:51
+ * @Last Modified time: 2018-08-08 21:49:39
  */
 /** 内建模块 */
 
@@ -14,12 +14,28 @@ import axios from 'axios';
 /** 项目模块 */
 
 /** 预处理 */
-axios.interceptors.response.use(res => res.data, err => Promise.reject(err));
 
 
 export default class {
   constructor(ctx) {
-    this.ctx = ctx;
+    this.ctx   = ctx;
     this.axios = axios;
+
+    axios.interceptors.request.use(conf => conf, err => Promise.reject(err));
+    axios.interceptors.response.use(res => res.data, err => Promise.reject(err));
+    axios.defaults.timeout = 10000;
+    axios.defaults.headers = { 'x-auth-token': ctx.state.xAuthToken };
+  }
+
+  async run(func, ...args) {
+    try {
+      await this[func](...args);
+    } catch (ex) {
+      this.ctx.state.logger(ex, `执行${func}时发生异常`);
+    }
+  }
+
+  async post(url, options) {
+    await this.axios.post(url, options);
   }
 }

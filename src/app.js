@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-06 17:51:26
+ * @Last Modified time: 2018-08-15 12:15:45
  */
 /* 内建模块 */
 import http from 'http'
@@ -15,16 +15,14 @@ import chalk      from 'chalk';
 import cors       from 'koa-cors';
 import ip         from 'ip';
 import koaStatic  from 'koa-static';
-import socketIO   from 'socket.io/lib';
 import userAgent  from 'koa-useragent';
 import views      from 'koa-views';
 import helpers    from 'handlebars-helpers';
 
 /* 基础模块 */
 import {
-  CONFIG, logger, prepare, socket, yamlCheck,
+  CONFIG, logger, prepare, yamlCheck, t,
 } from './helper';
-
 
 /** 项目模块 */
 import {
@@ -79,23 +77,12 @@ app.use(prepare.detectPageSetting);
 app.use(authMid.initUserInfo());
 app.use(noPageCache());
 
-
 // 路由加载
 app.use(router.routes());
 app.use(pageRouter.routes());
 
-const server = http.createServer(app.callback());
-
-// socket.io
-const io = new socketIO(server, {
-  path: '/socket'
-})
-
-// 添加一个连接监听器
-io.on('connection', socket(io))
-
 try {
-  server.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
+  app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
     /* 服务器运行配置 */
 
     logger(null, chalk.green('服务器已启动'));

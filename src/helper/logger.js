@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-01 23:33:33
+ * @Last Modified time: 2018-08-15 13:05:55
  */
 /** 内建模块 */
 import os from 'os';
@@ -65,16 +65,12 @@ const logger = (...args) => {
     logLevel = logLevel ? 'error' : 'info';
   }
 
-  const loggerColor = chalk[CONFIG.logLevels[logLevel]];
-  log4js.getLogger(hostName)[logLevel](loggerColor(...args));
+  log4js.getLogger(hostName)[logLevel](...args);
 };
 
 const Logger = {};
 for (const logLevel of Object.keys(CONFIG.logLevels)) {
-  const loggerColor = chalk[CONFIG.logLevels[logLevel]];
-  Logger[logLevel] = (...args) => {
-    log4js.getLogger(hostName)[logLevel](loggerColor(args));
-  };
+  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
 }
 
 Logger.sql = (execSql, execTime) => {

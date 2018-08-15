@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-07 15:31:26
+ * @Last Modified time: 2018-08-08 21:54:35
  */
 /** 内建模块 */
 
@@ -12,6 +12,7 @@
 
 /** 项目模块 */
 import { CONST } from './yamlCC';
+
 
 export default class CustomError {
   constructor(codeName, message, data) {

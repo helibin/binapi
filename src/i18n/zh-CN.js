@@ -2,12 +2,12 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:54
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-05 13:52:55
+ * @Last Modified time: 2018-08-15 13:19:49
  */
 export default {
   resMsg: {
-    ok       : '成功',
-    okByCache: '成功，来着缓存',
+    ok         : '成功',
+    okFromCache: '成功，来至缓存',
 
     noSuchUser       : '没有此用户',
     userIsExisted    : '用户已存在',
