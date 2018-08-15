@@ -1,0 +1,90 @@
+{
+  "format": "pop",
+  "apiVersion": "2017-08-10",
+  "checksumFormat": "md5",
+  "endpointPrefix": "yqbridge",
+  "serviceAbbreviation": "YQBRIDGE",
+  "serviceFullName": "Aliyun YQBRIDGE",
+  "signatureVersion": "pop",
+  "timestampFormat": "top",
+  "xmlnamespace": "",
+  "operations": {
+    "getStudentInfo": {
+      "name": "GetStudentInfo",
+      "http": {
+        "method": "POST",
+        "uri": "/"
+      },
+      "input": {
+        "type": "structure",
+        "members": {
+          "Action": {
+            "required": true,
+            "default": "GetStudentInfo"
+          },
+          "Uid": {
+            "required": true,
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "lotteryDraw": {
+      "name": "LotteryDraw",
+      "http": {
+        "method": "POST",
+        "uri": "/"
+      },
+      "input": {
+        "type": "structure",
+        "members": {
+          "Action": {
+            "required": true,
+            "default": "LotteryDraw"
+          },
+          "Uid": {
+            "required": true,
+            "type": "integer"
+          },
+          "ChannelValue": {
+            "type": "string"
+          },
+          "ActivityCode": {
+            "required": true,
+            "type": "string"
+          },
+          "ChannelType": {
+            "type": "string"
+          },
+          "ClientIp": {
+            "type": "string"
+          },
+          "FromAppName": {
+            "required": true,
+            "type": "string"
+          }
+        }
+      }
+    },
+    "studentCheck": {
+      "name": "StudentCheck",
+      "http": {
+        "method": "POST",
+        "uri": "/"
+      },
+      "input": {
+        "type": "structure",
+        "members": {
+          "Action": {
+            "required": true,
+            "default": "StudentCheck"
+          },
+          "Uid": {
+            "required": true,
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

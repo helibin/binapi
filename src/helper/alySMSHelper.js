@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-08 21:54:19
+ * @Last Modified time: 2018-08-15 19:06:01
  */
 /** 内建模块 */
 
@@ -73,7 +73,8 @@ export default class {
       await this.ctx.state.redis.set(retryCacheKey, `${Date.now()}`, CONFIG.webServer.smsCodRetryTimeout.aly);
 
       this.ctx.state.logger('debug', chalk.magenta('[ALYSMS]'), `${mobile}获取${type}类型验证码：${code}`);
-      return this.ret;
+
+      return;
     } catch (ex) {
       this.ctx.state.logger(ex, '获取阿里云短信验证码失败', ex, `参数：${JSON.stringify(smsOpt)}`);
       throw ex;

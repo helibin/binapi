@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 13:20:33
+ * @Last Modified time: 2018-08-15 19:34:01
  */
 /** 内建模块 */
 
@@ -17,14 +17,22 @@ import Base from './base';
 export default new class extends Base {
   async test(ctx) {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
-    const randStr = this.t.genRandStr(10, '342121lkdsaf');
-    const err = new this._e('EClientNotFound', 'xxx', { randStr });
-    await this.t.getIPInfo(ctx.ip);
 
-    // await ctx.state.aly.upload('static/img/test.png', new Buffer('1334'));
-    const ossRes = await ctx.state.aly.download('static/img/test.png');
-    console.log(ossRes, ',,,');
-    // console.log(await ctx.state.alySMS.queryDetail('15179316184'), ',,,');
+    // const randStr = this.t.genRandStr(10, '342121lkdsaf');
+    // this.ret = new this._e('EClientNotFound', 'xxx', { randStr });
+
+    // await this.t.getIPInfo(ctx.ip);
+
+    // this.ret.data = await ctx.state.aly.upload('static/img/test.png', new Buffer('1334'));
+    // this.ret.data = await ctx.state.aly.download('static/img/test.png');
+
+    // this.ret.data = await ctx.state.alySMS.sendSMS('15179316184');
+    // this.ret.data = await ctx.state.alySMS.queryDetail('15179316184');
+
+    // this.ret.data = await ctx.state.aly.genAlyCoupon(1440093726226429, 'sdfl');
+
+    this.ret.data = await ctx.state.aly.getSessionInfo('pNvcnX*gXTklUp7RwK4w3f_YNpoU_BOTwChTBoNM1ZJeedfK9zxYnbN5hossqIZCr6t7SGxRigm2Cb4fGaCdBZWIzmgdHq6sXXZQg4KFWufyvpeV*0*Cm58slMT1tJw3_k$$zcwPEWmES3IXvR33*jDW0');
+
     // this.ret = await ctx.state.subMailer.queryDetail('15179316184');
     // const data = await si.osInfo()
     // console.log(data)
@@ -36,7 +44,7 @@ export default new class extends Base {
     // next(new _e('xxx', 'xxx', {
     //   randStr: randStr
     // }))
-    ctx.state.sendJSON(ossRes);
+    ctx.state.sendJSON(this.ret);
     // throw err;
   }
 

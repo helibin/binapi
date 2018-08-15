@@ -1,0 +1,515 @@
+{
+	"format": "pop",
+	"apiVersion": "2016-07-13",
+	"checksumFormat": "md5",
+	"endpointPrefix": "risk",
+	"serviceAbbreviation": "RISK",
+	"serviceFullName": "Aliyun RISK",
+	"signatureVersion": "pop",
+	"timestampFormat": "top",
+	"xmlnamespace": "",
+	"operations": {
+		"findRisk": {
+			"name": "FindRisk",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "FindRisk"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"Ip": {
+						"type": "string"
+					},
+					"Phone": {
+						"type": "string"
+					},
+					"Email": {
+						"type": "string"
+					},
+					"Umid": {
+						"type": "string"
+					},
+					"CodeType": {
+						"required": true,
+						"type": "string"
+					},
+					"Collina": {
+						"type": "string"
+					},
+					"IdType": {
+						"required": true,
+						"type": "string"
+					},
+					"MteeCode": {
+						"required": true,
+						"type": "string"
+					},
+					"UserId": {
+						"required": true,
+						"type": "string"
+					},
+					"UmidToken": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"sendVerifyCode": {
+			"name": "SendVerifyCode",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "SendVerifyCode"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"CodeType": {
+						"required": true,
+						"type": "string"
+					},
+					"IdType": {
+						"required": true,
+						"type": "string"
+					},
+					"EventId": {
+						"type": "string"
+					},
+					"MteeCode": {
+						"required": true,
+						"type": "string"
+					},
+					"UserId": {
+						"required": true,
+						"type": "string"
+					},
+					"MessageReiver": {
+						"type": "string"
+					},
+					"ChannelType": {
+						"required": true,
+						"type": "string"
+					},
+					"BizId": {
+						"type": "string"
+					},
+					"TimeInterval": {
+						"type": "integer"
+					},
+					"RiskRequestId": {
+						"type": "string"
+					},
+					"MessageParameters": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"validateVerifyCode": {
+			"name": "ValidateVerifyCode",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "ValidateVerifyCode"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"Ip": {
+						"type": "string"
+					},
+					"VerifyCode": {
+						"required": true,
+						"type": "string"
+					},
+					"CodeType": {
+						"required": true,
+						"type": "string"
+					},
+					"Collina": {
+						"type": "string"
+					},
+					"IdType": {
+						"required": true,
+						"type": "string"
+					},
+					"MteeCode": {
+						"required": true,
+						"type": "string"
+					},
+					"UserId": {
+						"required": true,
+						"type": "string"
+					},
+					"ChannelType": {
+						"required": true,
+						"type": "string"
+					},
+					"RiskRequestId": {
+						"type": "string"
+					},
+					"UmidToken": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"writeUssc": {
+			"name": "WriteUssc",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "WriteUssc"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"Ip": {
+						"type": "string"
+					},
+					"Collina": {
+						"type": "string"
+					},
+					"IdType": {
+						"required": true,
+						"type": "string"
+					},
+					"UserId": {
+						"required": true,
+						"type": "string"
+					},
+					"SignTime": {
+						"required": true,
+						"type": "string"
+					},
+					"Sign": {
+						"required": true,
+						"type": "string"
+					},
+					"CodeType": {
+						"required": true,
+						"type": "string"
+					},
+					"MteeCode": {
+						"required": true,
+						"type": "string"
+					},
+					"AppKey": {
+						"required": true,
+						"type": "string"
+					},
+					"ChannelType": {
+						"required": true,
+						"type": "string"
+					},
+					"VerifyResult": {
+						"required": true,
+						"type": "string"
+					},
+					"UmidToken": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"queryNameList": {
+			"name": "QueryNameList",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "QueryNameList"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"DataType": {
+						"required": true,
+						"type": "string"
+					},
+					"Type": {
+						"required": true,
+						"type": "string"
+					},
+					"QueryLike": {
+						"required": true,
+						"type": "string"
+					},
+					"DataValue": {
+						"required": true,
+						"type": "string"
+					}
+				}
+			}
+		},
+		"addNameList": {
+			"name": "AddNameList",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "AddNameList"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"DataType": {
+						"type": "string"
+					},
+					"Mark": {
+						"type": "string"
+					},
+					"BpmsUrl": {
+						"type": "string"
+					},
+					"Type": {
+						"type": "string"
+					},
+					"Operator": {
+						"type": "string"
+					},
+					"Applicant": {
+						"type": "string"
+					},
+					"DataValue": {
+						"type": "string"
+					},
+					"Reason": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"updateNameList": {
+			"name": "UpdateNameList",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "UpdateNameList"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"DataType": {
+						"type": "string"
+					},
+					"Mark": {
+						"type": "string"
+					},
+					"BpmsUrl": {
+						"type": "string"
+					},
+					"Type": {
+						"type": "string"
+					},
+					"Operator": {
+						"type": "string"
+					},
+					"Applicant": {
+						"type": "string"
+					},
+					"DataValue": {
+						"type": "string"
+					},
+					"Reason": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"delNameList": {
+			"name": "DelNameList",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "DelNameList"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"DataType": {
+						"type": "string"
+					},
+					"Mark": {
+						"type": "string"
+					},
+					"BpmsUrl": {
+						"type": "string"
+					},
+					"Type": {
+						"type": "string"
+					},
+					"Operator": {
+						"type": "string"
+					},
+					"Applicant": {
+						"type": "string"
+					},
+					"DataValue": {
+						"type": "string"
+					},
+					"Reason": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"tunnelReceive": {
+			"name": "TunnelReceive",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "TunnelReceive"
+					},
+					"StartEndPoint": {
+						"type": "string"
+					},
+					"Data": {
+						"type": "string"
+					},
+					"Apn": {
+						"type": "string"
+					},
+					"StopEndPoint": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"tunnelSend": {
+			"name": "TunnelSend",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "TunnelSend"
+					},
+					"StartEndPoint": {
+						"type": "string"
+					},
+					"Data": {
+						"type": "string"
+					},
+					"Apn": {
+						"type": "string"
+					},
+					"StopEndPoint": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"fetchVerifyInfo": {
+			"name": "FetchVerifyInfo",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "FetchVerifyInfo"
+					},
+					"Extend": {
+						"type": "string"
+					},
+					"Ip": {
+						"type": "string"
+					},
+					"Phone": {
+						"type": "string"
+					},
+					"Email": {
+						"type": "string"
+					},
+					"Umid": {
+						"type": "string"
+					},
+					"CodeType": {
+						"required": true,
+						"type": "string"
+					},
+					"Collina": {
+						"type": "string"
+					},
+					"IdType": {
+						"required": true,
+						"type": "string"
+					},
+					"MteeCode": {
+						"required": true,
+						"type": "string"
+					},
+					"UserId": {
+						"required": true,
+						"type": "string"
+					},
+					"UmidToken": {
+						"type": "string"
+					}
+				}
+			}
+		}
+  }
+}

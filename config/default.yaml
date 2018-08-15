@@ -94,13 +94,15 @@ AES:
   key: 'jKDUqUyRezqNyQaY5faKYsZHLADHmD9e'
   iv: 'dvjMpXLMb8592RZr'
 
-# 阿里云服务
-alyServer:
+# 阿里云SDK
+alySDK:
   accessKeyId: null
   accessKeySecret: null
-  sms:
+  dayu:
     accessKeyId: null
     accessKeySecret: null
+    endpoint: 'http://dysmsapi.aliyuncs.com'
+    apiVersion: '2015-12-16'
     signName: null
     template:
       default: null
@@ -111,6 +113,28 @@ alyServer:
     apiVersion: '2013-10-15'
     bucketName: null
     cacheExpire: 900 # 缓存时间，秒
+  yqBridge:
+    accessKeyId    : null
+    accessKeySecret: null
+    endpoint       : 'https://yq-bridge.aliyuncs.com'         # 外网
+    apiVersion     : '2017-08-10'
+  aas:
+    accessKeyId    : null
+    accessKeySecret: null
+    endpoint       : 'https://aas.aliyuncs.com'         # 外网
+    apiVersion     : '2015-07-01'
+
+
+# 阿里云服务
+alyServer:
+  accessKeyId: null
+  accessKeySecret: null
+  sms:
+    accessKeyId: null
+    accessKeySecret: null
+    signName: null
+    template:
+      default: null
 
 # NodeMailer
 nodeMailer:

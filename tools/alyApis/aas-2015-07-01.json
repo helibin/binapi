@@ -1,0 +1,376 @@
+{
+	"format": "pop",
+	"apiVersion": "2015-07-01",
+	"checksumFormat": "md5",
+	"endpointPrefix": "aas",
+	"serviceAbbreviation": "AAS",
+	"serviceFullName": "Aliyun AAS",
+	"signatureVersion": "pop",
+	"timestampFormat": "top",
+	"xmlnamespace": "",
+	"operations": {
+		"getBasicInfoForAccount": {
+			"name": "GetBasicInfoForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetBasicInfoForAccount"
+					},
+					"AliyunId": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"listAccessKeysForAccount": {
+			"name": "ListAccessKeysForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "ListAccessKeysForAccount"
+					},
+					"AKType": {
+						"type": "string"
+					},
+					"AKStatus": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"updateAccessKeyStatusForAccount": {
+			"name": "UpdateAccessKeyStatusForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "UpdateAccessKeyStatusForAccount"
+					},
+					"AKId": {
+						"type": "string"
+					},
+					"AKStatus": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"updatePasswordForAccount": {
+			"name": "UpdatePasswordForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "UpdatePasswordForAccount"
+					},
+					"NewPassword": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"createAccessKeyForAccount": {
+			"name": "CreateAccessKeyForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "CreateAccessKeyForAccount"
+					},
+					"AKSecret": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"createAliyunAccount": {
+			"name": "CreateAliyunAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "CreateAliyunAccount"
+					},
+					"AliyunId": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"deleteAccessKeyForAccount": {
+			"name": "DeleteAccessKeyForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "DeleteAccessKeyForAccount"
+					},
+					"AKId": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"getShortTermAccessKeyForAccount": {
+			"name": "GetShortTermAccessKeyForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetShortTermAccessKeyForAccount"
+					},
+					"ExpireTime": {
+						"type": "string"
+					},
+					"IsMfaPresent": {
+						"type": "boolean"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"listAliyunAccount": {
+			"name": "ListAliyunAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "ListAliyunAccount"
+					},
+					"Marker": {
+						"type": "string"
+					},
+					"MaxItems": {
+						"type": "integer"
+					}
+				}
+			}
+		},
+		"updateStatusForAccount": {
+			"name": "UpdateStatusForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "UpdateStatusForAccount"
+					},
+					"AccountStatus": {
+						"type": "string"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"createAliyunAccountWithBindHid": {
+			"name": "CreateAliyunAccountWithBindHid",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "CreateAliyunAccountWithBindHid"
+					},
+					"InnerAccountHid": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"getAliyunAccountWithBindHid": {
+			"name": "GetAliyunAccountWithBindHid",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetAliyunAccountWithBindHid"
+					},
+					"InnerAccountHid": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"getAliyunAccountWithBindTaobaoHid": {
+			"name": "GetAliyunAccountWithBindTaobaoHid",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetAliyunAccountWithBindTaobaoHid"
+					},
+					"HavanaId": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"getSessionInfoByMiniTicket": {
+			"name": "GetSessionInfoByMiniTicket",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetSessionInfoByMiniTicket"
+					},
+					"Ticket": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"getSessionInfoByTicket": {
+			"name": "GetSessionInfoByTicket",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "GetSessionInfoByTicket"
+					},
+					"Ticket": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"createShortTermAccessKeyForAccount": {
+			"name": "CreateShortTermAccessKeyForAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "CreateShortTermAccessKeyForAccount"
+					},
+					"ExpireTime": {
+						"type": "string"
+					},
+					"IsMfaPresent": {
+						"type": "boolean"
+					},
+					"PK": {
+						"type": "string"
+					}
+				}
+			}
+		},
+		"createIntlAliyunAccount": {
+			"name": "CreateIntlAliyunAccount",
+			"http": {
+				"method": "POST",
+				"uri":"/"
+			},
+			"input": {
+				"type": "structure",
+				"members": {
+					"Action": {
+						"required": true,
+						"default": "CreateIntlAliyunAccount"
+					},
+					"NationalityCode": {
+						"required": true,
+						"type": "string"
+					}
+				}
+			}
+		}
+  }
+}
