@@ -155,11 +155,11 @@ nodeMailer:
 # 赛邮
 subMailServer:
   sms:
-    host: null
-    queryHost: null
-    appId: null
-    appKey: null
+    accessKeyId: null
+    accessKeySecret: null
+    signName: null
+    template:
+      default: null
   mail:
-    host: null
-    appId: null
-    appKey: null
+    accessKeyId: null
+    accessKeySecret: null

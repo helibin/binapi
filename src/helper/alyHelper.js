@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-08 21:55:49
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-16 15:48:21
+ * @Last Modified time: 2018-08-16 15:52:16
  */
 /** 内建模块 */
 
@@ -197,7 +197,7 @@ export default class {
   async genAlyCoupon(uid = 0, activityCode) {
     const opt = {
       Uid         : Number(uid),
-      FromAppName : 'cloud-sandbox',
+      FromAppName : 'bin-api',
       ActivityCode: activityCode,
     };
 
@@ -207,6 +207,12 @@ export default class {
     return alyRes.data;
   }
 
+  /**
+   * 获取用户会话信息
+   *
+   * @param {string} [alyTicket=''] 阿里云会话凭证，取至cookie的login_aliyunid_ticket
+   * @returns {object} sessionInfo
+   */
   async getSessionInfo(alyTicket = '') {
     const opt = { Ticket: `${alyTicket}` };
 

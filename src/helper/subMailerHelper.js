@@ -2,12 +2,11 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-02 21:26:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-06 14:29:22
+ * @Last Modified time: 2018-08-16 16:27:05
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import axios from 'axios';
 
 /** 基础模块 */
 import CONFIG from 'config';
@@ -25,36 +24,44 @@ export default class {
     this.ret = t.initRet();
   }
 
-  async sendMail(to = 'helibin@139.com', project = 'Ot1HX3') {
+  async sendMail(email, type = 'default') {
     const now = parseInt(Date.now(), 10);
     const opt = {
-      to,
-      project,
-      appid    : CONFIG.subMailServer.mail.appId,
-      signature: CONFIG.subMailServer.mail.appKey,
+      appid    : CONFIG.subMailServer.mail.accessKeyId,
+      signature: CONFIG.subMailServer.mail.accessKeySecret,
+      to       : email,
+      project  : CONFIG.subMailServer.mail.template[type],
     };
     try {
-      const res = await axios.post(CONFIG.subMailServer.mail.host, opt);
-      return res.data;
+      this.ctx.state.axios.post('https://api.mysubmail.com/mail/xsend', opt);
+      return this.ret.data;
     } catch (ex) {
       this.ctx.state.logger(ex, ex, opt);
       throw ex;
     } finally {
-      this.ctx.state.logger('info', `发送邮件用时：${Date.now() - now}ms`);
+      this.ctx.state.logger('info', `发送邮件至\`${email}\`，用时：${Date.now() - now}ms`);
     }
   }
 
-  async sendSMS(to = '15179316184', project = 'Dy4dH3', options) {
+  /**
+   * 发送短信
+   *
+   * @param {string} mobile 大陆手机号码
+   * @param {string} [type='default'] 发送类型
+   * @param {*} options 模板参数
+   * @returns {object} 公共返回值
+   */
+  async sendSMS(mobile, type = 'default', options) {
     const now = parseInt(Date.now(), 10);
     const opt = {
-      to,
-      project,
+      appid    : CONFIG.subMailServer.sms.accessKeyId,
+      signature: CONFIG.subMailServer.sms.accessKeySecret,
+      to       : mobile,
+      project  : CONFIG.subMailServer.sms.template[type],
       vars     : options || { code: t.genRandStr(6, '1234567890') },
-      appid    : CONFIG.subMailServer.sms.appId,
-      signature: CONFIG.subMailServer.sms.appKey,
     };
     try {
-      const smsRes = await axios.post(CONFIG.subMailServer.sms.host, opt);
+      const smsRes = await this.ctx.state.axios.post('https://api.mysubmail.com/message/xsend', opt);
       if (smsRes.data.status === 'error') {
         this.ctx.state.logger('error', '获取赛邮短信异常：', JSON.stringify(smsRes.data));
         throw new _e('ESubMailAPI', smsRes.data.msg);
@@ -65,20 +72,20 @@ export default class {
       this.ctx.state.logger(ex, ex, opt);
       throw ex;
     } finally {
-      this.ctx.state.logger('info', `发送短信用时：${Date.now() - now}ms`);
+      this.ctx.state.logger('info', `发送短信至\`${mobile}\`，用时：${Date.now() - now}ms`);
     }
   }
 
-  async queryDetail(mobile) {
+  async queryDetail(mobile, type = 'default') {
     const now = parseInt(Date.now(), 10);
     const queryOpt = {
+      appid    : CONFIG.subMailServer.sms.accessKeyId,
+      signature: CONFIG.subMailServer.sms.accessKeySecret,
       recipient: mobile,
-      project  : 'Dy4dH3',
-      appid    : CONFIG.subMailServer.sms.appId,
-      signature: CONFIG.subMailServer.sms.appKey,
+      project  : CONFIG.subMailServer.sms.template[type],
     };
     try {
-      const smsRes = await axios.post(CONFIG.subMailServer.sms.queryHost, queryOpt);
+      const smsRes = await this.ctx.state.axios.post('https://api.mysubmail.com/log/message', queryOpt);
       if (smsRes.data.status === 'error') {
         this.ctx.state.logger('error', '查询赛邮短信异常：', JSON.stringify(smsRes.data));
         throw new _e('ESubMailAPI', smsRes.data.msg);

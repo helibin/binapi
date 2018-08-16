@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-16 15:43:30
+ * @Last Modified time: 2018-08-16 16:42:58
  */
 /** 内建模块 */
 
@@ -31,21 +31,13 @@ export default new class extends Base {
 
     // this.ret.data = await ctx.state.aly.genAlyCoupon(1440093726226429, 'sdfl');
 
-    this.ret.data = await ctx.state.aly.getSessionInfo('IXmR33*jvWD3ixtnr2wJJFCgEn9N1ykcSf_ENpoU_BOTwChTBoNM1ZJeedfK9zxYnbN5hossqIZCr6t7SGxRigm2Cb4fGaCdBZWIzmgdHq6sXXZQg4KFWufyvpeV*0*Cm58slMT1tJw3_k$$zcwPEWSE0');
+    // this.ret.data = await ctx.state.aly.getSessionInfo('IXmR33*jvWD3ixtnr2wJJFCgEn9N1ykcSf_ENpoU_BOTwChTBoNM1ZJeedfK9zxYnbN5hossqIZCr6t7SGxRigm2Cb4fGaCdBZWIzmgdHq6sXXZQg4KFWufyvpeV*0*Cm58slMT1tJw3_k$$zcwPEWSE0');
 
-    // this.ret = await ctx.state.subMailer.queryDetail('15179316184');
+    this.ret.data = await ctx.state.subMailer.sendMail('helibin@139.com');
+
     // const data = await si.osInfo()
-    // console.log(data)
-    // console.time('math');
     // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'),
-    //   typeof this.t.eval('0.3 / 0.1'), ',,,');
-    // console.timeEnd('math');
-    // new Error('error from outside')
-    // next(new _e('xxx', 'xxx', {
-    //   randStr: randStr
-    // }))
     ctx.state.sendJSON(this.ret);
-    // throw err;
   }
 
   async location(ctx) {

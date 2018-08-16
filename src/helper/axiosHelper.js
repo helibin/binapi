@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-06 14:25:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-08 21:49:39
+ * @Last Modified time: 2018-08-16 16:26:27
  */
 /** 内建模块 */
 
@@ -24,7 +24,7 @@ export default class {
     axios.interceptors.request.use(conf => conf, err => Promise.reject(err));
     axios.interceptors.response.use(res => res.data, err => Promise.reject(err));
     axios.defaults.timeout = 10000;
-    axios.defaults.headers = { 'x-auth-token': ctx.state.xAuthToken };
+    axios.defaults.headers = { 'x-auth-token': ctx.state.xAuthToken || '' };
   }
 
   async run(func, ...args) {
@@ -36,6 +36,6 @@ export default class {
   }
 
   async post(url, options) {
-    await this.axios.post(url, options);
+    return await this.axios.post(url, options);
   }
 }
