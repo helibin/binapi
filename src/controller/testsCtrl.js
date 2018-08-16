@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 19:34:01
+ * @Last Modified time: 2018-08-16 15:43:30
  */
 /** 内建模块 */
 
@@ -31,7 +31,7 @@ export default new class extends Base {
 
     // this.ret.data = await ctx.state.aly.genAlyCoupon(1440093726226429, 'sdfl');
 
-    this.ret.data = await ctx.state.aly.getSessionInfo('pNvcnX*gXTklUp7RwK4w3f_YNpoU_BOTwChTBoNM1ZJeedfK9zxYnbN5hossqIZCr6t7SGxRigm2Cb4fGaCdBZWIzmgdHq6sXXZQg4KFWufyvpeV*0*Cm58slMT1tJw3_k$$zcwPEWmES3IXvR33*jDW0');
+    this.ret.data = await ctx.state.aly.getSessionInfo('IXmR33*jvWD3ixtnr2wJJFCgEn9N1ykcSf_ENpoU_BOTwChTBoNM1ZJeedfK9zxYnbN5hossqIZCr6t7SGxRigm2Cb4fGaCdBZWIzmgdHq6sXXZQg4KFWufyvpeV*0*Cm58slMT1tJw3_k$$zcwPEWSE0');
 
     // this.ret = await ctx.state.subMailer.queryDetail('15179316184');
     // const data = await si.osInfo()

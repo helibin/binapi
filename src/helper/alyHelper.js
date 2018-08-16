@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-08 21:55:49
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 19:31:23
+ * @Last Modified time: 2018-08-16 15:48:21
  */
 /** 内建模块 */
 
@@ -218,6 +218,11 @@ export default class {
       } catch (ex) {
         this.ctx.state.logger(ex, `JSON-alyRes.SessionInfo解析失败：${alyRes.SessionInfo}`);
       }
+    }
+
+    if (!t.isEmpty(this.ret.data)) {
+      const accountType = this.ret.data.accountStructure || 1;
+      this.ret.data.type = CONFIG.alySDK.aas.type[accountType - 1];
     }
     this.ctx.state.logger(null, `${chalk.blue('[ass]')}获取阿里用户信息，ticKet=${alyTicket}`);
     return this.ret.data;

@@ -123,6 +123,12 @@ alySDK:
     accessKeySecret: null
     endpoint       : 'https://aas.aliyuncs.com'         # 外网
     apiVersion     : '2015-07-01'
+    sessionTicket  : 'login_aliyunid_ticket'
+    type:
+      - 'biz'
+      - 'master'
+      - 'ram'
+      - 'token'
 
 
 # 阿里云服务
