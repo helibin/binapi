@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-07 14:39:40
+ * @Last Modified time: 2018-08-20 17:00:52
  */
 /** 内建模块 */
 import path from 'path';
@@ -352,9 +352,7 @@ M.decryptoByAES = (base64Output, key = CONFIG.AES.key, iv = CONFIG.AES.iv) => {
  *    hostname: 'Ly***al',
  *    logofile: 'ap***le' }
  */
-M.getOSInfo = async () => {
-  await si.osInfo();
-};
+M.getOSInfo = async () =>  await si.osInfo();
 
 /**
  * 获取系统信息
@@ -367,9 +365,7 @@ M.getOSInfo = async () => {
  *    uuid: 'E8***E8',
  *    sku: 'Ma***21' }
  */
-M.getSystem = async () => {
-  await si.system();
-};
+M.getSystem = async () => await si.system();
 
 /**
  * 数字运算

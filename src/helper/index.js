@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:29
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 12:15:31
+ * @Last Modified time: 2018-08-22 15:03:01
  */
 import CONFIG     from 'config';
 import _e         from './customError';

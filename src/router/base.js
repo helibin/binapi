@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-31 11:50:11
+ * @Last Modified time: 2018-08-17 19:59:59
  */
 /** 内建模块 */
 
@@ -15,7 +15,7 @@ import CONFIG from 'config';
 /** 项目模块 */
 import { ipMid } from '../middleware';
 
-
+/** 预处理 */
 const router = new Router({ prefix: CONFIG.apiServer.prefix });
 const pageRouter = new Router();
 

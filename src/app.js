@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 12:15:45
+ * @Last Modified time: 2018-08-22 15:05:28
  */
 /* 内建模块 */
 import http from 'http'
@@ -18,16 +18,18 @@ import koaStatic  from 'koa-static';
 import userAgent  from 'koa-useragent';
 import views      from 'koa-views';
 import helpers    from 'handlebars-helpers';
+import IO         from 'socket.io';
 
 /* 基础模块 */
 import {
-  CONFIG, logger, prepare, yamlCheck, t,
+  CONFIG, logger, prepare, socket, yamlCheck,
 } from './helper';
 
 /** 项目模块 */
 import {
   authMid, errorHandler, noPageCache, headerMid, sessionMid,
 } from './middleware';
+import { ioHelper } from "./socketio";
 
 /** 路由模块 */
 import { pageRouter, router } from './router';
@@ -81,8 +83,12 @@ app.use(noPageCache());
 app.use(router.routes());
 app.use(pageRouter.routes());
 
+const server = http.createServer(app.callback());
+
+new ioHelper(server).init()
+
 try {
-  app.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
+  server.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
     /* 服务器运行配置 */
 
     logger(null, chalk.green('服务器已启动'));
