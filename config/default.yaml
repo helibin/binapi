@@ -27,6 +27,11 @@ dbServer:
     port    : 6379
     db      : 0
 
+  socketIO:
+    host    : '127.0.0.1'
+    password: null
+    port    : 6379
+
 # 站点服务
 webServer:
   host: '0.0.0.0'
@@ -66,6 +71,10 @@ apiServer:
   logLevel: 'ERROR' # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
   sentryDSN: null
 
+# socketIO
+socketServer:
+  prefix : '/s1'
+
 # 公共API
 openAPI:
   taobao:
@@ -73,10 +82,10 @@ openAPI:
 
 # log4js日志等级列表
 logLevels:
-  all: 'cyan'
+  all: 'white'
   trace: 'blue'
-  debug: 'white'
-  info: 'white'
+  debug: 'cyan'
+  info: 'green'
   warn: 'yellow'
   error: 'red'
   fatal: 'magenta'

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:04:38
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 14:02:43
+ * @Last Modified time: 2018-08-20 16:59:47
  */
 module.exports = {
   'extends': 'airbnb-base',
@@ -43,7 +43,9 @@ module.exports = {
     'no-console': 0,
     'no-param-reassign': 0,
     'no-unreachable': 0,
-    'valid-jsdoc': 2,
+    'valid-jsdoc': [2, {
+      requireReturn: false
+    }],
     'key-spacing': [2, {
       'beforeColon': false,
       'afterColon': true,

@@ -2,10 +2,9 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 13:05:55
+ * @Last Modified time: 2018-08-20 15:41:12
  */
 /** 内建模块 */
-import os from 'os';
 
 /** 第三方模块 */
 import chalk from 'chalk';
@@ -34,6 +33,18 @@ log4js.configure({
       filename  : './logs/all.log',
       maxLogSize: 10240,
       backups   : 10,
+      layout    : {
+        type   : 'pattern',
+        pattern: '%[%d [%x{level}] %c %m%]',
+        tokens : {
+          level(logEvent) {
+            return logEvent.level.levelStr.slice(0, 1);
+          },
+          color(logEvent) {
+            return logEvent.level.colour;
+          },
+        },
+      },
     },
     access: {
       type    : 'dateFile',
@@ -55,9 +66,6 @@ log4js.configure({
   pm2: true,
 });
 
-let hostName = os.hostname();
-hostName = hostName || hostName[0] || 'webServer';
-
 const logger = (...args) => {
   let logLevel = args.shift();
 
@@ -65,12 +73,12 @@ const logger = (...args) => {
     logLevel = logLevel ? 'error' : 'info';
   }
 
-  log4js.getLogger(hostName)[logLevel](...args);
+  log4js.getLogger('webServer')[logLevel](...args);
 };
 
 const Logger = {};
 for (const logLevel of Object.keys(CONFIG.logLevels)) {
-  Logger[logLevel] = (...args) => log4js.getLogger(hostName)[logLevel](...args);
+  Logger[logLevel] = (...args) => log4js.getLogger('webServer')[logLevel](...args);
 }
 
 Logger.sql = (execSql, execTime) => {
@@ -78,7 +86,7 @@ Logger.sql = (execSql, execTime) => {
   if (typeof execTime === 'number') {
     logStr += chalk.green(` => 用时：${execTime}ms`);
   }
-  log4js.getLogger('Mysql.execDetail').debug(logStr);
+  log4js.getLogger('Mysql    ').debug(logStr);
 };
 
 const rLog = (ex) => {
