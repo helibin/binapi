@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-20 15:53:41
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-22 20:13:06
+ * @Last Modified time: 2018-08-23 11:46:33
  */
 /** 内建模块 */
 
@@ -14,7 +14,7 @@ import ioRedis from 'socket.io-redis';
 
 /** 基础模块 */
 import CONFIG     from 'config';
-import { logger } from '../helper';
+import { logger, _e } from '../helper';
 
 /** 项目模块 */
 import ioEvent from './event';
@@ -30,7 +30,7 @@ export default class {
       pingInterval: 10000,
       pingTimeout : 5000,
       cookie      : false,
-      messages    : [{ namespace: '/test'  }, { namespace: '/test1'  }],
+      namespaces  : [{ name: '/test'  }, { name: '/test1'  }],
     };
     this.io      = new IO(server, options);
     this.events = {};
@@ -42,26 +42,27 @@ export default class {
   }
 
   async init() {
-    for (const m of this.options.messages) {
-      const io = m.namespace ? this.io.of(m.namespace) : this.io;
+    const funcs = [];
+    for (const n of this.options.namespaces) {
+      const io = n.name ? this.io.of(n.name) : this.io;
       io.on('connection', async (socket) => {
         // socket Promise化
         Promise.promisifyAll(socket);
 
-        await this.join(socket, socket.nsp.name);
-        await this.listen(socket);
+        funcs.push(this.join(socket, socket.nsp.name));
+        funcs.push(this.listen(socket));
       });
 
       this.io.on('error', (err) => {
         logger('error', 'socketIO连接出现异常：', err);
       });
     }
+    Promise.all(funcs);
   }
 
   async listen(socket) {
     for (const r in ioEvent) {
       if (!{}.hasOwnProperty.call(ioEvent, r)) continue;
-
 
       socket.on(r, async (data) => {
         try {
@@ -73,16 +74,15 @@ export default class {
           }
           await Promise.all(mids);
         } catch (ex) {
-          socket.emit('err', ex);
+          logger(ex, 'socket.io请求出现异常：', ex);
+          socket.emit('err', new _e('EWebServerSocketIO', ex.message, { data }));
         }
       });
     }
   }
 
   async emit(socket, event, data) {
-    // return new Promise((resolve, reject) => socket.emit(event, data, () => {
-    //   resolve();
-    // }));
+    socket.emit(event, data);
   }
 
   async join(socket, room) {

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-22 16:02:43
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-22 20:10:35
+ * @Last Modified time: 2018-08-23 11:18:23
  */
 /** 内建模块 */
 
@@ -20,7 +20,8 @@ export default new class {
   }
 
   async test(socket, data) {
-    return Promise.reject(new _e('EWebServerSocketIO', 'test error', { data }));
+    console.log(data, ',,,');
+    return Promise.reject(new Error('test error'));
   }
 
   async requireSign(socket, data) {
@@ -28,10 +29,12 @@ export default new class {
     const handshake = socket.handshake;
     console.log(handshake.query, ',,,');
     console.log(`收到来自用户=${socket.request.user} 的消息: ${data}`);
+    return ret;
   }
 
   async chat(socket, data) {
-    return Promise.reject(new _e('EWebServerSocketIO', 'chat error', { data }));
+    console.log(data, ',,,');
+    return Promise.reject(new Error('chat error'));
   }
 
   async sendOK(socket) {
