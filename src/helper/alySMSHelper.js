@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-31 16:32:39
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 19:06:01
+ * @Last Modified time: 2018-08-24 16:55:46
  */
 /** 内建模块 */
 
@@ -36,7 +36,6 @@ export default class {
    *
    * @param {*} mobile 大陆手机号码
    * @param {string} [type='default'] 短信验证码类型（signup）
-   * @returns {object} ret
    */
   async sendSMS(mobile, type = 'default') {
     const code = t.genRandStr(6, '1234567890');

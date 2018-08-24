@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-06 15:00:29
+ * @Last Modified time: 2018-08-24 17:31:02
  */
 /** 内建模块 */
 
@@ -136,20 +136,22 @@ export default new class extends Base {
             captchaToken,
           });
         }
+
+        let captcha = {};
         try {
-          const captcha = JSON.parse(redisRes);
-          if (captcha.text.toLowerCase() !== inputCaptcha.toLowerCase()) {
-            throw new this._e('EBizRuleCaptcha', 'invalidCaptcha', {
-              cate,
-              captchaToken,
-              captchaValue: captcha.text,
-              inputCaptcha,
-            });
-          }
+          captcha = JSON.parse(redisRes);
         } catch (ex) {
           throw new this._e('EDBRedis', 'redisParseError');
         }
 
+        if (captcha.text.toLowerCase() !== inputCaptcha.toLowerCase()) {
+          throw new this._e('EBizRuleCaptcha', 'invalidCaptcha', {
+            cate,
+            captchaToken,
+            captchaValue: captcha.text,
+            inputCaptcha,
+          });
+        }
         await ctx.state.redis.del(cacheKey);
       } catch (ex) {
         ctx.state.logger(ex, `校验[${cate}]验证码失败`);
