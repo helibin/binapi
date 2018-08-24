@@ -13,12 +13,50 @@ dbServer:
     port: 6379
     db  : 1
 
+  socketIO:
+    host: '127.0.0.1'
+    port    : 6379
+
 webServer:
   host: '127.0.0.1'
-  port: 5080
+  port: 5005
+
+  secret: ''
 
 apiServer:
   corsWhiteList: '*'
   ipWhiteList: '*'
 
   logLevel: 'ERROR'
+
+alyServer:
+  accessKeyId    : ''
+  accessKeySecret: ''
+
+alySDK:
+  accessKeyId    : ''
+  accessKeySecret: ''
+  dayu:
+    accessKeyId: ''
+    accessKeySecret: ''
+  oss:
+    accessKeyId: ''
+    accessKeySecret: ''
+    bucketName: ''
+  aas:
+    accessKeyId    : ''
+    accessKeySecret: ''
+
+nodeMailer:
+  user: 'service@helibin.com'
+  password: ''
+  sender: 'service@helibin.com'
+  name: '系统服务'
+
+subMailServer:
+  sms:
+    accessKeyId: ''
+    accessKeySecret: ''
+  mail:
+    accessKeyId: ''
+    accessKeySecret: ''
