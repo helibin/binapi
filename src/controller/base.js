@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-02 09:41:28
+ * @Last Modified time: 2018-08-24 15:53:21
  */
 /** 内建模块 */
 
@@ -28,7 +28,11 @@ export default class {
     return async (ctx) => {
       const now = Date.now();
       try {
-        await this[func](ctx, ...args);
+        if (typeof this[func] === 'function') {
+          await this[func](ctx, ...args);
+        } else {
+          throw new _e('EWebServer', `\`${func}\`IsNotFunction`);
+        }
       } catch (ex) {
         ctx.state.hasError = true;
         throw ex;

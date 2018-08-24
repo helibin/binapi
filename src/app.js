@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-22 15:05:28
+ * @Last Modified time: 2018-08-23 15:37:36
  */
 /* 内建模块 */
 import http from 'http'
@@ -85,6 +85,7 @@ app.use(pageRouter.routes());
 
 const server = http.createServer(app.callback());
 
+// socket.io初始化
 new ioHelper(server).init()
 
 try {
