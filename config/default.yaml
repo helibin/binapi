@@ -175,3 +175,4 @@ subMailServer:
 # 微信服务
 wxServer:
   secret: 'weixin-secret'
+  ipList: '*'
