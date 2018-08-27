@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-20 17:00:52
+ * @Last Modified time: 2018-08-27 14:26:26
  */
 /** 内建模块 */
 import path from 'path';
@@ -404,11 +404,20 @@ M.sortObj = (obj) => {
 
 M.strPlus = (...args) => `${args.join('')}`;
 
-M.getSignStr = (o) => {
+/**
+ * 获取签名字符串
+ *
+ * @param {object} o 待签名内容
+ * @param {array|string} e 排除数据
+ * @returns {string} 待签名字符串
+ */
+M.getSignStr = (o, e = []) => {
+  if (!Array.isArray(e)) e = [e];
   const keys = Object.keys(o).sort();
 
   let signStr = '';
   for (const k of keys) {
+    if (e.includes(k)) continue;
     signStr += `&${k}=${o[k]}`;
   }
   return signStr.substr(1);

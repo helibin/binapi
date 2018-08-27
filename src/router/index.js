@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-24 15:48:16
+ * @Last Modified time: 2018-08-27 14:46:54
  */
 /** 内建模块 */
 
@@ -21,7 +21,7 @@ require('./dabasesRouter');
 require('./indexRouter');
 require('./testsRouter');
 require('./usersRouter');
-require('./wechatRouter');
+require('./weixinRouter');
 
 // PAGE
 require('./indexPageRouter');

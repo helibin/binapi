@@ -139,7 +139,6 @@ alySDK:
       - 'ram'
       - 'token'
 
-
 # 阿里云服务
 alyServer:
   accessKeyId: null
@@ -172,3 +171,7 @@ subMailServer:
   mail:
     accessKeyId: null
     accessKeySecret: null
+
+# 微信服务
+weixinServer:
+  secret: 'weixin-secret'
