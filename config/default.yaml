@@ -173,5 +173,5 @@ subMailServer:
     accessKeySecret: null
 
 # 微信服务
-weixinServer:
+wxServer:
   secret: 'weixin-secret'
