@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-23 15:11:25
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-27 14:36:39
+ * @Last Modified time: 2018-08-27 15:07:33
  */
 /** 内建模块 */
 
@@ -17,4 +17,5 @@ import { ipMid } from '../middleware';
 
 router.get('/wx/check-sign',
   ipMid.allowAccess(),
+  ipMid.denyAccess(),
   weixinCtrl.run('checkSign'));

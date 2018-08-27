@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 22:46:28
+ * @Last Modified time: 2018-08-27 15:11:33
  */
 /** 内建模块 */
 
@@ -16,32 +16,12 @@ import Base from './base';
 
 
 export default new class extends Base {
-  intercept(options = {}) {
-    return async (ctx, next) => {
-      const clientIP = ctx.state.clientIP;
-
-      if (options.ipBlackList
-      && options.ipBlackList !== '*'
-      && options.ipBlackList.includes(clientIP)) {
-        throw new this._e('EClientBadRequest', 'accessDeniedByIPAdress', { clientIP });
-      }
-      if (options.ipWhiteList
-      && options.ipWhiteList !== '*'
-      && !options.ipWhiteList.includes(clientIP)) {
-        throw new this._e('EClientBadRequest', 'unTruestIPAdress', { clientIP });
-      }
-
-      await next();
-    };
-  }
-
   allowAccess(ipWhiteList = this.CONFIG.apiServer.ipWhiteList) {
+    if (!Array.isArray(ipWhiteList)) ipWhiteList = [ipWhiteList];
     return async (ctx, next) => {
       const clientIP = ctx.state.clientIP;
 
-      if (ipWhiteList
-      && ipWhiteList !== '*'
-      && !ipWhiteList.includes(clientIP)) {
+      if (!ipWhiteList.includes('*') && !ipWhiteList.includes(clientIP)) {
         throw new this._e('EClientBadRequest', 'unTruestIPAdress', { clientIP });
       }
 
@@ -51,11 +31,12 @@ export default new class extends Base {
 
   denyAccess(ipBlackList = this.CONFIG.apiServer.ipBlackList) {
     return async (ctx, next) => {
+      if (ipBlackList && !Array.isArray(ipBlackList)) ipBlackList = [ipBlackList];
       const clientIP = ctx.state.clientIP;
 
       if (ipBlackList
-      && ipBlackList !== '*'
-      && ipBlackList.includes(clientIP)) {
+        && (ipBlackList.includes('*')
+        || ipBlackList.includes(clientIP))) {
         throw new this._e('EClientBadRequest', 'accessDeniedByIPAdress', { clientIP });
       }
 
