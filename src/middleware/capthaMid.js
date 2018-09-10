@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-24 17:39:10
+ * @Last Modified time: 2018-09-10 17:08:47
  */
 /** 内建模块 */
 
@@ -16,10 +16,13 @@ import Base from './base';
 /** 项目模块 */
 
 /** 预处理 */
-svgCaptcha.options = {
-  width   : 150,
-  height  : 60,
-  fontSize: 18,
+const captchaOpt = {
+  width      : 150,
+  height     : 60,
+  fontSize   : 50,
+  ignoreChars: '0o1il',
+  noise      : 3,
+  color      : true,
 };
 
 
@@ -37,37 +40,17 @@ export default new class extends Base {
     return `captcha@${cate}#type=${type}:clientId=${clientId}:token=${token}`;
   }
 
-  genCaptchaTest(type = 'svg') {
+  genCaptchaTest() {
     return async (ctx, next) => {
       const ret = this.t.initRet();
       const start = Date.now();
       let count = 0;
 
-      switch (type) {
-        case 'svg':
-          while ((Date.now() - start) < 1000) {
-            svgCaptcha.create({
-              ignoreChars: '0o1i',
-              noise      : 4,
-              color      : true,
-              background : '#fff',
-            });
-            count += 1;
-          }
-          break;
-        case 'bmp':
-          while ((Date.now() - start) < 1000) {
-            svgCaptcha.create({
-              ignoreChars: '0o1i',
-              noise      : 4,
-              color      : true,
-              background : '#fff',
-            });
-            count += 1;
-          }
-          break;
-        default: break;
+      while ((Date.now() - start) < 1000) {
+        svgCaptcha.create(captchaOpt);
+        count += 1;
       }
+
       ctx.state.logger('1秒内生成验证码：', count);
       ret.data = { count };
       ctx.state.sendJSON(ret);
@@ -96,13 +79,7 @@ export default new class extends Base {
           }
         }
 
-        const captcha = svgCaptcha.create({
-          size       : 4,
-          ignoreChars: '0o1il',
-          noise      : 3,
-          color      : true,
-          background : '#fff',
-        });
+        const captcha = svgCaptcha.create(captchaOpt);
 
         await ctx.state.redis.set(cacheKey,
           JSON.stringify(captcha),

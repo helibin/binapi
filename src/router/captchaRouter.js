@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-05 15:19:23
+ * @Last Modified time: 2018-09-10 16:50:28
  */
 /** 内建模块 */
 
@@ -22,3 +22,6 @@ router.get('/captcha/sign-up.svg',
 router.get('/captcha/sign-in.svg',
   paramMid.joiCheck(captchaLogic.getSVGCaptcha),
   captchaMid.genSVGCaptcha('sign-in'));
+
+router.get('/captcha/test',
+  captchaMid.genCaptchaTest());
