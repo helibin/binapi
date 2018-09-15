@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-20 15:53:41
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-23 11:46:33
+ * @Last Modified time: 2018-09-15 15:52:01
  */
 /** 内建模块 */
 
@@ -59,12 +59,10 @@ export default class {
     }
     Promise.all(funcs);
   }
-
   async listen(socket) {
-    for (const r in ioEvent) {
-      if (!{}.hasOwnProperty.call(ioEvent, r)) continue;
-
-      socket.on(r, async (data) => {
+    // socket事件处理函数
+    const routerHandler = (r, socket) => {
+      return async (data) => {
         try {
           const mids = [];
           for (const mid of ioEvent[r]) {
@@ -77,7 +75,13 @@ export default class {
           logger(ex, 'socket.io请求出现异常：', ex);
           socket.emit('err', new _e('EWebServerSocketIO', ex.message, { data }));
         }
-      });
+      }
+    }
+
+    for (const r in ioEvent) {
+      if (!{}.hasOwnProperty.call(ioEvent, r)) continue;
+
+      socket.on(r, routerHandler(r, socket));
     }
   }
 

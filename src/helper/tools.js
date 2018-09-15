@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-27 14:26:26
+ * @Last Modified time: 2018-09-15 15:56:25
  */
 /** 内建模块 */
 import path from 'path';
@@ -313,7 +313,7 @@ M.encryptoByAES = (rawText, key = CONFIG.AES.key, iv = CONFIG.AES.iv) => {
     ];
     return chunks.join('');
   } catch (ex) {
-    logger.error(ex, ex);
+    logger(ex, ex);
     return null;
   }
 };
