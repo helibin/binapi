@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-20 15:41:12
+ * @Last Modified time: 2018-09-15 15:54:06
  */
 /** 内建模块 */
 
@@ -76,12 +76,7 @@ const logger = (...args) => {
   log4js.getLogger('webServer')[logLevel](...args);
 };
 
-const Logger = {};
-for (const logLevel of Object.keys(CONFIG.logLevels)) {
-  Logger[logLevel] = (...args) => log4js.getLogger('webServer')[logLevel](...args);
-}
-
-Logger.sql = (execSql, execTime) => {
+const sqlLog = (execSql, execTime) => {
   let logStr = `执行SQL语句：${execSql}`;
   if (typeof execTime === 'number') {
     logStr += chalk.green(` => 用时：${execTime}ms`);
@@ -92,16 +87,16 @@ Logger.sql = (execSql, execTime) => {
 const rLog = (ex) => {
   Raven.captureException(ex, (err, eventId) => {
     if (err) {
-      Logger.error(`发送远程日志失败，err: ${err}`);
+      logger('error', `发送远程日志失败，err: ${err}`);
     } else {
-      Logger.error(`发送远程日志，eventId: ${eventId}`);
+      logger('error', `发送远程日志，eventId: ${eventId}`);
     }
   });
 };
 
 
 export {
-  Logger,
   logger,
+  sqlLog,
   rLog,
 };

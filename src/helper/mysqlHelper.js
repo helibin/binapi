@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-29 23:07:56
+ * @Last Modified time: 2018-09-15 15:54:20
  */
 /** 内建模块 */
 
@@ -11,9 +11,10 @@ import Sequelize from 'sequelize';
 
 /** 基础模块 */
 import CONFIG from 'config';
-import { Logger, logger } from './logger';
+import { sqlLog, logger } from './logger';
 
 /** 项目模块 */
+
 
 const dbConfig = CONFIG.dbServer.mysql || {};
 
@@ -21,7 +22,7 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   host   : dbConfig.host,
   port   : dbConfig.port,
   dialect: 'mysql',
-  logging: CONFIG.env !== 'production' ? Logger.sql : false,
+  logging: CONFIG.env !== 'production' ? sqlLog : false,
 
   define: {
     freezeTableName: true,
