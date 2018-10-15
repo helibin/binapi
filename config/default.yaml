@@ -4,6 +4,15 @@
 # env: 'development'
 env: 'production'
 
+# 网站配置
+site:
+  baseURL: 'api.ajaxp.com'
+
+  onlineTimeout        : 900 # 认为用户在线的超时时间，秒
+  commonDataCacheExpire: 300 # 缓存超时时间-通用数据，秒
+
+  ossTempFileMaxAge    : 604800 # oss上传临时文件记录缓存时间，秒(1周)
+
 # 管理界面URL
 manageURL:
   'https://manage.helibin.com'

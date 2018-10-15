@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-09-12 15:49:21
+ * @Last Modified time: 2018-10-07 18:52:17
  */
 /** 内建模块 */
 
@@ -18,14 +18,14 @@ export default new class extends Base {
   async test(ctx) {
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
 
-    const randStr = this.t.genRandStr(10, '342121lkdsaf');
-    this.ret = new this._e('EClientNotFound', 'xxx', { randStr });
+    // const randStr = this.t.genRandStr(10, '342121lkdsaf');
+    // this.ret = new this._e('EClientNotFound', 'xxx', { randStr });
     // throw this.ret;
 
     // await this.t.getIPInfo(ctx.ip);
 
     // this.ret.data = await ctx.state.aly.upload('static/img/test.png', new Buffer('1334'));
-    // this.ret.data = await ctx.state.aly.download('static/img/test.png');
+    this.ret.data = await ctx.state.aly.download('static/img/test.png');
 
     // this.ret.data = await ctx.state.alySMS.sendSMS('15179316184');
     // this.ret.data = await ctx.state.alySMS.queryDetail('15179316184');
