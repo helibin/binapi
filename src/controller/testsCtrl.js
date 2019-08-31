@@ -2,11 +2,12 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-10-07 18:52:17
+ * @Last Modified time: 2019-06-24 22:25:08
  */
 /** 内建模块 */
 
 /** 第三方模块 */
+import geoip from 'geoip-lite';
 
 /** 基础模块 */
 import Base from './base';
@@ -16,6 +17,7 @@ import Base from './base';
 
 export default new class extends Base {
   async test(ctx) {
+    const ret = this.t.initRet();
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
 
     // const randStr = this.t.genRandStr(10, '342121lkdsaf');
@@ -25,7 +27,7 @@ export default new class extends Base {
     // await this.t.getIPInfo(ctx.ip);
 
     // this.ret.data = await ctx.state.aly.upload('static/img/test.png', new Buffer('1334'));
-    this.ret.data = await ctx.state.aly.download('static/img/test.png');
+    // this.ret.data = await ctx.state.aly.download('static/img/test.png');
 
     // this.ret.data = await ctx.state.alySMS.sendSMS('15179316184');
     // this.ret.data = await ctx.state.alySMS.queryDetail('15179316184');
@@ -40,7 +42,10 @@ export default new class extends Base {
 
     // const data = await si.osInfo()
     // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'),
-    ctx.state.sendJSON(this.ret);
+
+    const ip = '113.116.157.93';
+    ret.data = geoip.lookup(ip);
+    ctx.state.sendJSON(ret);
   }
 
   async location(ctx) {
