@@ -1,2 +1,15 @@
+{{> header.base }}
 
-<p class="text-center">err-sys: {{ JSONstringify pageData }}</p>
+<div class="container">
+  <div class="page-header">
+    <h1>发生系统故障</h1>
+  </div>
+
+  <h3>我们将尽快修复此问题</h3>
+  <p>Req Id：<code can-copy>{{pageData.err.req_id}}</code></p>
+</div>
+
+{{> footer }}
+{{> footer.base }}
+
+<script src="/js/index.js"></script>

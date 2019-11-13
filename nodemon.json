@@ -1,5 +1,7 @@
 {
+  "ignore": ["app", "src/static/apidoc", "src/static/mapidoc"],
   "execMap": {
     "yml": "yaml"
-  }
+  },
+  "ext": "js json yaml"
 }

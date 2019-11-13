@@ -1,0 +1,63 @@
+myDevices_entry:
+  myDevices_list: 我的设备-列表
+  myDevices_get: 我的设备-查看
+
+myManageUsers_entry:
+  myManageUsers_list: 我的后台用户-列表
+  myManageUsers_get: 我的后台用户-查看
+  myManageUsers_add: 我的后台用户-新增
+  myManageUsers_modify: 我的后台用户-修改
+  myManageUsers_setPrivilege: 我的后台用户-授权
+  myManageUsers_setDisable: 我的后台用户-启用/禁用
+  myManageUsers_delete: 我的后台用户-删除
+
+devices_entry:
+  devices_list: 设备-列表
+  devices_get: 设备-查看
+  devices_add: 设备-新增
+  devices_audit: 设备-审核
+  devices_modify: 设备-修改
+  devices_setDisable: 设备-启用/禁用
+  devices_delete: 设备-删除
+
+musers_entry:
+  musers_list: 后台用户-列表
+  musers_get: 后台用户-查看
+  musers_add: 后台用户-新增
+  musers_modify: 后台用户-修改
+  musers_setPrivilege: 后台用户-授权
+  musers_setDisable: 后台用户-启用/禁用
+  musers_delete: 后台用户-删除
+  musers_upload: 后台用户-上传头像
+
+messages_entry:
+  messages_list: 消息-列表
+  messages_get: 消息-查看
+  messages_add: 消息-新增
+  messages_modify: 消息-修改
+  messages_setDisable: 消息-启用/禁用
+  messages_delete: 消息-删除
+
+orders_entry:
+  orders_list: 订单-列表
+  orders_get: 订单-查看
+  orders_add: 订单-新增
+  orders_modify: 订单-修改
+  orders_setDisable: 订单-启用/禁用
+  orders_delete: 订单-删除
+
+systemConfigs_entry:
+  systemConfigs_list: 系统配置-列表
+  systemConfigs_get: 系统配置-查看
+  systemConfigs_add: 系统配置-新增
+  systemConfigs_modify: 系统配置-修改
+  systemConfigs_setDisable: 系统配置-启用/禁用
+  systemConfigs_delete: 系统配置-删除
+
+users_entry:
+  users_list: 注册用户-列表
+  users_get: 注册用户-查看
+  users_modify: 注册用户-修改
+  users_setDisable: 注册用户-启用/禁用
+  users_delete: 注册用户-删除
+  users_upload: 注册用户-头像上传

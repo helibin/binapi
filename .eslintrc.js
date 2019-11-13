@@ -1,69 +1,44 @@
 /*
  * @Author: helibin@139.com
- * @Date: 2018-07-17 19:04:38
+ * @Date: 2019-07-18 10:50:25
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-20 16:59:47
+ * @Last Modified time: 2019-11-12 21:24:05
  */
 module.exports = {
-  'extends': 'airbnb-base',
-  'env': {
-    'browser': true
+  root: true,
+  parserOptions: {
+    parser: 'babel-eslint',
+    sourceType: 'module',
+    ecmaVersion: 9,
   },
-  'rules': {
-    'linebreak-style': [
-      2,
-      'unix'
+  env: {
+    es6: true,
+    browser: true,
+    node: true,
+  },
+  globals: {},
+  extends: ['plugin:prettier/recommended', 'eslint:recommended'],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'prod' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'prod' ? 'error' : 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        trailingComma: 'all',
+        bracketSpacing: true,
+        jsxBracketSameLine: true,
+      },
     ],
-    'quotes': [
-      2,
-      'single'
-    ],
-    // 对象数组个数
-    'object-curly-newline': [2, {
-      'ObjectExpression': {
-        'multiline': true,
-        'minProperties': 3
-      },
-      'ObjectPattern': {
-        'multiline': true,
-        'minProperties': 3
-      },
-      'ImportDeclaration': {
-        'multiline': true,
-        'minProperties': 3
-      },
-      'ExportDeclaration': {
-        'multiline': true,
-        'minProperties': 3
-      }
-    }],
-    'prefer-destructuring': 0,
-    'no-restricted-syntax': 0,
-    'no-continue': 0,
-    'no-console': 0,
-    'no-param-reassign': 0,
-    'no-unreachable': 0,
-    'valid-jsdoc': [2, {
-      requireReturn: false
-    }],
-    'key-spacing': [2, {
-      'beforeColon': false,
-      'afterColon': true,
-      'align': 'colon'
-    }],
-    'no-multi-spaces': 0,
-    'sort-vars': [0, {
-      'ignoreCase': true
-    }],
-    'consistent-return': 0,
-    'no-underscore-dangle': 0,
-    'no-return-await': 0,
-    'class-methods-use-this': 0,
-    'max-len': [1, 150]
-  }
-};
+    'array-bracket-newline': 'warn',
+    'require-atomic-updates': 'off',
+  },
+}
+// https://eslint.org/docs/rules/ || https://eslint.cn/docs/rules/
 
-
+// 0或'off'：关闭规则。
+// 1或'warn'：打开规则, 并且作为一个警告（并不会导致检查不通过）。
+// 2或'error'：打开规则, 并且作为一个错误 (退出码为1, 检查不通过)。
 
 // "no-alert": 0,//禁止使用alert confirm prompt
 // "no-array-constructor": 2,//禁止使用数组构造器
@@ -103,7 +78,7 @@ module.exports = {
 // "no-inline-comments": 0,//禁止行内备注
 // "no-inner-declarations": [2, "functions"],//禁止在块语句中使用声明（变量或函数）
 // "no-invalid-regexp": 2,//禁止无效的正则表达式
-// "no-invalid-this": 2,//禁止无效的this，只能用在构造器，类，对象字面量
+// "no-invalid-this": 2,//禁止无效的this, 只能用在构造器, 类, 对象字面量
 // "no-irregular-whitespace": 2,//不能有不规则的空格
 // "no-iterator": 2,//禁止使用__iterator__ 属性
 // "no-label-var": 2,//label名不能与var声明的变量名相同
@@ -124,19 +99,19 @@ module.exports = {
 // "no-new-func": 1,//禁止使用new Function
 // "no-new-object": 2,//禁止使用new Object()
 // "no-new-require": 2,//禁止使用new require
-// "no-new-wrappers": 2,//禁止使用new创建包装实例，new String new Boolean new Number
-// "no-obj-calls": 2,//不能调用内置的全局对象，比如Math() JSON()
+// "no-new-wrappers": 2,//禁止使用new创建包装实例, new String new Boolean new Number
+// "no-obj-calls": 2,//不能调用内置的全局对象, 比如Math() JSON()
 // "no-octal": 2,//禁止使用八进制数字
 // "no-octal-escape": 2,//禁止使用八进制转义序列
 // "no-param-reassign": 2,//禁止给参数重新赋值
 // "no-path-concat": 0,//node中不能使用__dirname或__filename做路径拼接
-// "no-plusplus": 0,//禁止使用++，--
+// "no-plusplus": 0,//禁止使用++, --
 // "no-process-env": 0,//禁止使用process.env
 // "no-process-exit": 0,//禁止使用process.exit()
 // "no-proto": 2,//禁止使用__proto__属性
 // "no-redeclare": 2,//禁止重复声明变量
 // "no-regex-spaces": 2,//禁止在正则表达式字面量中使用多个空格 /foo bar/
-// "no-restricted-modules": 0,//如果禁用了指定模块，使用就会报错
+// "no-restricted-modules": 0,//如果禁用了指定模块, 使用就会报错
 // "no-return-assign": 1,//return 语句中不能有赋值表达式
 // "no-script-url": 0,//禁止使用javascript:void(0)
 // "no-self-compare": 2,//不能比较自身
@@ -144,7 +119,7 @@ module.exports = {
 // "no-shadow": 2,//外部作用域中的变量不能与它所包含的作用域中的变量或参数同名
 // "no-shadow-restricted-names": 2,//严格模式中规定的限制标识符不能作为声明时的变量名使用
 // "no-spaced-func": 2,//函数调用时 函数名与()之间不能有空格
-// "no-sparse-arrays": 2,//禁止稀疏数组， [1,,2]
+// "no-sparse-arrays": 2,//禁止稀疏数组,  [1,,2]
 // "no-sync": 0,//nodejs 禁止同步方法
 // "no-ternary": 0,//禁止使用三目运算符
 // "no-trailing-spaces": 1,//一行结束后面不要有空格
@@ -162,7 +137,7 @@ module.exports = {
 // "no-use-before-define": 2,//未定义前不能使用
 // "no-useless-call": 2,//禁止不必要的call和apply
 // "no-void": 2,//禁用void操作符
-// "no-var": 0,//禁用var，用let和const代替
+// "no-var": 0,//禁用var, 用let和const代替
 // "no-warning-comments": [1, { "terms": ["todo", "fixme", "xxx"], "location": "start" }],//不能有警告备注
 // "no-with": 2,//禁用with
 
@@ -176,20 +151,20 @@ module.exports = {
 // "camelcase": 2,//强制驼峰法命名
 // "comma-dangle": [2, "never"],//对象字面量项尾不能有逗号
 // "comma-spacing": 0,//逗号前后的空格
-// "comma-style": [2, "last"],//逗号风格，换行时在行首还是行尾
+// "comma-style": [2, "last"],//逗号风格, 换行时在行首还是行尾
 // "complexity": [0, 11],//循环复杂度
 // "computed-property-spacing": [0, "never"],//是否允许计算后的键名什么的
 // "consistent-return": 0,//return 后面是否允许省略
 // "consistent-this": [2, "that"],//this别名
-// "constructor-super": 0,//非派生类不能调用super，派生类必须调用super
+// "constructor-super": 0,//非派生类不能调用super, 派生类必须调用super
 // "curly": [2, "all"],//必须使用 if(){} 中的{}
 // "default-case": 2,//switch语句最后必须有default
-// "dot-location": 0,//对象访问符的位置，换行的时候在行首还是行尾
+// "dot-location": 0,//对象访问符的位置, 换行的时候在行首还是行尾
 // "dot-notation": [0, { "allowKeywords": true }],//避免不必要的方括号
 // "eol-last": 0,//文件以单一的换行符结束
 // "eqeqeq": 2,//必须使用全等
 // "func-names": 0,//函数表达式必须有名字
-// "func-style": [0, "declaration"],//函数风格，规定只能使用函数声明/函数表达式
+// "func-style": [0, "declaration"],//函数风格, 规定只能使用函数声明/函数表达式
 // "generator-star-spacing": 0,//生成器函数*的前后空格
 // "guard-for-in": 0,//for in循环要用if语句过滤
 // "handle-callback-err": 0,//nodejs 处理错误
@@ -203,7 +178,7 @@ module.exports = {
 // "max-nested-callbacks": [0, 2],//回调嵌套深度
 // "max-params": [0, 3],//函数最多只能有3个参数
 // "max-statements": [0, 10],//函数内最多有几个声明
-// "new-cap": 2,//函数名首行大写必须使用new方式调用，首行小写必须用不带new方式调用
+// "new-cap": 2,//函数名首行大写必须使用new方式调用, 首行小写必须用不带new方式调用
 // "new-parens": 2,//new时必须加小括号
 // "newline-after-var": 2,//变量声明后是否需要空一行
 // "object-curly-spacing": [0, "never"],//大括号内是否允许不必要的空格
@@ -232,7 +207,7 @@ module.exports = {
 // "space-unary-ops": [0, { "words": true, "nonwords": false }],//一元运算符的前/后要不要加空格
 // "spaced-comment": 0,//注释风格要不要有空格什么的
 // "strict": 2,//使用严格模式
-// "use-isnan": 2,//禁止比较时使用NaN，只能用isNaN()
+// "use-isnan": 2,//禁止比较时使用NaN, 只能用isNaN()
 // "valid-jsdoc": 0,//jsdoc规则
 // "valid-typeof": 2,//必须使用合法的typeof的值
 // "vars-on-top": 2,//var必须放在作用域顶部

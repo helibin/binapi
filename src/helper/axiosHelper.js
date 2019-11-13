@@ -2,40 +2,56 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-06 14:25:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-16 16:26:27
+ * @Last Modified time: 2019-10-22 14:20:50
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import axios from 'axios';
+import axios from 'axios'
+import chalk from 'chalk'
 
 /** 基础模块 */
+import ce from './customError'
 
 /** 项目模块 */
 
 /** 预处理 */
+axios.defaults.timeout = 10000
 
+axios.interceptors.request.use(conf => conf, err => Promise.reject(err))
+axios.interceptors.response.use(res => res.data, err => Promise.reject(err.response ? err.response.data : err))
 
 export default class {
   constructor(ctx) {
-    this.ctx   = ctx;
-    this.axios = axios;
-
-    axios.interceptors.request.use(conf => conf, err => Promise.reject(err));
-    axios.interceptors.response.use(res => res.data, err => Promise.reject(err));
-    axios.defaults.timeout = 10000;
-    axios.defaults.headers = { 'x-auth-token': ctx.state.xAuthToken || '' };
+    this.ctx = ctx
   }
 
   async run(func, ...args) {
     try {
-      await this[func](...args);
+      this.ctx.state.logger('info', '发起第三方请求：', ...args)
+
+      return await this[func](...args)
     } catch (ex) {
-      this.ctx.state.logger(ex, `执行${func}时发生异常`);
+      this.ctx.state.logger(ex, `执行${chalk.magenta(func)}时发生异常`, ex)
+      if (ex instanceof Error) {
+        throw new ce('eOpenAPI', ex.code, {
+          code: ex.code,
+          errno: ex.errno,
+          msg: ex.message,
+        })
+      }
+
+      throw ex
     }
   }
 
-  async post(url, options) {
-    return await this.axios.post(url, options);
+  async post(url, data, options) {
+    data = data || {}
+    return await axios({ method: 'POST', url, data, ...options })
+  }
+
+  async get(url, params, options) {
+    params = params || {}
+    return await axios({ method: 'GET', url, params, ...options })
   }
 }

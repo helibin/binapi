@@ -2,36 +2,15 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:29
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-22 15:03:01
+ * @Last Modified time: 2019-10-31 11:19:23
  */
-import CONFIG     from 'config';
-import _e         from './customError';
-import * as mysql from './mysqlHelper';
-import nodeMailer from './nodeMailerHelper';
-import prepare    from './prepare';
-import redis      from './redisHelper';
-import t          from './tools';
-import {
-  logger,
-  rLog,
-}                 from './logger';
-import {
-  CONST,
-  PRIVILEGE,
-  yamlCheck,
-}                 from './yamlCC';
-
-export {
-  CONFIG,
-  CONST,
-  PRIVILEGE,
-  _e,
-  mysql,
-  nodeMailer,
-  logger,
-  prepare,
-  rLog,
-  redis,
-  t,
-  yamlCheck,
-};
+exports.CONFIG = require('config')
+exports.Log = require('./logger')
+exports.Mysql = require('./mysqlHelper')
+exports.T = require('./toolkit')
+exports.YamlCC = require('./yamlCC')
+exports.CONST = require('./yamlCC').CONST
+exports.ce = require('./customError')
+exports.nodeMailer = require('./nodeMailerHelper')
+exports.prepare = require('./prepare')
+exports.redis = require('./redisHelper')

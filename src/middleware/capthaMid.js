@@ -2,140 +2,176 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-09-10 17:08:47
+ * @Last Modified time: 2019-10-30 15:33:19
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import chalk from 'chalk';
-import svgCaptcha from 'svg-captcha';
+import svgCaptcha from 'svg-captcha'
+import pngCaptcha from 'captchapng/lib/captchapng'
 
 /** 基础模块 */
-import Base from './base';
+import CONFIG from 'config'
+import Base from './base'
 
 /** 项目模块 */
 
 /** 预处理 */
 const captchaOpt = {
-  width      : 150,
-  height     : 60,
-  fontSize   : 50,
+  width: 150,
+  height: 60,
+  fontSize: 50,
   ignoreChars: '0o1il',
-  noise      : 3,
-  color      : true,
-};
+  noise: 3,
+  color: true,
+}
 
-
-export default new class extends Base {
+module.exports = new (class extends Base {
   /**
-   * 创建验证码缓存键值
+   * 创建图形验证码缓存键值
    *
-   * @param {string} type 验证码类型
-   * @param {string} cate 验证码分类
+   * @param {string} type 图形验证码类型(svg|png)
+   * @param {string} cate 图形验证码分类
    * @param {string} clientId 客户端ID
-   * @param {string} token 验证码Token
-   * @returns {string} 验证码缓存键值
+   * @param {string} token 图形验证码Token
+   * @returns {string} 图形验证码缓存键值
    */
   createCapthaCacheKey(type, cate, clientId, token) {
-    return `captcha@${cate}#type=${type}:clientId=${clientId}:token=${token}`;
+    return `captcha@${cate}#user=${CONFIG.webServer.name}:type=${type}:clientId=${clientId}:token=${token}`
   }
 
   genCaptchaTest() {
     return async (ctx, next) => {
-      const ret = this.t.initRet();
-      const start = Date.now();
-      let count = 0;
-
-      while ((Date.now() - start) < 1000) {
-        svgCaptcha.create(captchaOpt);
-        count += 1;
+      const ret = this.t.initRet()
+      let start = Date.now()
+      const count = {
+        svg: 0,
+        png: 0,
+        gif: 0,
       }
 
-      ctx.state.logger('1秒内生成验证码：', count);
-      ret.data = { count };
-      ctx.state.sendJSON(ret);
-      await next();
-    };
+      while (Date.now() - start < 1000) {
+        svgCaptcha.create(captchaOpt)
+        count.svg += 1
+      }
+
+      start = Date.now()
+      while (Date.now() - start < 1000) {
+        const captchaText = this.t.genRandStr(4, '1234567890')
+        const captchaContent = pngCaptcha(captchaOpt.width, captchaOpt.height, captchaText)
+        captchaContent.color(0, 0, 0, 0)
+        captchaContent.color(80, 80, 80, 255)
+        captchaContent.getBase64()
+        count.png += 1
+      }
+
+      ctx.state.logger('debug', '1秒内生成图形验证码：', count)
+      ret.data = { count }
+      ctx.state.sendJSON(ret)
+      await next()
+    }
   }
 
-  genSVGCaptcha(cate = 'common') {
-    return async (ctx) => {
+  getSVGCaptcha(cate) {
+    return async ctx => {
+      cate = cate || ctx.query.cate || 'common'
+
       try {
-        const cacheKey = this.createCapthaCacheKey('svg',
-          cate,
-          ctx.state.clientId,
-          ctx.query.token);
+        const cacheKey = this.createCapthaCacheKey('svg', cate, ctx.state.clientId, ctx.query.captcha_token)
 
-        const redisRes = await ctx.state.redis.get(cacheKey);
-        if (!this.t.isEmpty(redisRes)) {
-          try {
-            const captcha = JSON.parse(redisRes).data;
-            ctx.state.logger('debug',
-              chalk.magenta('[缓存]'),
-              `生成[${cate}]验证码成功：captcha: ${captcha.text}`);
-            return ctx.state.sendSVG(captcha);
-          } catch (ex) {
-            ctx.state.logger(ex, 'redisParseError');
-          }
-        }
+        const { data, text } = svgCaptcha.create(captchaOpt)
 
-        const captcha = svgCaptcha.create(captchaOpt);
+        await ctx.state.redis.set(cacheKey, text, this.CONFIG.webServer.captchaMaxAge.svg)
 
-        await ctx.state.redis.set(cacheKey,
-          JSON.stringify(captcha),
-          this.CONFIG.webServer.captchaMaxAge.svg);
-
-        ctx.state.logger('debug', `生成[${cate}]验证码成功：captcha: ${captcha.text}`);
-        ctx.state.sendSVG(captcha.data);
+        ctx.state.logger('debug', `生成[${cate}]图形验证码成功：captcha: ${text}`)
+        ctx.state.sendMedia(data, 'svg')
       } catch (ex) {
-        ctx.state.logger(ex, `生成[${cate}]验证码失败`);
-        throw ex;
+        ctx.state.logger(ex, `生成[${cate}]图形验证码失败`)
+        throw ex
       }
-    };
+    }
   }
 
   verifySVGCaptha(cate = 'common') {
     return async (ctx, next) => {
+      if (['signIn', 'signUp'].includes(cate)) {
+        if (this.CONFIG.webServer.skipAuthCaptcha) return next()
+      } else if (this.CONFIG.webServer.skipCaptcha) return next()
+
       try {
-        if (this.CONFIG.webServer.skipCaptcha) return await next();
+        const captchaToken = ctx.request.body.captcha_token
+        const captcha = ctx.request.body.captcha
+        const cacheKey = this.createCapthaCacheKey('svg', cate, ctx.state.clientId, captchaToken)
 
-        const captchaToken = ctx.request.body.captchaToken;
-        const inputCaptcha = ctx.request.body.captcha;
-        const cacheKey = this.createCapthaCacheKey('svg',
-          cate,
-          ctx.state.clientId,
-          captchaToken);
+        // 校验缓存图形验证码
+        const cacheCaptcha = await ctx.state.redis.get(cacheKey)
+        if (this.t.isEmpty(cacheCaptcha)) throw new this.ce('invalidCaptchaToken', { captcha_token: captchaToken })
 
-        const redisRes = await ctx.state.redis.get(cacheKey);
-        if (this.t.isEmpty(redisRes)) {
-          throw new this._e('EClientBadRequest', 'captchaTokenNotFound', {
-            cate,
-            captchaToken,
-          });
+        await ctx.state.redis.del(cacheKey)
+        if (captcha && cacheCaptcha.toLowerCase() !== captcha.toLowerCase()) {
+          throw new this.ce('invalidCaptcha', { captcha })
         }
 
-        let captcha = {};
-        try {
-          captcha = JSON.parse(redisRes);
-        } catch (ex) {
-          throw new this._e('EDBRedis', 'redisParseError');
-        }
-
-        await ctx.state.redis.del(cacheKey);
-        if (captcha.text.toLowerCase() !== inputCaptcha.toLowerCase()) {
-          throw new this._e('EBizRuleCaptcha', 'invalidCaptcha', {
-            cate,
-            captchaToken,
-            captchaValue: captcha.text,
-            inputCaptcha,
-          });
-        }
-        await ctx.state.redis.del(cacheKey);
+        ctx.state.logger('debug', `校验[${cate}]图形验证码成功：captcha: ${captcha}`)
+        return next()
       } catch (ex) {
-        ctx.state.logger(ex, `校验[${cate}]验证码失败`);
-        throw ex;
+        ctx.state.logger(ex, `校验[${cate}]图形验证码失败`)
+        throw ex
       }
-      await next();
-    };
+    }
   }
-}();
+
+  genPNGCaptcha(cate) {
+    return async ctx => {
+      cate = cate || ctx.query.cate || 'common'
+
+      try {
+        const cacheKey = this.createCapthaCacheKey('png', cate, ctx.state.clientId, ctx.query.captcha_token)
+
+        // 生成图形验证码
+        const text = this.t.genRandStr(4, '1234567890')
+        const captcha = pngCaptcha(captchaOpt.width, captchaOpt.height, text)
+        captcha.color(0, 0, 0, 0)
+        captcha.color(80, 80, 80, 255)
+        const data = Buffer.from(captcha.getBase64(), 'base64')
+
+        await ctx.state.redis.set(cacheKey, text, this.CONFIG.webServer.captchaMaxAge.png)
+
+        ctx.state.logger('debug', `生成[${cate}]图形验证码成功：captcha: ${text}`)
+        ctx.state.sendMedia(data, 'png')
+      } catch (ex) {
+        ctx.state.logger(ex, `生成[${cate}]图形验证码失败`)
+        throw ex
+      }
+    }
+  }
+
+  verifyPNGCaptha(cate = 'common') {
+    return async (ctx, next) => {
+      if (['signIn', 'signUp'].includes(cate)) {
+        if (this.CONFIG.webServer.skipAuthCaptcha) return next()
+      } else if (this.CONFIG.webServer.skipCaptcha) return next()
+
+      try {
+        const captchaToken = ctx.request.body.captcha_token
+        const captcha = ctx.request.body.captcha
+        const cacheKey = this.createCapthaCacheKey('png', cate, ctx.state.clientId, captchaToken)
+
+        // 校验缓存图形验证码
+        const cacheCaptcha = await ctx.state.redis.get(cacheKey)
+        if (this.t.isEmpty(cacheCaptcha)) throw new this.ce('invalidCaptchaToken', { captcha_token: captchaToken })
+
+        await ctx.state.redis.del(cacheKey)
+        if (cacheCaptcha && captcha && cacheCaptcha.toLowerCase() !== captcha.toLowerCase()) {
+          throw new this.ce('invalidCaptcha', { captcha })
+        }
+
+        ctx.state.logger('debug', `校验[${cate}]图形验证码成功：captcha: ${captcha}`)
+        return next()
+      } catch (ex) {
+        ctx.state.logger(ex, `校验[${cate}]图形验证码失败`)
+        throw ex
+      }
+    }
+  }
+})()

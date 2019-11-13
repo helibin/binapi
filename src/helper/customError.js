@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-20 21:25:26
+ * @Last Modified time: 2019-10-30 14:41:34
  */
 /** 内建模块 */
 
@@ -11,48 +11,55 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import { CONST } from './yamlCC';
+import { RESPCODE } from './yamlCC'
 
-
-export default class CustomError {
+module.exports = class CustomError {
   constructor(codeName, message, data) {
-    this.name = 'CustomError';
-    this.respCode = CONST.respCode[codeName] || CONST.respCode.Unknown;
-    this.respMessage = message;
-    this.respData = data;
+    this.name = 'CustomError'
+    this.respCode = RESPCODE[codeName] || RESPCODE.unknown
+    this.respMessage = message || codeName
+    this.respData = data
 
-    // 固定配置错误
-    if (codeName === 'EClientNotFound') {
-      this.status = 404;
+    if (message && typeof message === 'object') {
+      this.respMessage = codeName
+      this.respData = message
+    }
+
+    if (['noSuchRouter'].includes(codeName)) {
+      this.httpStatus = 404
     } else {
-      const prefix = (`${Math.abs(this.respCode)}`)[0];
+      const prefix = `${Math.abs(this.respCode)}`[0]
       switch (prefix) {
         case '0':
-          this.status = 200;
-          break;
+          this.httpStatus = 200
+          break
 
         case '1':
-          this.status = 401;
-          break;
+          this.httpStatus = 401
+          break
 
         case '2':
         case '3':
         case '4':
-          this.status = 400;
-          break;
+          this.httpStatus = 400
+          break
 
         default:
-          this.status = 500;
-          break;
+          this.httpStatus = 500
+          break
       }
     }
+
+    // 响应状态码统一改成200
+    this.status = 200
   }
 
   toJSON() {
     return {
-      err : this.respCode,
-      msg : this.respMessage,
+      status: this.httpStatus,
+      code: this.respCode,
+      msg: this.respMessage,
       data: this.respData,
-    };
+    }
   }
 }

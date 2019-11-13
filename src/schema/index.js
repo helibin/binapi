@@ -1,14 +1,16 @@
 /*
  * @Author: helibin@139.com
- * @Date: 2018-07-17 19:02:34
+ * @Date: 2018-09-29 21:59:12
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-25 22:37:26
+ * @Last Modified time: 2019-04-30 11:49:17
  */
-import authScm      from './authScm';
-import usersScm     from './usersScm';
+/** 内建模块 */
 
+/** 第三方模块 */
 
-export {
-  authScm,
-  usersScm,
-};
+/** 基础模块 */
+
+/** 项目模块 */
+import './relation'
+
+module.exports = require('./modules')

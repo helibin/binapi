@@ -1,0 +1,184 @@
+# 收费模式
+priceMode:
+  fix: 固定收费
+  flex: 灵活收费
+
+# 设备组类型
+deviceGroupType:
+  eBike: 电单车
+  eCar: 电汽车
+
+# 充电类型
+chargingType:
+  quick: 快充
+  slow: 慢充
+
+# 商品优惠类型
+reliefType:
+  discount: 折扣
+  present: 赠送
+
+# 认证类型
+authType:
+  account: 账密认证
+  phone: 手机认证
+  wechat: 微信认证
+
+# 性别
+gender:
+  - 保密
+  - 男性
+  - 女性
+
+# 媒体类型
+mediaType:
+  application: 应用
+  audio: 音频
+  image: 图片
+  video: 视频
+  text: 文本
+
+muserType:
+  admin: 管理员
+  agent: 代理商
+  patner: 合作商
+
+# 验证码类型
+captchaType:
+  signIn: 用户登录
+  signUp: 用户注册
+  resetPassword: 找回密码
+  verifyMobile: 验证手机号码
+  bindMobile: 绑定手机号码
+
+# 短信类型
+smsCodeType:
+  signUp: 用户注册
+  resetPassword: 找回密码
+  verifyMobile: 验证手机号码
+  bindMobile: 绑定手机号码
+  smsSignIn: 短信登录认证
+
+# 设备类型
+deviceType:
+  floor: 落地式
+  hang: 悬挂式
+  desktop: 桌面式
+  other: 其它
+
+# 设备状态
+deviceStatus:
+  online: 在线
+  offline: 离线
+  error: 异常
+  auditing: 待审核
+
+# 通知方式
+noticeWay:
+  sms: 短信通知
+  system: 系统通知
+  umeng: 友盟推送
+
+# 订单状态
+orderStatus:
+  paying: 支付中
+  preparing: 商品准备中
+  refunded: 已申请退款
+  refunding: 退款中
+  auditing: 审核中
+  sending: 快递运送中
+  completed: 已完成
+
+  canceled: 已取消
+  closed: 已关闭
+
+# 支付状态
+payStatus:
+  unpay: 未支付
+  timeout: 支付超时
+  refund: 已退款
+  refunding: 退款中
+  error: 支付失败
+  success: 支付成功
+
+  closed: 已关闭
+
+# 微信交易类型
+wxTradeType:
+  app: APP支付
+  native: 扫码支付
+  mweb: H5支付
+  jsapi: jsapi支付
+
+# 支付方式
+payWay:
+  wechat: 微信支付
+  aliPay: 支付宝
+
+# 交易来源
+payFrom:
+  app: app
+  h5: mweb
+  native: native
+  wxa: jsapi
+  mp: jsapi
+
+# 文件常用类型
+mimeType:
+  application:
+    doc: application/msword
+    pdf: application/pdf
+    rtf: application/rtf
+    xls: application/vnd.ms-excel
+    ppt: application/vnd.ms-powerpoint
+    rar: application/x-rar-compressed
+    swf: application/x-shockwave-flash
+    zip: application/zip
+    json: application/json
+  audio:
+    mp3: audio/mpeg
+    wav: audio/wav
+    wave: audio/wave
+    xwav: audio/x-wav
+    ogg: audio/ogg
+    m4a: audio/m4a
+    ra: audio/x-realaudio
+    mid: audio/mid
+    rmi: audio/mid
+    m3u: audio/x-mpegurl
+    ram: audio/x-pn-realaudio
+    aif: audio/x-aiff
+    aifc: audio/x-aiff
+    aiff: audio/x-aiff
+    au: audio/basic
+    amr: audio/amr
+    pcm: audio/pcm
+    webm: audio/webm
+  image:
+    gif: image/gif
+    jpg: image/jpeg
+    jpeg: image/jpeg
+    png: image/png
+    wbmp: image/vnd.wap.wbmp
+    ico: image/x-icon
+    jng: image/x-jng
+    bmp: image/x-ms-bmp
+    svg: image/svg+xml
+    webp: image/webp
+    tiff: image/tiff
+  text:
+    js: text/javascript
+    css: text/css
+    html: text/html
+    txt: text/plain
+    xml: text/xml
+  video:
+    3gp: video/3gpp
+    mp4: video/mp4
+    mpeg: video/mpeg
+    mov: video/quicktime
+    webm: video/webm
+    flv: video/x-flv
+    m4v: video/x-m4v
+    wmv: video/x-ms-wmv
+    avi: video/x-msvideo

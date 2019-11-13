@@ -2,26 +2,21 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 18:59:57
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-27 14:46:10
+ * @Last Modified time: 2019-11-07 17:55:24
  */
+exports._sampleCtrl = require('./_sampleCtrl')
+exports.indexCtrl = require('./indexCtrl')
+exports.indexPageCtrl = require('./indexPageCtrl')
+exports.databaseCtrl = require('./databaseCtrl')
 
-import authCtrl      from './authCtrl';
-import databasesCtrl from './databasesCtrl';
-import indexCtrl     from './indexCtrl';
-import testsCtrl     from './testsCtrl';
-import usersCtrl     from './usersCtrl';
-import weixinCtrl    from './weixinCtrl';
+exports.authCtrl = require('./authCtrl')
+exports.testCtrl = require('./testCtrl')
+exports.userCtrl = require('./userCtrl')
+exports.muserCtrl = require('./muserCtrl')
+exports.settingCtrl = require('./settingCtrl')
 
-import indexPageCtrl from './indexPageCtrl';
-
-
-export {
-  authCtrl,
-  databasesCtrl,
-  indexCtrl,
-  testsCtrl,
-  usersCtrl,
-  weixinCtrl,
-
-  indexPageCtrl,
-};
+exports.sysMenuCtrl = require('./sysMenuCtrl')
+exports.actionLogCtrl = require('./actionLogCtrl')
+exports.deviceCtrl = require('./deviceCtrl')
+exports.deviceGroupCtrl = require('./deviceGroupCtrl')
+exports.goodsCtrl = require('./goodsCtrl')

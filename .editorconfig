@@ -1,0 +1,10 @@
+root = true
+
+[*]
+end_of_line = lf # mac linux/unix 都用lf。 window 设置 cr 在 *nix 有问题
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+max_line_length = 120

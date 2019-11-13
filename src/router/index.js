@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-27 14:46:54
+ * @Last Modified time: 2019-11-07 17:17:41
  */
 /** 内建模块 */
 
@@ -11,19 +11,25 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import { router, pageRouter } from './base';
+import { router, pageRouter } from './base'
 
+// index
+require('./indexRouter')
+require('./indexPageRouter')
 
 // API
-require('./authRouter');
-require('./captchaRouter');
-require('./dabasesRouter');
-require('./indexRouter');
-require('./testsRouter');
-require('./usersRouter');
-require('./weixinRouter');
+require('./captchaRouter')
+require('./testRouter')
 
-// PAGE
-require('./indexPageRouter');
+require('./authRouter')
+require('./userRouter')
+require('./muserRouter')
 
-export { router, pageRouter };
+require('./settingRouter')
+require('./sysMenuRouter')
+require('./actionLogRouter')
+require('./deviceRouter')
+require('./deviceGroupRouter')
+require('./goodsRouter')
+
+export { router, pageRouter }

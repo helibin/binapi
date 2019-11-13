@@ -2,96 +2,155 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-05 15:28:01
+ * @Last Modified time: 2019-11-06 15:47:45
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
+import dayjs from 'dayjs'
 
 /** 基础模块 */
-import Base from './base';
+import Base from './base'
 
 /** 项目模块 */
-import { authMod, usersMod } from '../model';
+import Mod from '../model'
 
-
-export default new class extends Base  {
-  async createAuthCacheKey(userId = '*', xAuthTokenId = '*') {
-    return `token@xAuthToken#:userId=${userId}:xAuthTokenId=${xAuthTokenId}`;
+module.exports = new (class extends Base {
+  async createAuthCacheKey(
+    userId = '*',
+    authType = 'web',
+    xAuthTokenId = '*',
+    clientType = '*',
+    userType = this.CONFIG.webServer.name,
+  ) {
+    return `token@xAuthToken#:userType=${userType}:authType=${authType}:clientType=${clientType}:userId=${userId}:xAuthTokenId=${xAuthTokenId}`
   }
 
   /**
    *
    * @param {object} ctx 上下文
-   * @param {string} userId 用户ID
-   * @param {string} type=[authUser] 用户类型
+   * @param {string} uid 用户ID
+   * @param {string} authType=[web] 认证类型（web|ak）
+   * @param {string} clientType=[desktop] 客户端类型（desktop|mobile）
+   * @param {string} userType 用户类型（www|manage）
+   * @param {string} [xatId] 令牌ID
    * @returns {string} xAuthToken
    */
-  async genXAuthToken(ctx, userId, type = 'authUser') {
-    const xatId = `xat_${this.t.genUUID()}`;
-    const authType = type.slice(-2).toUpperCase() === 'AK' ? 'AK' : 'web';
+  async genXAuthToken(
+    ctx,
+    uid,
+    authType = 'web',
+    clientType = 'desktop',
+    userType = this.CONFIG.webServer.name,
+    xatId,
+  ) {
+    if (authType === 'ak') {
+      xatId = `xat_${xatId}` // AK 强制单点登录
+    } else {
+      xatId = this.CONFIG.webServer.singleSignIn ? `xat_${uid}` : `xat_${this.t.genUUID()}` // 单点登录判断
+    }
+
     const xAuthTokenInfo = {
-      uid: userId,
-      authType,
+      uid,
       xatId,
-    };
+      clientType,
+      userType,
+      authType,
+    }
 
-    const xAuthTokenCacheKey = await this.createAuthCacheKey(userId, xatId);
-    const xAuthToken         = jwt.sign(xAuthTokenInfo, this.CONFIG.webServer.secret);
-    await ctx.state.redis.set(xAuthTokenCacheKey, xAuthToken, this.CONFIG.webServer.xAuthMaxAge);
+    const xAuthTokenCacheKey = await this.createAuthCacheKey(uid, authType, xatId, clientType, userType)
+    const xAuthToken = jwt.sign(xAuthTokenInfo, this.CONFIG.webServer.secret)
+    await ctx.state.redis.set(xAuthTokenCacheKey, xAuthToken, this.CONFIG.webServer.xAuthMaxAge[clientType])
 
-    return xAuthToken;
+    return {
+      x_auth_token: xAuthToken,
+      expires_in: this.CONFIG.webServer.xAuthMaxAge[clientType],
+    }
   }
 
   async signIn(ctx) {
-    const body = ctx.request.body;
-    const whereOpt =  {
+    const ret = this.t.initRet()
+    const body = ctx.request.body
+
+    // 用户登录校验
+    const whereOpt = {
       $or: {
-        user_id   : body.identifier,
         identifier: body.identifier,
+        phone: body.identifier,
+        email: body.identifier,
       },
-    };
-    const authRes = await authMod.get(ctx, whereOpt);
-
-    if (this.t.isEmpty(authRes)) {
-      throw new this._e('EUserAuth', 'noSuchUser', { identifier: body.identifier });
     }
-    if (authRes.password !== this.t.getSaltedHashStr(body.password, authRes.user_id)) {
-      throw new this._e('EUserAuth', 'invildUsenameOrPassowrd');
-    }
-
-    const userRes = await usersMod.get(ctx, { id: authRes.user_id });
+    const userRes = await Mod.muserMod.get(ctx, whereOpt, { attributes: {} })
     if (this.t.isEmpty(userRes)) {
-      throw new this._e('EUser', 'noSuchUser', { userId: authRes.user_id });
+      throw new this.ce('noSuchMuser', { identifier: body.identifier })
+    }
+    if (userRes.password !== this.t.getSaltedHashStr(body.password.toUpperCase(), userRes.id)) {
+      throw new this.ce('invildUsenameOrPassowrd')
     }
 
-    userRes.username = body.identifier;
-    userRes.xAuthToken = await this.genXAuthToken(ctx, authRes.user_id);
-    this.ret.data            = userRes;
+    // 发放令牌
+    const tokenInfo = await this.genXAuthToken(ctx, userRes.id, 'web', ctx.state.clientType)
 
-    ctx.state.logger('debug', `用户登录: userId=${authRes.user_id}`);
-    ctx.state.sendJSON(this.ret);
+    // 记录最后登录时间
+    await Mod.muserMod.modify(ctx, userRes.id, { last_sign_at: Date.now() })
+
+    // 准备响应数据
+    ret.data = this.t.safeData(userRes)
+    ret.data = { ...ret.data, ...tokenInfo }
+
+    Mod.actionLogMod.run(ctx, 'addData', 'signIn', '登录', userRes.name || userRes.identifier)
+
+    // 打印日志并返回数据
+    ctx.state.logger('debug', `用户登录: muserId=${userRes.id}`)
+    ctx.state.sendJSON(ret)
   }
 
-  async signUp(ctx) {
-    const body      = ctx.request.body;
-    const ret       = this.t.initRet();
-    const newUserId = this.t.genUUID();
+  async signOut(ctx) {
+    // 回收token
+    const xAuthTokenCacheKey = await this.createAuthCacheKey(
+      ctx.state.userId,
+      'web',
+      ctx.state.xAuthTokenId,
+      ctx.state.clientType,
+    )
+    await ctx.state.redis.del(xAuthTokenCacheKey)
 
-    const newData = {
-      id        : newUserId,
-      identifier: body.identifier,
-      password  : this.t.getSaltedHashStr(body.password, newUserId),
-      nickname  : body.nickname || this.t.getDateStr(),
-      name      : body.name,
-      mobile    : body.mobile,
-      email     : body.email,
-    };
-    await usersMod.run(ctx, 'addUser', newData);
-
-    ctx.state.logger('debug', `用户注册：userId=${newUserId}`);
-    ret.data = { newDataId: newUserId };
-    ctx.state.sendJSON(ret);
+    ctx.state.logger('debug', `用户登出：muserId=${ctx.state.userId}`)
+    ctx.state.sendJSON()
   }
-}();
+
+  async resetPassword(ctx) {
+    const body = ctx.request.body
+
+    const authRes = await Mod.authMod.get(ctx, { identifier: body.phone })
+    if (this.t.isEmpty(authRes)) {
+      throw new this.ce('noSuchIdentifier', {
+        identifier: body.identifier,
+      })
+    }
+
+    const nextData = {
+      password: this.t.getSaltedHashStr(body.password.toUpperCase(), authRes.user_id),
+    }
+    await Mod.userMod.modify(ctx, authRes.user_id, nextData)
+
+    // 非登录状态回收所有令牌
+    if (!ctx.state.userId) {
+      const xAuthTokenCacheKey = await this.createAuthCacheKey(authRes.user_id)
+      await ctx.state.redis.del(xAuthTokenCacheKey)
+    }
+
+    ctx.state.logger('debug', `重置密码：targetId=${authRes.user_id}`, body)
+    ctx.state.sendJSON()
+  }
+
+  async applySTSDownloadToken(ctx) {
+    const ret = this.t.initRet()
+    const { cate } = ctx.query
+    const stsToken = await ctx.state.alyOss.getSTSDownloadToken(cate || 'media')
+
+    ret.data = { sts_token: stsToken }
+    ctx.state.sendJSON(ret)
+  }
+})()
