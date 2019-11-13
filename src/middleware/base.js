@@ -2,41 +2,42 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 13:55:41
+ * @Last Modified time: 2019-11-13 09:25:56
  */
 /** 内建模块 */
 
 /** 第三方模块 */
+import chalk from 'chalk'
 
 /** 基础模块 */
-import {
-  CONFIG, t, _e,
-} from '../helper';
+import { CONFIG, T, ce } from '../helper'
 
 /** 项目模块 */
 
-
 export default class {
   constructor() {
-    this.CONFIG = CONFIG;
-    this._e     = _e;
-    this.t      = t;
+    this.CONFIG = CONFIG
+    this.ce = ce
+    this.t = T
   }
 
   run(func, ...args) {
     return async (ctx, next) => {
-      const now = Date.now();
+      const now = Date.now()
       try {
-        await this[func](...args);
+        await this[func](ctx, ...args)
       } catch (ex) {
-        ctx.state.hasError = true;
-        throw ex;
+        ctx.state.hasError = true
+
+        throw ex
       } finally {
-        ctx.state.logger(ctx.state.hasError,
-          `Mid调用方法：[${func}] ${ctx.state.hasError ? '终止' : '通过'},`,
-          `用时：${Date.now() - now}ms。`);
+        ctx.state.logger(
+          ctx.state.hasError,
+          `Mid:<${this.mid}>调用方法：[${chalk.magenta(func)}] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时：${Date.now() - now}ms`),
+        )
       }
-      return await next();
-    };
+      return await next()
+    }
   }
 }

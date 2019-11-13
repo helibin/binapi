@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-19 19:13:50
+ * @Last Modified time: 2019-11-01 09:42:04
  */
 /** 内建模块 */
 
@@ -11,21 +11,19 @@
 /** 基础模块 */
 
 /** 项目模块 */
-import Base from './base';
+import Base from './base'
 
-
-export default new class extends Base {
+module.exports = new (class extends Base {
   async index(ctx) {
-    this.pageData = { body: 'index', title: 'Bin API' };
-    await ctx.state.render('index', this.pageData);
+    const pageData = { body: 'index', title: 'Bin API' }
+    await ctx.state.render('index', pageData)
   }
 
   async apidoc(ctx) {
-    await ctx.state.redirect('/apidoc/index.html');
-    // await ctx.state.render('apidoc/index.html');
+    await ctx.state.redirect('/apidoc/index.html')
   }
 
-  async apidocInternal(ctx) {
-    await ctx.state.redirect('/apidoc-internal/index.html');
+  async mapidoc(ctx) {
+    await ctx.state.redirect('/mapidoc/index.html')
   }
-}();
+})()

@@ -2,11 +2,12 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-09-12 15:49:21
+ * @Last Modified time: 2019-06-24 22:25:08
  */
 /** 内建模块 */
 
 /** 第三方模块 */
+import geoip from 'geoip-lite';
 
 /** 基础模块 */
 import Base from './base';
@@ -16,10 +17,11 @@ import Base from './base';
 
 export default new class extends Base {
   async test(ctx) {
+    const ret = this.t.initRet();
     // console.log(await t.getIPInfoByTaobao(ctx, '1.82.64.124'), 'getLocation,,,');
 
-    const randStr = this.t.genRandStr(10, '342121lkdsaf');
-    this.ret = new this._e('EClientNotFound', 'xxx', { randStr });
+    // const randStr = this.t.genRandStr(10, '342121lkdsaf');
+    // this.ret = new this._e('EClientNotFound', 'xxx', { randStr });
     // throw this.ret;
 
     // await this.t.getIPInfo(ctx.ip);
@@ -40,7 +42,10 @@ export default new class extends Base {
 
     // const data = await si.osInfo()
     // console.log(this.t.eval('0.3 / 0.1 + 0.6 + 4 - 5 / 3 + 1234556'),
-    ctx.state.sendJSON(this.ret);
+
+    const ip = '113.116.157.93';
+    ret.data = geoip.lookup(ip);
+    ctx.state.sendJSON(ret);
   }
 
   async location(ctx) {

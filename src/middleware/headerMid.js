@@ -2,27 +2,41 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-21 18:15:17
+ * @Last Modified time: 2019-11-13 09:24:19
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import Base from './base';
+import Base from './base'
 
 /** 项目模块 */
 
-
-export default new class extends Base {
-  setVersion(version) {
+module.exports = new (class extends Base {
+  common() {
     return async (ctx, next) => {
-      ctx.set('x-api-version', version);
-      await next();
-    };
+      // 请求计时开始
+      ctx.state.startTime = Date.now()
+      await next()
+    }
   }
 
   setCors() {
-    return { expose: ['Date'] };
+    const self = this
+    return {
+      origin: req => {
+        const { header } = req
+        const corsWhiteList = self.CONFIG.apiServer.corsWhiteList
+        if (corsWhiteList === '*' || corsWhiteList.includes(header.origin)) {
+          return header.origin
+        }
+
+        return false
+      },
+      expose: ['Date'],
+      credentials: true,
+      maxAge: this.CONFIG.webServer.maxAge,
+    }
   }
-}();
+})()

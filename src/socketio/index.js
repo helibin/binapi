@@ -5,12 +5,8 @@
  * @Last Modified time: 2018-08-22 16:50:10
  */
 
-import ioHelper  from './helper';
-import ioHandler from './handler';
-import ioEvent   from './event';
+import ioHelper from './helper'
+import ioHandler from './handler'
+import ioEvent from './event'
 
-export {
-  ioHelper,
-  ioHandler,
-  ioEvent,
-};
+export { ioHelper, ioHandler, ioEvent }

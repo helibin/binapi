@@ -2,84 +2,73 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-15 16:35:30
+ * @Last Modified time: 2019-11-01 10:15:38
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import {
-  CONFIG, _e, t,
-} from '../helper';
+import { T as t, ce } from '../helper'
 
 /** 项目模块 */
 
-
-export default async (ctx, next) => {
-  let ret = t.initRet();
+module.exports = async (ctx, next) => {
+  let ret = t.initRet()
   try {
-    // 请求计时开始
-    ctx.state.startTime = Date.now();
-    ctx.state.hasError = false;
+    ctx.state.hasError = false
 
-    await next();
+    await next()
     // 404
     if (ctx.status === 404 && !ctx.body) {
-      switch (ctx.state.accepts) {
-        case 'html':
-          ctx.type = 'html';
-          await ctx.state.render('404', { title: 'o(╥﹏╥)o 404' });
-          break;
-        case 'json':
-          ret = t.initRet('4010', 'Oops! Router Not Found.', {
-            method: ctx.method,
-            url   : ctx.url,
-          });
-          ctx.state.sendJSON(ret);
-          break;
-        default:
-          ctx.type = 'text';
-          ctx.body = 'Oops! Nothing Found.';
+      if (ctx.state.accepts === 'html') {
+        ctx.type = 'html'
+        await ctx.state.render('404', { title: 'o(╥﹏╥)o 404' })
+      } else {
+        ctx.type = 'json'
+        throw new ce('noSuchRouter', null, {
+          method: ctx.method,
+          host: ctx.host,
+          url: ctx.url,
+        })
       }
     }
   } catch (ex) {
-    ctx.state.logger(ex, `访问发生异常：${ex instanceof _e
-      ? `自定义异常 => ${JSON.stringify(ctx.state.i18n(ex.toJSON()))}`
-      : '系统异常 =>'}`);
-
-    ctx.status = ex.status || 500;
+    ctx.state.hasError = true
 
     // 自定义异常处理
-    if (ex instanceof _e) {
+    if (ex instanceof ce) {
       if (ctx.state.accepts === 'json') {
-        return ctx.state.sendJSON(ex);
+        ctx.state.logger('error', '自定义异常：\n', ex.toJSON())
+        return ctx.state.sendJSON(ex)
       }
 
-      const pageData = { title: 'err-sys', err: ctx.state.i18n(ex.toJSON()) };
-      return await ctx.state.render('err-sys',  pageData);
+      const pageData = { title: 'err-biz', err: ctx.state.i18n(ex.toJSON()) }
+      return await ctx.state.render(pageData.err.status === 401 ? 'sign-in' : 'err-biz', pageData)
     }
 
-    if (ex instanceof Error) { // 程序异常
-      if (CONFIG.env === 'production') ctx.state.rLog(ex);
+    if (ex instanceof Error) {
+      // 程序异常
+      if (['prod', 'qa'].includes(process.env.NODE_ENV)) ctx.state.rLog(ex)
 
-      const stackLines = ex.stack.split('\n');
+      ctx.state.logger('error', '系统异常：')
+      const stackLines = ex.stack.split('\n')
       for (const stackLine of stackLines) {
-        ctx.state.logger(ex, stackLine);
+        ctx.state.logger(ex, stackLine)
       }
     }
 
     if (ctx.state.accepts === 'json') {
-      if (CONFIG.env === 'production') {
-        const exWrap = new _e('EWebServer', 'unexpectedError');
-        return ctx.state.sendJSON(exWrap);
+      if (['prod', 'qa'].includes(process.env.NODE_ENV)) {
+        const exWrap = new ce('eWebServer', 'unexpectedError')
+        return ctx.state.sendJSON(exWrap)
       }
 
-      ret = new _e('EWebServer', ex.message || ex.toString());
-      return ctx.state.sendJSON(ret);
+      ret = new ce('eWebServer', ex.message || ex.toString())
+      return ctx.state.sendJSON(ret)
     }
 
-    const pageData = { title: 'err-sys', err: ex.message || ex.toString() };
-    return await ctx.state.render('err-sys',  pageData);
+    const pageData = { title: 'err-sys', err: { req_id: ctx.state.reqId } }
+    return await ctx.state.render('err-sys', pageData)
   }
-};
+}

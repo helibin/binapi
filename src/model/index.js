@@ -2,13 +2,15 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:01:57
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 22:48:13
+ * @Last Modified time: 2019-11-07 16:48:51
  */
-import authMod      from './authMod';
-import usersMod     from './usersMod';
+exports.authMod = require('./authMod')
+exports.sqlMod = require('./sqlMod')
+exports.userMod = require('./userMod')
+exports.muserMod = require('./muserMod')
 
-
-export {
-  authMod,
-  usersMod,
-};
+exports.sysMenuMod = require('./sysMenuMod')
+exports.actionLogMod = require('./actionLogMod')
+exports.deviceMod = require('./deviceMod')
+exports.deviceGroupMod = require('./deviceGroupMod')
+exports.goodsMod = require('./goodsMod')

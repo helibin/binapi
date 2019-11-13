@@ -34,7 +34,10 @@ respCode:
   EDB                  : 7000  ## 数据库错误
   EDBMysql             : 7010  # Mysql错误
   EDBRedis             : 7020  # Redis错误
-  EAliyunAPI           : 8000  # 阿里云API错误
+
+  EOpenAPI             : 8000  # 第三方API错误
+  EAliyunAPI           : 8100  # 阿里云API错误
+  EWeixinAPI           : 8200  # 微信API错误
 
   Unknown              : 9000  ## 未知错误
 

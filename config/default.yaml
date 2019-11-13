@@ -1,144 +1,121 @@
-# 环境变量（debug|development|prodction)
+# 一天：1 * 24 * 60 * 60 = 86400 s
+# 一周：86400s * 7 = 604800 s
+# 一月：86400s * 30 = 2592000 s
 
-# env: 'debug'
-# env: 'development'
-env: 'production'
+# 网站配置
+site:
+  baseUrl: "https://api.xx"
 
-# 管理界面URL
-manageURL:
-  'https://manage.helibin.com'
+  onlineTimeout: 900 # 认为用户在线的超时时间, 秒
+  commonDataCacheExpire: 300 # 缓存超时时间-通用数据, 秒
+
+  ossTempFileMaxAge: 604800 # oss上传临时文件记录缓存时间, 秒(1周)
 
 # 数据库配置
 dbServer:
   mysql:
-    host              : '127.0.0.1'
-    port              : '3306'
-    username          : '<username>'
-    password          : null
-    database          : '<database>'
-    connectionLimit   : 5        # 连接池大小
-    acquireTimeout    : 30000    # 超时时间
-    multipleStatements: true     # 允许多条SQL语句
-    timezone          : '+08: 00' # 时区
+    host: "127.0.0.1"
+    port: "3306"
+    username: null
+    password: null
+    database: "<database>"
+    connectionLimit: 5 # 连接池大小
 
   redis:
-    host    : '127.0.0.1'
+    host: "127.0.0.1"
     password: null
-    port    : 6379
-    db      : 0
+    port: 6379
+    db: 0
 
   socketIO:
-    host    : '127.0.0.1'
+    host: "127.0.0.1"
     password: null
-    port    : 6379
+    port: 6379
 
 # 站点服务
 webServer:
-  host: '0.0.0.0'
-  port: 5080
+  host: "127.0.0.1"
+  port: 4000
+  name: manage
 
-  pageSize: 20
-  pageSizeMax: 1000
+  defaultPaging: true
+  psize: 10
+  psizeMax: 1000
 
-  xAuthMaxAge: 7200           # 用户认证通用过期时间，秒
-  xAuthHeader: 'x-auth-token' # HTTP Header中用户令牌字段名，`false`为禁用
-  xAuthQuery : 'xAuthToken'   # QueryString中用户令牌字段名，`false`为禁用
-  xAuthCookie: 'xAuthToken'   # Cookie中用户令牌字段名，`false`为禁用
+  prefix: null
 
-  captchaMaxAge: # 验证码过期时间，秒
+  xAuthMaxAge:
+    desktop: 7200 # 用户认证通用过期时间, 秒
+    mobile: 2592000 # 用户认证通用过期时间, 秒
+
+  xAuthHeader: "x-auth-token" # HTTP Header中用户令牌字段名, `false`为禁用
+  xAuthQuery: "x_auth_token" # QueryString中用户令牌字段名, `false`为禁用
+
+  captchaMaxAge: # 图形验证码过期时间, 秒
     svg: 300
-  smsCodeMaxAge: # 短信验证码过期时间，秒
-    aly: 900
-  smsCodRetryTimeout: # 短信验证码重试时间间隔，秒
-    aly: 60
-  mailCodeMaxAge: # 邮件验证码过期时间，秒
-    aly: 900
-  mailCodRetryTimeout: # 邮件验证码重试时间间隔，秒
-    aly: 60
+    png: 300
+  smsCodLimit: # 短信验证码限流
+    hour: 5
+    day: 60
+  smsCodeMaxAge: 900 # 短信验证码过期时间, 秒
+  smsCodRetryTimeout: 60 # 短信验证码重试时间间隔, 秒
+  mailCodeMaxAge: 900 # 邮件验证码过期时间, 秒
+  mailCodRetryTimeout: 60 # 邮件验证码重试时间间隔, 秒
 
-  secret: 'secret-binapi-oYfKQsdb8NALAXGR' # 通用密钥：用于Cookie签名、密码加盐等
+  secret: "secret-default" # 通用密钥：用于Cookie签名、密码加盐等
 
-  defaultLocale: 'zh-CN'
+  defaultLocale: "zh-CN"
+  defaultPassword: "Hello1234"
 
-  skipCaptcha: false
+  skipCaptcha: false # 跳过图形验证码
+  skipSMSCode: false # 跳过短信验证码
+
+  skipAuthCaptcha: false # 跳过Auth图形验证码, 登录、注册、重置密码...
+  skipAuthSMSCode: false # 跳过Auth短信验证码, 登录、注册、重置密码...
+
+  singleSignIn: true # 开启单点登录（true|false）
 
 # API服务
 apiServer:
-  prefix       : '/v1'
-  corsWhiteList: '*'
-  ipWhiteList  : '*'
+  baseUrl: "https://api.xx"
+  prefix: null
 
-  logLevel: 'ERROR' # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
+  corsWhiteList: "*"
+  corsMaxAge: 86400
+
+  ipWhiteList: "*"
+
+  logFlag: "APP_NAME" # logger标记
+  logLevel: "ERROR" # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
+
   sentryDSN: null
 
 # socketIO
 socketServer:
-  prefix : '/s1'
-
-# 公共API
-openAPI:
-  taobao:
-    ip: 'http://ip.taobao.com/service/getIpInfo2.php?ip='
+  prefix: null
 
 # log4js日志等级列表
 logLevels:
-  all: 'white'
-  trace: 'blue'
-  debug: 'cyan'
-  info: 'green'
-  warn: 'yellow'
-  error: 'red'
-  fatal: 'magenta'
+  all: "white"
+  trace: "blue"
+  debug: "cyan"
+  info: "green"
+  warn: "yellow"
+  error: "red"
+  fatal: "magenta"
 
 # hbs模板
 hbs:
   partials:
-    'header.base': 'layout/header.base'
-    'header'     : 'layout/header'
-    'footer.base': 'layout/footer.base'
-    'footer'     : 'layout/footer'
+    "header.base": "layout/header.base"
+    "header": "layout/header"
+    "footer.base": "layout/footer.base"
+    "footer": "layout/footer"
 
 # AES加密
-AES:
-  key: 'jKDUqUyRezqNyQaY5faKYsZHLADHmD9e'
-  iv: 'dvjMpXLMb8592RZr'
-
-# 阿里云SDK
-alySDK:
-  accessKeyId: null
-  accessKeySecret: null
-  dayu:
-    accessKeyId: null
-    accessKeySecret: null
-    endpoint: 'http://dysmsapi.aliyuncs.com'
-    apiVersion: '2015-12-16'
-    signName: null
-    template:
-      default: null
-  oss:
-    accessKeyId: null
-    accessKeySecret: null
-    endpoint: 'https://oss-cn-shenzhen.aliyuncs.com'
-    apiVersion: '2013-10-15'
-    bucketName: null
-    cacheExpire: 900 # 缓存时间，秒
-  yqBridge:
-    accessKeyId    : null
-    accessKeySecret: null
-    endpoint       : 'https://yq-bridge.aliyuncs.com'         # 外网
-    apiVersion     : '2017-08-10'
-  aas:
-    accessKeyId    : null
-    accessKeySecret: null
-    endpoint       : 'https://aas.aliyuncs.com'         # 外网
-    apiVersion     : '2015-07-01'
-    sessionTicket  : 'login_aliyunid_ticket'
-    type:
-      - 'biz'
-      - 'master'
-      - 'ram'
-      - 'token'
-
+aes:
+  key: "32bitUyRezqNyQaY5faKYsZHLADHmD9e"
+  iv: "16bitXLMb8592RZr"
 
 # 阿里云服务
 alyServer:
@@ -150,25 +127,114 @@ alyServer:
     signName: null
     template:
       default: null
+  dayu:
+    accessKeyId: null
+    accessKeySecret: null
+    endpoint: "http://dysmsapi.aliyuncs.com"
+    apiVersion: "2015-12-16"
+    signName: null
+    template:
+      default: null
+  oss:
+    accessKeyId: null
+    accessKeySecret: null
+    region: "oss-cn-shenzhen"
+    bucket: "<bucket-name>"
+    cacheExpire: 900 # 缓存时间, 秒
+    stsTokenExpireTime: 900 # stsToken过期时间, 秒
+    ossUrlExpireTime: 7200 # oss文件地址过期时间, 秒
+    roRoleArn: "acs:ram::<uid>:role/oss-ro"
+    rwRoleArn: "acs:ram::<uid>:role/oss-rw"
+  yqBridge:
+    accessKeyId: null
+    accessKeySecret: null
+    endpoint: "https://yq-bridge.aliyuncs.com" # 外网
+    apiVersion: "2017-08-10"
+  aas:
+    accessKeyId: null
+    accessKeySecret: null
+    endpoint: "https://aas.aliyuncs.com" # 外网
+    apiVersion: "2015-07-01"
+    sessionTicket: "login_aliyunid_ticket"
+    type:
+      - "biz"
+      - "master"
+      - "ram"
+      - "token"
+  iot:
+    accessKeyId: null
+    accessKeySecret: null
+    productKey: null
+    productSecret: null
+    endpoint: "https://iot.cn-shanghai.aliyuncs.com"
+    regionId: "cn-shanghai"
+    apiVersion: "2018-01-20"
+  mns:
+    accessKeyId: null
+    accessKeySecret: null
+    accountId: null
+    mqId: null
+    regionName: "shanghai"
 
 # NodeMailer
 nodeMailer:
-  host: 'smtp.mxhichina.com'
+  host: "smtp.qiye.aliyun.com"
   port: 465
   secure: true
   user: null
   password: null
   sender: null
-  name: null
+  name: 系统通知
 
-# 赛邮
-subMailServer:
-  sms:
-    accessKeyId: null
-    accessKeySecret: null
-    signName: null
-    template:
-      default: null
-  mail:
-    accessKeyId: null
-    accessKeySecret: null
+# 微信服务
+wxServer:
+  secret: null
+  appId: null
+  ipList: "*"
+  api:
+    code2AccessToken: "https://api.weixin.qq.com/sns/oauth2/access_token"
+    getAccessToken: "https://api.weixin.qq.com/cgi-bin/token"
+    oAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
+    getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
+    jscode2session: "https://api.weixin.qq.com/sns/jscode2session"
+
+  app: # app
+    appId: null
+    secret: null
+    api:
+      code2AccessToken: "https://api.weixin.qq.com/sns/oauth2/access_token"
+      getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
+
+  mp: # 公众号
+    appId: null
+    secret: null
+    api:
+      getAccessToken: "https://api.weixin.qq.com/cgi-bin/token"
+      code2AccessToken: "https://api.weixin.qq.com/sns/oauth2/access_token"
+      oAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
+      getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
+  native: # 扫码支付-公众号
+    appId: null
+    secret: null
+  h5: # h5支付-公众号
+    appId: null
+    secret: null
+  wxa: # 小程序
+    appId: null
+    secret: null
+    api:
+      signIn: "https://api.weixin.qq.com/sns/jscode2session"
+
+  payment: # 微信商户
+    mchId: null
+    key: null
+    api:
+      createOrder: "https://api.mch.weixin.qq.com/pay/unifiedorder"
+      queryOrder: "https://api.mch.weixin.qq.com/pay/orderquery"
+      closeOrder: "https://api.mch.weixin.qq.com/pay/closeorder"
+      notifyCallbackUrl: "https://api/wechat/pay/do/notify"
+      notifyUrl: "https://api.xx/bookings/pay/do/notify"
+
+      applyRefund: "https://api.mch.weixin.qq.com/secapi/pay/refund"
+      queryRefund: "https://api.mch.weixin.qq.com/secapi/pay/refundquery"
+      accessToken: "https://api.weixin.qq.com/cgi-bin/token"

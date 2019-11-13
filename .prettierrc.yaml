@@ -1,0 +1,8 @@
+printWidth: 120
+tabWidth: 2 # tab宽度
+semi: false # 分号
+singleQuote: true # 单眼号
+jsxSingleQuote: true # jsx单眼号
+trailingComma: all # 尾部逗号
+proseWrap: preserve
+# https://prettier.io/docs/en/options.html

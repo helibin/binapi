@@ -2,64 +2,63 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-08 21:55:49
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-16 15:52:16
+ * @Last Modified time: 2019-11-13 09:28:36
  */
 /** 内建模块 */
 
 /** 第三方模块 */
-import ALY   from 'aliyun-sdk';
-import chalk from 'chalk';
-import day   from 'dayjs';
+import ALY from 'aliyun-sdk'
+import chalk from 'chalk'
+import day from 'dayjs'
 
 /** 基础模块 */
-import CONFIG     from 'config';
-import _e         from './customError';
-import { logger } from './logger';
-import t          from './tools';
+import CONFIG from 'config'
+import ce from './customError'
+import { logger } from './logger'
+import t from './toolkit'
 
 /** 项目模块 */
 
 /** 预处理 */
 // 创建aly产品客户端
-const alyClient  = (type = 'common') => {
+const alyClient = (type = 'common') => {
   try {
-    const Client = ALY[type.toUpperCase()];
-    if (t.isEmpty(Client)) throw new _e('EAliyunAPI', 'initAliyunSDKFailed', { type });
+    const Client = ALY[type.toUpperCase()]
+    if (t.isEmpty(Client)) throw new ce('EAliyunAPI', 'initAliyunSDKFailed', { type })
     return new Client({
-      accessKeyId    : CONFIG.alySDK[type].accessKeyId || CONFIG.alySDK.accessKeyId,
-      secretAccessKey: CONFIG.alySDK[type].accessKeySecret || CONFIG.alySDK.accessKeySecret,
-      endpoint       : CONFIG.alySDK[type].endpoint,
-      apiVersion     : CONFIG.alySDK[type].apiVersion,
-    });
+      accessKeyId: CONFIG.alyServer[type].accessKeyId || CONFIG.alyServer.accessKeyId,
+      secretAccessKey: CONFIG.alyServer[type].accessKeySecret || CONFIG.alyServer.accessKeySecret,
+      endpoint: CONFIG.alyServer[type].endpoint,
+      apiVersion: CONFIG.alyServer[type].apiVersion,
+    })
   } catch (ex) {
-    logger(ex, '初始化阿里云客户端失败：', JSON.stringify(ex));
-    throw ex;
+    logger(ex, '初始化阿里云客户端失败：', JSON.stringify(ex))
+    throw ex
   }
-};
+}
 
 // 缓存
-const alyServerCache = { oss: {} };
-
+const alyServerCache = { oss: {} }
 
 export default class {
   constructor(ctx) {
-    this.ctx = ctx;
-    this.client = alyClient;
-    this.ret = t.initRet();
+    this.ctx = ctx
+    this.client = alyClient
+    this.ret = t.initRet()
   }
 
   async run(type, func, options) {
     return new Promise((resolve, reject) => {
       try {
         this.client(type)[func](options, (err, alyRes) => {
-          if (err) reject(new _e('EAliyunAPI', `${type}-${func}Failed`, err));
+          if (err) reject(new ce('EAliyunAPI', `${type}-${func}Failed`, err))
 
-          resolve(alyRes);
-        });
+          resolve(alyRes)
+        })
       } catch (ex) {
-        reject(ex);
+        reject(ex)
       }
-    });
+    })
   }
 
   /**
@@ -70,28 +69,28 @@ export default class {
    * @returns {object} 公共返回值
    */
   async upload(ossPath, data) {
-    if (t.isEmpty(data)) return this.ret;
+    if (t.isEmpty(data)) return this.ret
 
     const opt = {
-      Bucket                  : CONFIG.alySDK.oss.bucketName,
-      Key                     : ossPath,
-      Body                    : data,
+      Bucket: CONFIG.alyServer.oss.bucketName,
+      Key: ossPath,
+      Body: data,
       AccessControlAllowOrigin: '',
-      ContentType             : 'text/plain',
-      CacheControl            : 'no-cache',
-      ContentDisposition      : '',
-      ContentEncoding         : 'utf-8',
-      ServerSideEncryption    : 'AES256',
-    };
-    await this.run('oss', 'putObject', opt);
-    this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 文件上传至\`${ossPath}\``);
+      ContentType: 'text/plain',
+      CacheControl: 'no-cache',
+      ContentDisposition: '',
+      ContentEncoding: 'utf-8',
+      ServerSideEncryption: 'AES256',
+    }
+    await this.run('oss', 'putObject', opt)
+    this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 文件上传至\`${ossPath}\``)
 
     // 上传成功后，清理缓存
-    if (CONFIG.alySDK.oss.cacheExpire) {
-      delete alyServerCache.oss[ossPath];
+    if (CONFIG.alyServer.oss.cacheExpire) {
+      delete alyServerCache.oss[ossPath]
     }
 
-    return this.ret;
+    return this.ret
   }
 
   /**
@@ -101,72 +100,70 @@ export default class {
    * @returns {object} 公共返回值
    */
   async download(ossPath) {
-    if (CONFIG.alySDK.oss.cacheExpire && alyServerCache.oss[ossPath]) {
-      this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 从\`${ossPath}\`缓存下载文件`);
+    if (CONFIG.alyServer.oss.cacheExpire && alyServerCache.oss[ossPath]) {
+      this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 从\`${ossPath}\`缓存下载文件`)
 
-      this.ret.msg = 'okFromCache';
-      this.ret.data = alyServerCache.oss[ossPath];
-      return this.ret;
+      this.ret.msg = 'okFromCache'
+      this.ret.data = alyServerCache.oss[ossPath]
+      return this.ret
     }
 
     const opt = {
-      Bucket: CONFIG.alySDK.oss.bucketName,
-      Key   : ossPath,
-    };
+      Bucket: CONFIG.alyServer.oss.bucketName,
+      Key: ossPath,
+    }
 
-    const ossRes = await this.run('oss', 'getObject', opt);
-    this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 从\`${ossPath}\`下载文件`);
+    const ossRes = await this.run('oss', 'getObject', opt)
+    this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 从\`${ossPath}\`下载文件`)
 
-    if (CONFIG.alySDK.oss.cacheExpire && ossRes) {
+    if (CONFIG.alyServer.oss.cacheExpire && ossRes) {
       // 首次下载后，缓存在Web服务器
-      alyServerCache.oss[ossPath] = ossRes.Body;
+      alyServerCache.oss[ossPath] = ossRes.Body
 
       // 缓存自动销毁
       setTimeout(() => {
-        delete alyServerCache.oss[ossPath];
-      }, CONFIG.alySDK.oss.cacheExpire * 1000);
+        delete alyServerCache.oss[ossPath]
+      }, CONFIG.alyServer.oss.cacheExpire * 1000)
     }
 
-    this.ret.data = ossRes.Body;
-    return this.ret;
+    this.ret.data = ossRes.Body
+    return this.ret
   }
 
   async sendSMS(mobile, type = 'default') {
-    const code = t.genRandStr(6, '1234567890');
-    const cache = t.genCacheKey('alySMS', mobile, type);
-    const retryCacheKey = t.genCacheKey('alySMS@retryTimeout', mobile);
-    this.ctx.state.logger('debug',
-      chalk.magenta('[ALYSMS]'),
-      `${mobile}获取${type}类型验证码：${code}`);
+    const code = t.genRandStr(6, '1234567890')
+    const cache = t.genCacheKey('alySMS', mobile, type)
+    const retryCacheKey = t.genCacheKey('alySMS@retryTimeout', mobile)
+    this.ctx.state.logger('debug', chalk.magenta('[ALYSMS]'), `${mobile}获取${type}类型验证码：${code}`)
 
     // 查询重试标记
-    const retryCacheCheck = await this.ctx.state.redis.get(retryCacheKey);
+    const retryCacheCheck = await this.ctx.state.redis.get(retryCacheKey)
     if (!t.isEmpty(retryCacheCheck)) {
-      throw new _e('EAliyunAPI', 'EClientTooManyRequest');
+      throw new ce('EAliyunAPI', 'EClientTooManyRequest')
     }
 
     const opt = {
-      rec_num           : mobile,
-      sms_template_code : CONFIG.alySDK.dayu.template[type],
-      sms_free_sign_name: CONFIG.alySDK.dayu.signName,
-      sms_param         : { code },
-    };
-    const smsRes = await this.run('dayu', 'sendSMS', opt);
+      rec_num: mobile,
+      sms_template_code: CONFIG.alyServer.dayu.template[type],
+      sms_free_sign_name: CONFIG.alyServer.dayu.signName,
+      sms_param: { code },
+    }
+    const smsRes = await this.run('dayu', 'sendSMS', opt)
     if (smsRes.Code !== 'OK') {
       if (smsRes.code === 'isv.BUSINESS_LIMIT_CONTROL') {
-        throw new _e('EAliyunAPI', 'EClientTooManyRequest');
+        throw new ce('EAliyunAPI', 'EClientTooManyRequest')
       }
 
-      this.ctx.state.logger('error', '获取阿里云短信异常：', JSON.stringify(smsRes));
-      throw new _e('EAliyunAPI', 'senSMSFailed', smsRes);
+      this.ctx.state.logger('error', '获取阿里云短信异常：', JSON.stringify(smsRes))
+      throw new ce('EAliyunAPI', 'senSMSFailed', smsRes)
     }
 
     // 设置验证码缓存
-    await this.ctx.state.redis.set(cache, code, CONFIG.webServer.smsCodeMaxAge.aly);
+    await this.ctx.state.redis.set(cache, code, CONFIG.webServer.smsCodeMaxAge.aly)
     // 设置重试标记
-    await this.ctx.state.redis.set(retryCacheKey, `${Date.now()}`, CONFIG.webServer.smsCodRetryTimeout.aly);
+    await this.ctx.state.redis.set(retryCacheKey, `${Date.now()}`, CONFIG.webServer.smsCodRetryTimeout.aly)
 
-    return smsRes;
+    return smsRes
   }
 
   /**
@@ -179,32 +176,34 @@ export default class {
    * @returns {object} alyRes
    */
   async querySMS(mobile, sendDate = day().format('YYYYMMDD'), page = 1, pageSize = 10) {
-    pageSize = pageSize > 50 ? 50 : pageSize;
+    pageSize = pageSize > 50 ? 50 : pageSize
     const opt = {
-      rec_num     : mobile,
-      query_date  : sendDate,
+      rec_num: mobile,
+      query_date: sendDate,
       current_page: `${page}`,
-      page_size   : `${pageSize}`,
-    };
-    const alyRes = await this.run('dayu', 'querySMS', opt);
-    const { Code, SmsSendDetailDTOs } = alyRes;
-    if (Code !== 'OK') { throw new _e('EAliyunAPI', 'querySMSFailed', alyRes); }
+      page_size: `${pageSize}`,
+    }
+    const alyRes = await this.run('dayu', 'querySMS', opt)
+    const { Code, SmsSendDetailDTOs } = alyRes
+    if (Code !== 'OK') {
+      throw new ce('EAliyunAPI', 'querySMSFailed', alyRes)
+    }
 
-    this.ctx.state.logger('debug', '查询短信发送详情：', JSON.stringify(alyRes));
-    return SmsSendDetailDTOs.SmsSendDetailDTO;
+    this.ctx.state.logger('debug', '查询短信发送详情：', JSON.stringify(alyRes))
+    return SmsSendDetailDTOs.SmsSendDetailDTO
   }
 
   async genAlyCoupon(uid = 0, activityCode) {
     const opt = {
-      Uid         : Number(uid),
-      FromAppName : 'bin-api',
+      Uid: Number(uid),
+      FromAppName: 'bin-api',
       ActivityCode: activityCode,
-    };
+    }
 
-    const alyRes =  await this.run('yqBridge', 'lotteryDraw', opt);
+    const alyRes = await this.run('yqBridge', 'lotteryDraw', opt)
 
-    this.ctx.state.logger(null, `${chalk.blue('[yqBridge]')}为用户${uid}生成代金券`);
-    return alyRes.data;
+    this.ctx.state.logger(null, `${chalk.blue('[yqBridge]')}为用户${uid}生成代金券`)
+    return alyRes.data
   }
 
   /**
@@ -214,23 +213,23 @@ export default class {
    * @returns {object} sessionInfo
    */
   async getSessionInfo(alyTicket = '') {
-    const opt = { Ticket: `${alyTicket}` };
+    const opt = { Ticket: `${alyTicket}` }
 
-    const alyRes = await this.run('aas', 'getSessionInfoByTicket', opt);
+    const alyRes = await this.run('aas', 'getSessionInfoByTicket', opt)
 
     if (!t.isEmpty(alyRes) && !t.isEmpty(alyRes.SessionInfo)) {
       try {
-        this.ret.data = JSON.parse(alyRes.SessionInfo) || {};
+        this.ret.data = JSON.parse(alyRes.SessionInfo) || {}
       } catch (ex) {
-        this.ctx.state.logger(ex, `JSON-alyRes.SessionInfo解析失败：${alyRes.SessionInfo}`);
+        this.ctx.state.logger(ex, `JSON-alyRes.SessionInfo解析失败：${alyRes.SessionInfo}`)
       }
     }
 
     if (!t.isEmpty(this.ret.data)) {
-      const accountType = this.ret.data.accountStructure || 1;
-      this.ret.data.type = CONFIG.alySDK.aas.type[accountType - 1];
+      const accountType = this.ret.data.accountStructure || 1
+      this.ret.data.type = CONFIG.alyServer.aas.type[accountType - 1]
     }
-    this.ctx.state.logger(null, `${chalk.blue('[ass]')}获取阿里用户信息，ticKet=${alyTicket}`);
-    return this.ret.data;
+    this.ctx.state.logger(null, `${chalk.blue('[ass]')}获取阿里用户信息，ticKet=${alyTicket}`)
+    return this.ret.data
   }
 }

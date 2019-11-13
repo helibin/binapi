@@ -2,22 +2,21 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-07-30 15:13:45
+ * @Last Modified time: 2019-10-23 20:53:52
  */
 /** 内建模块 */
 
 /** 第三方模块 */
 
 /** 基础模块 */
-import Base from './base';
+import Base from './base'
 
 /** 项目模块 */
-import { authScm } from '../schema';
+import Scm from '../schema'
 
-
-export default new class extends Base {
+module.exports = new (class extends Base {
   constructor() {
-    super();
-    this.model = authScm;
+    super()
+    this.model = Scm.authScm
   }
-}();
+})()

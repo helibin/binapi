@@ -2,25 +2,14 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:01:35
  * @Last Modified by: lybeen
- * @Last Modified time: 2018-08-06 17:53:10
+ * @Last Modified time: 2019-06-22 17:04:36
  */
-import authMid      from './authMid';
-import bizMid       from './bizMid';
-import captchaMid   from './capthaMid';
-import errorHandler from './errorHandler';
-import headerMid    from './headerMid';
-import ipMid        from './ipMid';
-import noPageCache  from './noPageCache';
-import paramMid     from './paramMid';
-
-
-export {
-  authMid,
-  bizMid,
-  captchaMid,
-  errorHandler,
-  headerMid,
-  ipMid,
-  noPageCache,
-  paramMid,
-};
+exports.authMid = require('./authMid')
+exports.bizMid = require('./bizMid')
+exports.captchaMid = require('./capthaMid')
+exports.errorHandler = require('./errorHandler')
+exports.headerMid = require('./headerMid')
+exports.ipMid = require('./ipMid')
+exports.noPageCache = require('./noPageCache').default
+exports.paramMid = require('./paramMid')
+exports.smsMid = require('./smsMid')

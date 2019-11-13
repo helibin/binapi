@@ -32,10 +32,6 @@ apiServer:
 alyServer:
   accessKeyId    : ''
   accessKeySecret: ''
-
-alySDK:
-  accessKeyId    : ''
-  accessKeySecret: ''
   dayu:
     accessKeyId: ''
     accessKeySecret: ''
