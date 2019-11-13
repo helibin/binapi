@@ -10,8 +10,9 @@
     "prod": "cross-env NODE_ENV=prod node src/index.js",
     "compile": "\\cp -rf $PWD/src/. $PWD/app && babel src/ --out-dir app/ && rm $PWD/app/index.js",
     "lint": "eslint src/**/*.js",
-    "doc-dev": "apidoc -c config -i src/router -o src/static/apidoc --private false && apidoc -c config -i src/router -o src/static/mapidoc && \\cp -rf $PWD/src/static/*apidoc $PWD/app/static/",
-    "doc": "apidoc -i src/router -o src/static/apidoc --private false && apidoc -i src/router -o src/static/mapidoc && \\cp -rf $PWD/src/static/*apidoc $PWD/app/static/",
+    "copy-doc": "\\cp -rf $PWD/src/static/*apidoc $PWD/app/static/ & \\cp -rf $PWD/src/static/*apidoc $PWD/docs/",
+    "doc-dev": "apidoc -c config -i src/router -o src/static/apidoc --private false && apidoc -c config -i src/router -o src/static/mapidoc && npm run copy-doc",
+    "doc": "apidoc -i src/router -o src/static/apidoc --private false && apidoc -i src/router -o src/static/mapidoc && npm run copy-doc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

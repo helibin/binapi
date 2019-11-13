@@ -46,6 +46,7 @@ build
 
 # 静态文件
 src/static/*apidoc
+docs/*apidoc
 
 # package-lock
 package-lock.json
