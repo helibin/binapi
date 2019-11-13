@@ -83,7 +83,7 @@ apiServer:
   corsWhiteList: "*"
   corsMaxAge: 86400
 
-  ipWhiteList: "*"
+  ipWhiteList: "127.0.0.1"
 
   logFlag: "APP_NAME" # logger标记
   logLevel: "ERROR" # 日志等级（ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, MARK, OFF）
@@ -186,6 +186,24 @@ nodeMailer:
   sender: null
   name: 系统通知
 
+# 赛邮
+subMailerServer:
+  sms:
+    accessKeyId: null
+    accessKeySecret: null
+    template:
+      default: null
+    api:
+      send: "https://api.mysubmail.com/message/xsend"
+      query: "https://api.mysubmail.com/log/message"
+  mail:
+    accessKeyId: null
+    accessKeySecret: null
+    template:
+      default: null
+    api:
+      send: "https://api.mysubmail.com/mail/xsend"
+
 # 微信服务
 wxServer:
   secret: null
@@ -238,3 +256,12 @@ wxServer:
       applyRefund: "https://api.mch.weixin.qq.com/secapi/pay/refund"
       queryRefund: "https://api.mch.weixin.qq.com/secapi/pay/refundquery"
       accessToken: "https://api.weixin.qq.com/cgi-bin/token"
+
+# 企业微信
+wxWorkServer:
+  webhook:
+    key: null
+    send: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=
+    noticeList: []
+  notifyTemplate:
+    fundStockChanged: "基金{0}名下股票发生变动, 请关注~"

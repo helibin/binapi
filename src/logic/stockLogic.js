@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-31 20:11:24
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 10:54:45
+ * @Last Modified time: 2019-11-07 21:49:41
  */
 /** 内建模块 */
 
@@ -18,19 +18,32 @@ module.exports = {
     query: {
       page: joi.string(),
       psize: joi.string(),
-      id: joi.string().length(32),
+      id: joi
+        .string()
+        .length(32)
+        .required(),
     },
   },
 
-  add: {
-    code: joi
-      .string()
-      .min(4)
-      .max(128)
-      .required(),
+  list: {
+    query: {
+      page: joi.string(),
+      psize: joi.string(),
+    },
   },
 
-  modify: {
+  get: {
+    params: {
+      targetId: joi
+        .string()
+        .length(32)
+        .required(),
+    },
+  },
+
+  add: joi.object().keys({}),
+
+  modify: joi.object().keys({
     params: {
       targetId: joi
         .string()
@@ -40,8 +53,9 @@ module.exports = {
     name: joi.string().max(128),
     code: joi.string().length(20),
     extra_info: joi.object(),
-    remark: joi.string().allow(''),
-  },
+    remark: joi.string(),
+    _strictMode: true,
+  }),
 
   setDisable: {
     params: {
@@ -64,14 +78,5 @@ module.exports = {
         .length(32)
         .required(),
     },
-  },
-
-  apply: {
-    __strict: true,
-    code: joi
-      .string()
-      .min(4)
-      .max(128)
-      .required(),
   },
 }

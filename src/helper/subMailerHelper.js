@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-02 21:26:59
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 10:16:54
+ * @Last Modified time: 2019-11-13 23:19:40
  */
 /** 内建模块 */
 
@@ -16,6 +16,7 @@ import ce from './customError'
 /** 项目模块 */
 
 /** 预处理 */
+const subMailConf = CONFIG.subMailerServer
 
 export default class {
   constructor(ctx) {
@@ -26,10 +27,10 @@ export default class {
   async sendMail(email, type = 'default') {
     const now = parseInt(Date.now(), 10)
     const opt = {
-      appid: CONFIG.subMailServer.mail.accessKeyId,
-      signature: CONFIG.subMailServer.mail.accessKeySecret,
+      appid: subMailConf.mail.accessKeyId,
+      signature: subMailConf.mail.accessKeySecret,
       to: email,
-      project: CONFIG.subMailServer.mail.template[type],
+      project: subMailConf.mail.template[type],
     }
     try {
       this.ctx.state.axios.post('https://api.mysubmail.com/mail/xsend', opt)
@@ -53,17 +54,18 @@ export default class {
   async sendSMS(mobile, type = 'default', options) {
     const now = parseInt(Date.now(), 10)
     const opt = {
-      appid: CONFIG.subMailServer.sms.accessKeyId,
-      signature: CONFIG.subMailServer.sms.accessKeySecret,
+      appid: subMailConf.sms.accessKeyId,
+      signature: subMailConf.sms.accessKeySecret,
       to: mobile,
-      project: CONFIG.subMailServer.sms.template[type],
+      project: subMailConf.sms.template[type],
       vars: options || { code: t.genRandStr(6, '1234567890') },
     }
     try {
       const smsRes = await this.ctx.state.axios.post('https://api.mysubmail.com/message/xsend', opt)
-      if (smsRes.data.status === 'error') {
-        this.ctx.state.logger('error', '获取赛邮短信异常：', JSON.stringify(smsRes.data))
-        throw new ce('ESubMailAPI', smsRes.data.msg)
+
+      if (smsRes.status === 'error') {
+        this.ctx.state.logger('error', '获取赛邮短信异常：', JSON.stringify(smsRes))
+        throw new ce('ESubMailAPI', smsRes.msg)
       }
 
       return this.ret
@@ -78,10 +80,10 @@ export default class {
   async queryDetail(mobile, type = 'default') {
     const now = parseInt(Date.now(), 10)
     const queryOpt = {
-      appid: CONFIG.subMailServer.sms.accessKeyId,
-      signature: CONFIG.subMailServer.sms.accessKeySecret,
+      appid: subMailConf.sms.accessKeyId,
+      signature: subMailConf.sms.accessKeySecret,
       recipient: mobile,
-      project: CONFIG.subMailServer.sms.template[type],
+      project: subMailConf.sms.template[type],
     }
     try {
       const smsRes = await this.ctx.state.axios.post('https://api.mysubmail.com/log/message', queryOpt)

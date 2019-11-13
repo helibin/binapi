@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 15:24:32
+ * @Last Modified time: 2019-11-13 22:09:52
  */
 /** 内建模块 */
 
@@ -252,7 +252,7 @@ export default class {
     ctx.state.hasError = false
     newData = this.t.jsonFormat(newData)
     extraOpt = extraOpt || {}
-    const targetData = { ...newData }
+    const targetData = newData
     const transaction = extraOpt.transaction || (await this.sequelize.transaction())
 
     try {
@@ -298,7 +298,7 @@ export default class {
     ctx.state.hasError = false
     newDataList = this.t.jsonFormat(newDataList)
     extraOpt = extraOpt || {}
-    const targetDataList = { ...newDataList }
+    const targetDataList = newDataList
     const transaction = extraOpt.transaction || (await this.sequelize.transaction())
 
     try {
@@ -347,7 +347,7 @@ export default class {
     whereOpt = typeof whereOpt === 'object' ? this.t.jsonFormat(whereOpt) : { id: whereOpt }
     nextData = this.t.jsonFormat(nextData)
     extraOpt = extraOpt || {}
-    const targetData = { ...nextData }
+    const targetData = nextData
     const transaction = extraOpt.transaction || (await this.sequelize.transaction())
 
     try {

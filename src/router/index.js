@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-07 17:17:41
+ * @Last Modified time: 2019-11-13 21:04:04
  */
 /** 内建模块 */
 
@@ -28,8 +28,7 @@ require('./muserRouter')
 require('./settingRouter')
 require('./sysMenuRouter')
 require('./actionLogRouter')
-require('./deviceRouter')
-require('./deviceGroupRouter')
-require('./goodsRouter')
+require('./fundRouter')
+require('./stockRouter')
 
 export { router, pageRouter }

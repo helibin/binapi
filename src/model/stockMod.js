@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 10:08:55
+ * @Last Modified time: 2019-11-13 21:02:07
  */
 /** 内建模块 */
 
@@ -17,6 +17,6 @@ import Scm from '../schema'
 module.exports = new (class extends Base {
   constructor() {
     super()
-    this.model = Scm.goodsScm
+    this.model = Scm.stockScm
   }
 })()

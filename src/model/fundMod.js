@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 14:46:54
+ * @Last Modified time: 2019-11-13 20:24:58
  */
 /** 内建模块 */
 
@@ -17,6 +17,6 @@ import Scm from '../schema'
 module.exports = new (class extends Base {
   constructor() {
     super()
-    this.model = Scm.deviceGroupScm
+    this.model = Scm.fundScm
   }
 })()

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-31 20:11:24
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-07 20:53:47
+ * @Last Modified time: 2019-11-07 21:49:41
  */
 /** 内建模块 */
 
@@ -18,7 +18,10 @@ module.exports = {
     query: {
       page: joi.string(),
       psize: joi.string(),
-      id: joi.string().length(32),
+      id: joi
+        .string()
+        .length(32)
+        .required(),
     },
   },
 
@@ -47,11 +50,11 @@ module.exports = {
         .length(32)
         .required(),
     },
-    hospital_id: joi.string().length(32),
     name: joi.string().max(128),
     code: joi.string().length(20),
     extra_info: joi.object(),
     remark: joi.string(),
+    _strictMode: true,
   }),
 
   setDisable: {

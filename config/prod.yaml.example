@@ -49,7 +49,7 @@ nodeMailer:
   sender: 'service@helibin.com'
   name: '系统服务'
 
-subMailServer:
+subMailerServer:
   sms:
     accessKeyId: ''
     accessKeySecret: ''

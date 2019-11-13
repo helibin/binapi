@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 18:59:57
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-07 17:55:24
+ * @Last Modified time: 2019-11-13 20:45:27
  */
 exports._sampleCtrl = require('./_sampleCtrl')
 exports.indexCtrl = require('./indexCtrl')
@@ -17,6 +17,5 @@ exports.settingCtrl = require('./settingCtrl')
 
 exports.sysMenuCtrl = require('./sysMenuCtrl')
 exports.actionLogCtrl = require('./actionLogCtrl')
-exports.deviceCtrl = require('./deviceCtrl')
-exports.deviceGroupCtrl = require('./deviceGroupCtrl')
-exports.goodsCtrl = require('./goodsCtrl')
+exports.fundCtrl = require('./fundCtrl')
+exports.stockCtrl = require('./stockCtrl')
