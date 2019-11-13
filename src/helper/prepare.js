@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-08 11:51:27
+ * @Last Modified time: 2019-11-13 10:17:49
  */
 /** 内建模块 */
 
@@ -20,6 +20,7 @@ import AlyPop from './alyPopHelper'
 import AlySms from './alySmsHelper'
 import Axios from './axiosHelper'
 import NodeMailer from './nodeMailerHelper'
+import SubMailer from './subMailerHelper'
 import Wxpay from './wxpayHelper'
 
 import Log from './logger'
@@ -155,6 +156,8 @@ exports.response = async (ctx, next) => {
     ctx.state.axios = new Axios(ctx)
     // nodeMailer初始化
     ctx.state.nodeMailer = new NodeMailer(ctx)
+    // subMailer初始化
+    ctx.state.subMailer = new SubMailer(ctx)
     // redis初始化
     ctx.state.redis = new Redis(ctx)
     // wxPay初始化
