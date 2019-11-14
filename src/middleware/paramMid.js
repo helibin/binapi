@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 11:03:02
+ * @Last Modified time: 2019-11-14 16:01:21
  */
 /** 内建模块 */
 
@@ -28,7 +28,8 @@ module.exports = new (class extends Base {
           const params = ctx.params
           const body = ctx.request.body
           const files = ctx.request.files
-          const target = { ...query, ...params, ...body, ...files, ...data }
+          const target = { query, params, ...body, ...files, ...data }
+          console.log(target, ',,,')
 
           ctx.state.logger(
             'debug',

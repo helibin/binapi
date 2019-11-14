@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-08 11:05:47
+ * @Last Modified time: 2019-11-14 15:09:58
  */
 /** 内建模块 */
 
@@ -51,6 +51,7 @@ export default class {
 
         // 操作日志记录, 查询操作除外
         if (
+          ctx.state.user &&
           !ctx.state.hasError &&
           actionMsg &&
           !['queryCommon', 'listCommon', 'getCommon', 'query', 'list', 'get', 'signIn'].includes(func)

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-31 20:11:24
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-07 21:49:41
+ * @Last Modified time: 2019-11-14 16:02:03
  */
 /** 内建模块 */
 
@@ -77,6 +77,12 @@ module.exports = {
         .string()
         .length(32)
         .required(),
+    },
+  },
+
+  watch: {
+    query: {
+      code: joi.string().required(),
     },
   },
 }

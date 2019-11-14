@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-09 10:27:08
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 23:47:01
+ * @Last Modified time: 2019-11-14 16:06:46
  */
 /** 内建模块 */
 
@@ -20,6 +20,16 @@ module.exports = new (class extends Base {
     const ret = this.t.initRet()
     const { code } = ctx.query
 
+    let fundCodes = code.split(',')
+    for (const d of fundCodes) {
+      this._watch(ctx, d).catch(ex => {
+        ctx.state.logger(ex, `检测基金${d}出现异常: `, this.t.jsonStringify(ex))
+      })
+    }
+
+    ctx.state.sendJSON(ret)
+  }
+  async _watch(ctx, code) {
     const fundRes = await Mod.fundMod.get(ctx, { code })
     if (this.t.isEmpty(fundRes)) throw new this.ce('noSuchResource', 'fundNotExits')
 
@@ -41,14 +51,17 @@ module.exports = new (class extends Base {
         total: d.totalPrice,
         extra_info: d,
       })
-      stockList.push(d.zcCode)
+      stockList.push(`${d.zcCode}(${d.zcName})`)
     }
     await Mod.stockMod.run(ctx, 'batchAdd', newStockDataList)
     if (fundRes.stocks && stockList.sort().toString() !== fundRes.stocks.toString()) {
+      const subStocks = fundRes.stocks.filter(d => !stockList.includes(d)).toString()
+      const addStocks = stockList.filter(d => !fundRes.stocks.includes(d)).toString()
       await ctx.state.wxWork.send(
         'fundStockChanged',
         this.CONFIG.wxWorkServer.webhook.noticeList,
         `${fundRes.name}(${fundRes.code})`,
+        `${subStocks ? `减持: ${subStocks}` : ''}, ${addStocks ? `增持: ${addStocks}` : ''},`,
       )
     }
     await Mod.fundMod.modify(
@@ -62,7 +75,5 @@ module.exports = new (class extends Base {
         },
       },
     )
-
-    ctx.state.sendJSON(ret)
   }
 })()

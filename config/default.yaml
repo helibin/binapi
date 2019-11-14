@@ -264,4 +264,4 @@ wxWorkServer:
     send: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=
     noticeList: []
   notifyTemplate:
-    fundStockChanged: "基金{0}名下股票发生变动, 请关注~"
+    fundStockChanged: "基金{0}名下股票发生变动, {1}请关注~"
