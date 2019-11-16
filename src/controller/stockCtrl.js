@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-09 10:27:08
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-14 16:06:46
+ * @Last Modified time: 2019-11-16 10:04:55
  */
 /** 内建模块 */
 
@@ -22,7 +22,7 @@ module.exports = new (class extends Base {
 
     let fundCodes = code.split(',')
     for (const d of fundCodes) {
-      this._watch(ctx, d).catch(ex => {
+      await this._watch(ctx, d).catch(ex => {
         ctx.state.logger(ex, `检测基金${d}出现异常: `, this.t.jsonStringify(ex))
       })
     }
@@ -57,12 +57,15 @@ module.exports = new (class extends Base {
     if (fundRes.stocks && stockList.sort().toString() !== fundRes.stocks.toString()) {
       const subStocks = fundRes.stocks.filter(d => !stockList.includes(d)).toString()
       const addStocks = stockList.filter(d => !fundRes.stocks.includes(d)).toString()
-      await ctx.state.wxWork.send(
-        'fundStockChanged',
-        this.CONFIG.wxWorkServer.webhook.noticeList,
-        `${fundRes.name}(${fundRes.code})`,
-        `${subStocks ? `减持: ${subStocks}` : ''}, ${addStocks ? `增持: ${addStocks}` : ''},`,
-      )
+      ctx.state.logger(null, `减持: ${subStocks}, 增持: ${addStocks}`)
+      if (subStocks && addStocks) {
+        await ctx.state.wxWork.send(
+          'fundStockChanged',
+          this.CONFIG.wxWorkServer.webhook.noticeList,
+          `${fundRes.name}(${fundRes.code})`,
+          `${subStocks ? `减持: ${subStocks}, ` : ''}${addStocks ? `增持: ${addStocks}, ` : ''}`,
+        )
+      }
     }
     await Mod.fundMod.modify(
       ctx,
