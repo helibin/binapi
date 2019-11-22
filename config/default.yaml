@@ -215,33 +215,21 @@ wxServer:
     oAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
     getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
     jscode2session: "https://api.weixin.qq.com/sns/jscode2session"
-
-  app: # app
+  app: # app(native app)
     appId: null
     secret: null
-    api:
-      code2AccessToken: "https://api.weixin.qq.com/sns/oauth2/access_token"
-      getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
-
-  mp: # 公众号
+  oa: # 公众号(open account)
     appId: null
     secret: null
-    api:
-      getAccessToken: "https://api.weixin.qq.com/cgi-bin/token"
-      code2AccessToken: "https://api.weixin.qq.com/sns/oauth2/access_token"
-      oAuthUrl: "https://open.weixin.qq.com/connect/oauth2/authorize"
-      getUserInfo: "https://api.weixin.qq.com/sns/userinfo"
   native: # 扫码支付-公众号
     appId: null
     secret: null
   h5: # h5支付-公众号
     appId: null
     secret: null
-  wxa: # 小程序
+  mp: # 小程序(mini program)
     appId: null
     secret: null
-    api:
-      signIn: "https://api.weixin.qq.com/sns/jscode2session"
 
   payment: # 微信商户
     mchId: null
