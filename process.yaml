@@ -10,4 +10,4 @@ apps:
     max_restarts: 5
     restart_delay: 1000
     env:
-      NODE_ENV: 'production'
+      NODE_ENV: 'prod'
