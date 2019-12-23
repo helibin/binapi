@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-09 10:27:08
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-16 10:04:55
+ * @Last Modified time: 2019-12-23 21:09:19
  */
 /** 内建模块 */
 
@@ -18,12 +18,12 @@ import Mod from '../model'
 module.exports = new (class extends Base {
   async watch(ctx) {
     const ret = this.t.initRet()
-    const { code } = ctx.query
 
-    let fundCodes = code.split(',')
-    for (const d of fundCodes) {
-      await this._watch(ctx, d).catch(ex => {
-        ctx.state.logger(ex, `检测基金${d}出现异常: `, this.t.jsonStringify(ex))
+    const codeList = await Mod.fundMod.list(ctx, {}, { attributes: ['code'] })
+
+    for (const d of codeList) {
+      await this._watch(ctx, d.code).catch(ex => {
+        ctx.state.logger(ex, `检测基金${d.code}出现异常: `, this.t.jsonStringify(ex))
       })
     }
 

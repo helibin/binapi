@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2019-10-28 15:47:06
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-14 15:06:43
+ * @Last Modified time: 2019-12-23 20:56:35
  */
 /** 内建模块 */
 
@@ -28,7 +28,7 @@ router.post(
   paramMid.joiCheck(fundLogic.add),
   ipMid.allowAccess(),
   // authMid.requireSignIn(),
-  fundCtrl.run('addCommon', 'fund', '新增基金'),
+  fundCtrl.run('add', 'fund', '新增基金'),
 )
 router.post(
   '/fund/:targetId/do/modify',
