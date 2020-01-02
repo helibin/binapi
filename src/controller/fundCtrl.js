@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-09 10:27:08
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-12-23 21:03:48
+ * @Last Modified time: 2020-01-02 17:41:28
  */
 /** 内建模块 */
 
@@ -27,6 +27,7 @@ module.exports = new (class extends Base {
       api: 'http://fund.10jqka.com.cn/web/fund/stockAndBond/' + code,
     }
     await Mod.fundMod.add(ctx, newData)
+    ret.data = { new_id: newData.id }
 
     ctx.state.sendJSON(ret)
   }
