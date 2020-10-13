@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-04 09:56:19
+ * @Last Modified time: 2020-02-28 11:09:38
  */
 
 /** 内建模块 */
@@ -56,4 +56,4 @@ router.get('/captcha/image/do/get', paramMid.joiCheck(captchaLogic.getCaptcha), 
  *
  * @apiSampleRequest /captcha/sms-code/do/get
  */
-router.get('/captcha/sms-code/do/get', paramMid.joiCheck(captchaLogic.getSMSCode), smsMid.getALYSMSCode())
+router.get('/captcha/sms-code/do/get', paramMid.joiCheck(captchaLogic.getSmsCode), smsMid.getAlySmsCode())

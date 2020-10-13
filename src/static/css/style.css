@@ -1,3 +1,19 @@
+#loading {
+	position: absolute;
+	display: none;
+	z-index: 99999;
+	background-color: rgba(0, 0, 0, 0.4);
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	text-align: center;
+	line-height: 100vh;
+	color: rgba(255, 255, 255, 1);
+	font-size: 3rem;
+	font-weight: bold;
+}
+
 .text-center {
   text-align: center;
 }
@@ -16,3 +32,45 @@
   bottom: 1rem;
   width: 100%;
 }
+
+/* 元素垂直居中 */
+.parent {
+  display: inline-block;
+  width: 300px;
+  height: 300px;
+  font-size: 0;
+  background: #80848f;
+  text-align: center;
+}
+.parent:before {
+  display: inline-block;
+  width: 20px;
+  height: 100%;
+  content: '';
+  background: #ff9900;
+  vertical-align: middle;
+}
+.child {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  background: #19be6b;
+  vertical-align: middle;
+}
+/* 元素垂直居中 */
+
+/* 内容垂直居中 */
+.vertical-center {
+  padding: 0 auto;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -moz-box-pack: center;
+  -ms-flex-pack: center;
+  -ms-flex-align: center;
+  /* IE 11+,Firefox 22+,Chrome 29+,Opera 12.1*/
+}
+/* 内容垂直居中 */

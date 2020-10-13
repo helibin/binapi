@@ -1,0 +1,58 @@
+# 文件常用类型
+application:
+  doc: application/msword
+  pdf: application/pdf
+  rtf: application/rtf
+  xls: application/vnd.ms-excel
+  ppt: application/vnd.ms-powerpoint
+  rar: application/x-rar-compressed
+  swf: application/x-shockwave-flash
+  zip: application/zip
+  json: application/json
+audio:
+  mp3: audio/mpeg
+  wav: audio/wav
+  wave: audio/wave
+  xwav: audio/x-wav
+  ogg: audio/ogg
+  m4a: audio/m4a
+  ra: audio/x-realaudio
+  mid: audio/mid
+  rmi: audio/mid
+  m3u: audio/x-mpegurl
+  ram: audio/x-pn-realaudio
+  aif: audio/x-aiff
+  aifc: audio/x-aiff
+  aiff: audio/x-aiff
+  au: audio/basic
+  amr: audio/amr
+  pcm: audio/pcm
+  webm: audio/webm
+image:
+  gif: image/gif
+  jpg: image/jpeg
+  jpeg: image/jpeg
+  png: image/png
+  wbmp: image/vnd.wap.wbmp
+  ico: image/x-icon
+  jng: image/x-jng
+  bmp: image/x-ms-bmp
+  svg: image/svg+xml
+  webp: image/webp
+  tiff: image/tiff
+text:
+  js: text/javascript
+  css: text/css
+  html: text/html
+  txt: text/plain
+  xml: text/xml
+video:
+  3gp: video/3gpp
+  mp4: video/mp4
+  mpeg: video/mpeg
+  mov: video/quicktime
+  webm: video/webm
+  flv: video/x-flv
+  m4v: video/x-m4v
+  wmv: video/x-ms-wmv
+  avi: video/x-msvideo

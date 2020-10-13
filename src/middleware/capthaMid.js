@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-10-30 15:33:19
+ * @Last Modified time: 2019-12-27 16:08:54
  */
 /** 内建模块 */
 
@@ -21,9 +21,9 @@ const captchaOpt = {
   width: 150,
   height: 60,
   fontSize: 50,
-  ignoreChars: '0o1il',
-  noise: 3,
-  color: true,
+  ignoreChars: '0oO1iIl',
+  noise: 1,
+  color: false,
 }
 
 module.exports = new (class extends Base {
@@ -61,11 +61,11 @@ module.exports = new (class extends Base {
         const captchaContent = pngCaptcha(captchaOpt.width, captchaOpt.height, captchaText)
         captchaContent.color(0, 0, 0, 0)
         captchaContent.color(80, 80, 80, 255)
-        captchaContent.getBase64()
+        captchaContent.base64Encode()
         count.png += 1
       }
 
-      ctx.state.logger('debug', '1秒内生成图形验证码：', count)
+      ctx.state.logger('debug', '1秒内生成图形验证码: ', count)
       ret.data = { count }
       ctx.state.sendJSON(ret)
       await next()
@@ -83,7 +83,7 @@ module.exports = new (class extends Base {
 
         await ctx.state.redis.set(cacheKey, text, this.CONFIG.webServer.captchaMaxAge.svg)
 
-        ctx.state.logger('debug', `生成[${cate}]图形验证码成功：captcha: ${text}`)
+        ctx.state.logger('debug', `生成[${cate}]图形验证码成功: captcha: ${text}`)
         ctx.state.sendMedia(data, 'svg')
       } catch (ex) {
         ctx.state.logger(ex, `生成[${cate}]图形验证码失败`)
@@ -112,7 +112,7 @@ module.exports = new (class extends Base {
           throw new this.ce('invalidCaptcha', { captcha })
         }
 
-        ctx.state.logger('debug', `校验[${cate}]图形验证码成功：captcha: ${captcha}`)
+        ctx.state.logger('debug', `校验[${cate}]图形验证码成功: captcha: ${captcha}`)
         return next()
       } catch (ex) {
         ctx.state.logger(ex, `校验[${cate}]图形验证码失败`)
@@ -133,11 +133,11 @@ module.exports = new (class extends Base {
         const captcha = pngCaptcha(captchaOpt.width, captchaOpt.height, text)
         captcha.color(0, 0, 0, 0)
         captcha.color(80, 80, 80, 255)
-        const data = Buffer.from(captcha.getBase64(), 'base64')
+        const data = Buffer.from(captcha.base64Encode(), 'base64')
 
         await ctx.state.redis.set(cacheKey, text, this.CONFIG.webServer.captchaMaxAge.png)
 
-        ctx.state.logger('debug', `生成[${cate}]图形验证码成功：captcha: ${text}`)
+        ctx.state.logger('debug', `生成[${cate}]图形验证码成功: captcha: ${text}`)
         ctx.state.sendMedia(data, 'png')
       } catch (ex) {
         ctx.state.logger(ex, `生成[${cate}]图形验证码失败`)
@@ -166,7 +166,7 @@ module.exports = new (class extends Base {
           throw new this.ce('invalidCaptcha', { captcha })
         }
 
-        ctx.state.logger('debug', `校验[${cate}]图形验证码成功：captcha: ${captcha}`)
+        ctx.state.logger('debug', `校验[${cate}]图形验证码成功: captcha: ${captcha}`)
         return next()
       } catch (ex) {
         ctx.state.logger(ex, `校验[${cate}]图形验证码失败`)

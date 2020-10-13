@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-08 21:55:49
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-06 16:05:33
+ * @Last Modified time: 2020-02-28 09:53:47
  */
 /** 内建模块 */
 
@@ -22,21 +22,21 @@ import T from './toolkit'
 // 创建aly产品客户端
 const alyClient = (type = 'common') => {
   try {
-    const alyAK = CONFIG.alyServer[type].accessKeyId || CONFIG.alyServer.accessKeyId
-    const alyAS = CONFIG.alyServer[type].accessKeySecret || CONFIG.alyServer.accessKeySecret
+    const alyAk = CONFIG.alyServer[type].accessKeyId || CONFIG.alyServer.accessKeyId
+    const alyAs = CONFIG.alyServer[type].accessKeySecret || CONFIG.alyServer.accessKeySecret
 
-    if (alyAK && alyAS) {
+    if (alyAk && alyAs) {
       return new PopCore({
-        accessKeyId: alyAK,
-        secretAccessKey: alyAS,
+        accessKeyId: alyAk,
+        accessKeySecret: alyAs,
         endpoint: CONFIG.alyServer[type].endpoint,
         apiVersion: CONFIG.alyServer[type].apiVersion,
       })
     } else {
-      logger('error', `aly${type}服务缺少参数：`, `alyAK='${alyAK}', alyAS='${alyAS}'`)
+      logger('error', `aly${type}服务缺少参数: `, `alyAk='${alyAk}', alyAs='${alyAs}'`)
     }
   } catch (ex) {
-    logger(ex, '初始化阿里云客户端失败：', JSON.stringify(ex))
+    logger(ex, '初始化阿里云客户端失败: ', JSON.stringify(ex))
     throw ex
   }
 }
@@ -48,10 +48,17 @@ export default class {
     this.t = T
   }
 
-  async run(type, func, ...args) {
+  async run(type, action, ...args) {
     try {
-      const alyRes = await this.client(type)[func](...args)
+      const alyRes = await this.client(type).request(action, ...args)
 
+      logger(
+        'debug',
+        `调用阿里云${type}服务成功, `,
+        `func: ${func}, `,
+        `参数: ${this.t.jsonStringify(args)}, `,
+        `响应: ${this.t.jsonStringify(alyRes)}`,
+      )
       return alyRes.Data
     } catch (ex) {
       logger(ex, `调用阿里云${type}服务失败, `, `func: ${func}, `, `参数: ${this.t.jsonStringify(...args)}`, ex)
@@ -59,19 +66,39 @@ export default class {
     }
   }
 
-  async iot(action, params, extraOpt) {
+  async iot(action, params = {}, extraOpt = {}) {
+    const alyConf = CONFIG.alyServer.iot
+
     return await this.run(
       'iot',
-      'request',
       action,
       {
         ...params,
-        RegionId: params.RegionId || CONFIG.alyServer.iot.regionId,
-        ProductKey: params.ProductKey || CONFIG.alyServer.iot.productKey,
+        RegionId: params.RegionId || alyConf.regionId,
+        ProductKey: params.ProductKey || alyConf.productKey,
+      },
+      extraOpt,
+    )
+  }
+
+  async sms(action, params = {}, extraOpt = {}) {
+    const alyConf = CONFIG.alyServer.sms
+
+    return await this.run(
+      'sms',
+      action,
+      {
+        ...params,
+        PhoneNumbers: params.PhoneNumbers,
+        TemplateParam: params.TemplateParam,
+        SignName: params.SignName || alyConf.signName,
+        TemplateCode: params.TemplateCode || alyConf.template.default,
+        RegionId: params.RegionId || alyConf.regionId,
       },
       extraOpt,
     )
   }
 }
 
+// https://api.aliyun.com
 // iotAPI https://help.aliyun.com/document_detail/69470.html?spm=a2c4g.11186623.6.719.32ef3e99YTL79J

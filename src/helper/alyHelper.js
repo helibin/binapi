@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-08 21:55:49
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 09:28:36
+ * @Last Modified time: 2020-07-16 18:13:51
  */
 /** 内建模块 */
 
@@ -14,7 +14,7 @@ import day from 'dayjs'
 /** 基础模块 */
 import CONFIG from 'config'
 import ce from './customError'
-import { logger } from './logger'
+import Log from './logger'
 import t from './toolkit'
 
 /** 项目模块 */
@@ -32,8 +32,7 @@ const alyClient = (type = 'common') => {
       apiVersion: CONFIG.alyServer[type].apiVersion,
     })
   } catch (ex) {
-    logger(ex, '初始化阿里云客户端失败：', JSON.stringify(ex))
-    throw ex
+    Log.logger(ex, '初始化阿里云客户端失败：', JSON.stringify(ex))
   }
 }
 
@@ -64,7 +63,7 @@ export default class {
   /**
    * 上传
    *
-   * @param {*} ossPath oss路径，如：static/img/test.txt
+   * @param {*} ossPath oss路径, 如：static/img/test.txt
    * @param {binary} data 上传数据
    * @returns {object} 公共返回值
    */
@@ -85,7 +84,7 @@ export default class {
     await this.run('oss', 'putObject', opt)
     this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 文件上传至\`${ossPath}\``)
 
-    // 上传成功后，清理缓存
+    // 上传成功后, 清理缓存
     if (CONFIG.alyServer.oss.cacheExpire) {
       delete alyServerCache.oss[ossPath]
     }
@@ -96,7 +95,7 @@ export default class {
   /**
    * 下载
    *
-   * @param {*} ossPath oss路径，如：static/img/test.txt
+   * @param {*} ossPath oss路径, 如：static/img/test.txt
    * @returns {object} 公共返回值
    */
   async download(ossPath) {
@@ -117,7 +116,7 @@ export default class {
     this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 从\`${ossPath}\`下载文件`)
 
     if (CONFIG.alyServer.oss.cacheExpire && ossRes) {
-      // 首次下载后，缓存在Web服务器
+      // 首次下载后, 缓存在Web服务器
       alyServerCache.oss[ossPath] = ossRes.Body
 
       // 缓存自动销毁
@@ -130,11 +129,11 @@ export default class {
     return this.ret
   }
 
-  async sendSMS(mobile, type = 'default') {
+  async sendSms(mobile, type = 'default') {
     const code = t.genRandStr(6, '1234567890')
-    const cache = t.genCacheKey('alySMS', mobile, type)
-    const retryCacheKey = t.genCacheKey('alySMS@retryTimeout', mobile)
-    this.ctx.state.logger('debug', chalk.magenta('[ALYSMS]'), `${mobile}获取${type}类型验证码：${code}`)
+    const cache = t.genCacheKey('alySms', mobile, type)
+    const retryCacheKey = t.genCacheKey('alySms@retryTimeout', mobile)
+    this.ctx.state.logger('debug', chalk.magenta('[AlySms]'), `${mobile}获取${type}类型验证码：${code}`)
 
     // 查询重试标记
     const retryCacheCheck = await this.ctx.state.redis.get(retryCacheKey)
@@ -148,14 +147,14 @@ export default class {
       sms_free_sign_name: CONFIG.alyServer.dayu.signName,
       sms_param: { code },
     }
-    const smsRes = await this.run('dayu', 'sendSMS', opt)
+    const smsRes = await this.run('dayu', 'sendSms', opt)
     if (smsRes.Code !== 'OK') {
       if (smsRes.code === 'isv.BUSINESS_LIMIT_CONTROL') {
         throw new ce('EAliyunAPI', 'EClientTooManyRequest')
       }
 
       this.ctx.state.logger('error', '获取阿里云短信异常：', JSON.stringify(smsRes))
-      throw new ce('EAliyunAPI', 'senSMSFailed', smsRes)
+      throw new ce('EAliyunAPI', 'senSmsFailed', smsRes)
     }
 
     // 设置验证码缓存
@@ -175,7 +174,7 @@ export default class {
    * @param {number} [pageSize=10] 每页大小
    * @returns {object} alyRes
    */
-  async querySMS(mobile, sendDate = day().format('YYYYMMDD'), page = 1, pageSize = 10) {
+  async querySms(mobile, sendDate = day().format('YYYYMMDD'), page = 1, pageSize = 10) {
     pageSize = pageSize > 50 ? 50 : pageSize
     const opt = {
       rec_num: mobile,
@@ -183,10 +182,10 @@ export default class {
       current_page: `${page}`,
       page_size: `${pageSize}`,
     }
-    const alyRes = await this.run('dayu', 'querySMS', opt)
+    const alyRes = await this.run('dayu', 'querySms', opt)
     const { Code, SmsSendDetailDTOs } = alyRes
     if (Code !== 'OK') {
-      throw new ce('EAliyunAPI', 'querySMSFailed', alyRes)
+      throw new ce('EAliyunAPI', 'querySmsFailed', alyRes)
     }
 
     this.ctx.state.logger('debug', '查询短信发送详情：', JSON.stringify(alyRes))
@@ -209,7 +208,7 @@ export default class {
   /**
    * 获取用户会话信息
    *
-   * @param {string} [alyTicket=''] 阿里云会话凭证，取至cookie的login_aliyunid_ticket
+   * @param {string} [alyTicket=''] 阿里云会话凭证, 取至cookie的login_aliyunid_ticket
    * @returns {object} sessionInfo
    */
   async getSessionInfo(alyTicket = '') {
@@ -229,7 +228,7 @@ export default class {
       const accountType = this.ret.data.accountStructure || 1
       this.ret.data.type = CONFIG.alyServer.aas.type[accountType - 1]
     }
-    this.ctx.state.logger(null, `${chalk.blue('[ass]')}获取阿里用户信息，ticKet=${alyTicket}`)
+    this.ctx.state.logger(null, `${chalk.blue('[ass]')}获取阿里用户信息, ticKet=${alyTicket}`)
     return this.ret.data
   }
 }

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-09 10:27:08
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-04 11:33:49
+ * @Last Modified time: 2020-03-02 18:01:45
  */
 /** 内建模块 */
 
@@ -31,7 +31,7 @@ module.exports = new (class extends Base {
     ctx.state.sendJSON(ret)
   }
 
-  async getInfo(ctx) {
+  async getUser(ctx) {
     const ret = this.t.initRet()
     const targetId = ctx.state.userId
 
@@ -40,7 +40,31 @@ module.exports = new (class extends Base {
     // 处理返回数据
     ret.data = this.t.safeData(dbRes)
 
-    ctx.state.logger('debug', `获取我的用户信息：targetId=${targetId}`)
+    ctx.state.logger('debug', `获取我的用户信息: targetId=${targetId}`)
     ctx.state.sendJSON(ret)
+  }
+
+  async downloadAvatar(ctx, filePathPatten) {
+    const targetId = ctx.params.targetId
+    const filename = ctx.params.filename
+    const suffix = filename.split('.').slice(-1)[0]
+
+    const opt = {}
+    if (ctx.query['x-oss-process'] && Object.keys(this.CONST.mimeType.image).includes(suffix)) {
+      opt.process = ctx.query['x-oss-process']
+    }
+
+    const ossPath = this.t.strf(filePathPatten, targetId, filename)
+    const file = await ctx.state.alyOss.download(ossPath, opt)
+
+    ctx.state.logger('debug', `下载用户头像: targetId=${targetId}`)
+    ctx.state.sendMedia(file, suffix)
+  }
+
+  async bindPhone(ctx) {
+    // 修改用户资料
+    await Mod.userMod.run(ctx, 'bindPhone', ctx.state.userId, { phone: ctx.request.body.phone })
+
+    ctx.state.sendJSON()
   }
 })()

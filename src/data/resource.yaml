@@ -1,0 +1,107 @@
+# 样板管理
+- { code: sample_query, name: 样板-查询, content: /sample/do/query, type: api }
+- { code: sample_list, name: 样板-列表, content: /sample/do/list, type: api }
+- { code: sample_get, name: 样板-详情, content: /sample/:targetId/do/get, type: api }
+- { code: sample_add, name: 样板-添加, content: /sample/do/add, type: api }
+- { code: sample_modify, name: 样板-修改, content: /sample/:targetId/do/modify, type: api }
+- { code: sample_setDisable, name: 样板-启禁用, content: /sample/:targetId/do/set-disable, type: api }
+- { code: sample_delete, name: 样板-删除, content: /sample/:targetId/do/delete, type: api }
+
+# 操作日志管理
+- { code: actionLog_query, name: 操作日志-查询, content: /action-log/do/query, type: api }
+- { code: actionLog_add, name: 操作日志-添加, content: /action-log/do/add, type: api }
+- { code: actionLog_modify, name: 操作日志-修改, content: /action-log/:targetId/do/modify, type: api }
+- { code: actionLog_delete, name: 操作日志-删除, content: /action-log/:targetId/do/delete, type: api }
+
+# 电卡流水管理
+- { code: cardBalance_query, name: 电卡流水-查询, content: /card-balance/do/query, type: api }
+
+# 电卡管理
+- { code: card_query, name: 电卡-查询, content: /card/do/query, type: api }
+- { code: card_add, name: 电卡-添加, content: /card/do/add, type: api }
+- { code: card_modify, name: 电卡-修改, content: /card/:targetId/do/modify, type: api }
+- { code: card_setDisable, name: 电卡-启禁用, content: /card/:targetId/do/set-disable, type: api }
+- { code: card_delete, name: 电卡-删除, content: /card/:targetId/do/delete, type: api }
+- { code: card_setBind, name: 电卡-绑定, content: /card/do/set-bind, type: api }
+- { code: card_recharge, name: 电卡-充值, content: /card/:targetId/do/recharge, type: api }
+
+# 设备分组管理
+- { code: deviceGroup_query, name: 设备分组-查询, content: /device-group/do/query, type: api }
+- { code: deviceGroup_add, name: 设备分组-添加, content: /device-group/do/add, type: api }
+- { code: deviceGroup_modify, name: 设备分组-修改, content: /device-group/:targetId/do/modify, type: api }
+- { code: deviceGroup_setDisable, name: 设备分组-启禁用, content: /device-group/:targetId/do/set-disable, type: api }
+- { code: deviceGroup_delete, name: 设备分组-删除, content: /device-group/:targetId/do/delete, type: api }
+
+# 设备管理
+- { code: device_query, name: 设备-查询, content: /device/do/query, type: api }
+- { code: device_add, name: 设备-添加, content: /device/do/add, type: api }
+- { code: device_modify, name: 设备-修改, content: /device/:targetId/do/modify, type: api }
+- { code: device_setDisable, name: 设备-启禁用, content: /device/:targetId/do/set-disable, type: api }
+- { code: device_delete, name: 设备-删除, content: /device/:targetId/do/delete, type: api }
+- { code: device_send, name: 设备-发送指令, content: /device/:targetId/do/send, type: api }
+
+# 商品管理
+- { code: goods_query, name: 商品-查询, content: /goods/do/query, type: api }
+- { code: goods_add, name: 商品-添加, content: /goods/do/add, type: api }
+- { code: goods_modify, name: 商品-修改, content: /goods/:targetId/do/modify, type: api }
+- { code: goods_setDisable, name: 商品-启禁用, content: /goods/:targetId/do/set-disable, type: api }
+- { code: goods_delete, name: 商品-删除, content: /goods/:targetId/do/delete, type: api }
+
+# 后台用户管理
+- { code: rmuser_query, name: 后台用户-查询, content: /rmuser/do/query, type: api }
+- { code: muser_add, name: 后台用户-添加, content: /muser/do/add, type: api }
+- { code: muser_modify, name: 后台用户-修改, content: /muser/:targetId/do/modify, type: api }
+- { code: muser_setDisable, name: 后台用户-启禁用, content: /muser/:targetId/do/set-disable, type: api }
+- { code: muser_delete, name: 后台用户-删除, content: /muser/:targetId/do/delete, type: api }
+- { code: muser_setResource, name: 后台用户-关联资源, content: /muser/:targetId/do/set-resource, type: api }
+- { code: muser_setRole, name: 后台用户-关联角色, content: /muser/:targetId/do/set-role, type: api }
+
+# 订单管理
+- { code: order_query, name: 订单-查询, content: /order/do/query, type: api }
+- { code: order_add, name: 订单-添加, content: /order/do/add, type: api }
+- { code: order_modify, name: 订单-修改, content: /order/:targetId/do/modify, type: api }
+- { code: order_delete, name: 订单-删除, content: /order/:targetId/do/delete, type: api }
+- { code: order_refund, name: 订单-退款, content: /order/:targetId/do/refund, type: api }
+
+# 资源管理
+- { code: resource_query, name: 资源-查询, content: /resource/do/query, type: api }
+- { code: resource_add, name: 资源-添加, content: /resource/do/add, type: api }
+- { code: resource_modify, name: 资源-修改, content: /resource/:targetId/do/modify, type: api }
+- { code: resource_setDisable, name: 资源-启禁用, content: /resource/:targetId/do/set-disable, type: api }
+- { code: resource_delete, name: 资源-删除, content: /resource/:targetId/do/delete, type: api }
+
+# 角色管理
+- { code: role_query, name: 角色-查询, content: /role/do/query, type: api }
+- { code: role_add, name: 角色-添加, content: /role/do/add, type: api }
+- { code: role_modify, name: 角色-修改, content: /role/:targetId/do/modify, type: api }
+- { code: role_setDisable, name: 角色-启禁用, content: /role/:targetId/do/set-disable, type: api }
+- { code: role_delete, name: 角色-删除, content: /role/:targetId/do/delete, type: api }
+- { code: role_setResource, name: 角色-关联资源, content: /role/:targetId/do/set-resource, type: api }
+- { code: role_setMuser, name: 角色-关联后台用户, content: /role/:targetId/do/set-muser, type: api }
+
+# 设置
+- { code: setting_changePassword, name: 设置-修改密码, content: /setting/do/change-password, type: api }
+- { code: setting_getInfo, name: 设置-获取信息, content: /setting/do/get-info, type: api }
+
+# 系统菜单管理
+- { code: sysMenu_query, name: 系统菜单-查询, content: /sys-menu/do/query, type: api }
+- { code: sysMenu_add, name: 系统菜单-添加, content: /sys-menu/do/add, type: api }
+- { code: sysMenu_modify, name: 系统菜单-修改, content: /sys-menu/:targetId/do/modify, type: api }
+- { code: sysMenu_setDisable, name: 系统菜单-启禁用, content: /sys-menu/:targetId/do/set-disable, type: api }
+- { code: sysMenu_delete, name: 系统菜单-删除, content: /sys-menu/:targetId/do/delete, type: api }
+
+# 测试
+- { code: test, name: 测试, content: /test, type: api }
+
+# 用户流水管理
+- { code: userBalance_query, name: 用户流水-查询, content: /user-balance/do/query, type: api }
+
+# 注册用户管理
+- { code: user_query, name: 注册用户-查询, content: /user/do/query, type: api }
+- { code: user_add, name: 注册用户-添加, content: /user/do/add, type: api }
+- { code: user_modify, name: 注册用户-修改, content: /user/:targetId/do/modify, type: api }
+- { code: user_setDisable, name: 注册用户-启禁用, content: /user/:targetId/do/set-disable, type: api }
+- { code: user_delete, name: 注册用户-删除, content: /user/:targetId/do/delete, type: api }
+
+# 微信管理
+- { code: wechat_bindPhone, name: 微信-绑定手机号码, content: /wechat/phone/do/bind, type: api }

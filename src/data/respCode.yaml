@@ -11,7 +11,6 @@ akIsDisabled: 10040 # ak已被禁用
 deviceNotSignIn: 11000 # 设备未登录
 invalidxDeviceToken: 11010 # 无效设备令牌
 xDeviceTokenExpired: 11020 # 设备令牌已过期
-deviceDisabled: 11030 # 设备已被禁用
 
 # User
 invildUsenameOrPassowrd: 20000 # 用户名或密码错误
@@ -30,6 +29,9 @@ invalidParam: 30030 # 无效参数
 requestFrequently: 30040 # 请求频繁
 requestForbidden: 30050 # 访问被拒绝
 requestEntityTooLarge: 30060 # 请求体过大
+requestBad: 30070 # 请求错误
+limitRequestPerHour: 30080 # 每小时请求限流
+limitRequestPerDay: 30090 # 每日请求限流
 
 # BizRule
 dataIsNotYours: 40000 # 操作他人数据
@@ -37,7 +39,7 @@ noSuchResource: 40020 # 资源不存在
 databaseInited: 40030 # 数据库已初始化
 invalidCaptchaToken: 40040 # 无效验证码令牌
 invalidCaptcha: 40050 # 无效图形验证码
-invalidSMSCode: 40060 # 无效短信验证码
+invalidSmsCode: 40060 # 无效短信验证码
 tooLargeTimeSpanFromCS: 40070 # 客户端与服务端时间差异过大
 nonceIsUsed: 40080 # 随机数已使用
 noSuchAccessKey: 40090 # AK不存在
@@ -46,6 +48,10 @@ invalidSign: 40110 # 无效签名
 invalidOldPassword: 40120 # 原密码不正确
 dataDisabled: 40130 # 数据已被禁用
 dataExisted: 40140 # 数据已存在
+deviceDisabled: 40150 # 设备已被禁用
+invalidCardCount: 40160 # 持卡数量不合法
+cardIsBound: 40170 # 电卡已被绑定
+cardIsUnbound: 40180 # 电卡未绑定
 
 # Server
 eWebServer: 50000 # Web服务器错误
@@ -54,6 +60,5 @@ eMysql: 70010 # Mysql错误
 eRedis: 70020 # Redis错误
 eOpenAPI: 80000 # 第三方API错误
 eAliyunAPI: 80100 # 阿里云API错误
-eWeixinAPI: 80200 # 微信API错误
+eWechatAPI: 80200 # 微信API错误
 unknown: 90000 # 未知错误
-

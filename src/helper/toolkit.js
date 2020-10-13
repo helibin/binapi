@@ -1,18 +1,21 @@
+0
 /*
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 10:57:27
+ * @Last Modified time: 2020-07-16 17:09:20
  */
 /** 内建模块 */
 import util from 'util'
+import fs from 'fs'
 
 /** 第三方模块 */
 import xml2js from 'xml2js'
 import CONFIG from 'config'
 import crypto from 'crypto'
-import math from 'mathjs'
+import * as mathjs from 'mathjs'
 import uuid from 'uuid'
+import CircularJSON from 'circular-json'
 
 /** 基础模块 */
 
@@ -64,11 +67,8 @@ exports.getDateStr = () => {
 
   const date = new Date()
   dateStr += date.getFullYear() // 获取完整的年份(4位,1970-????)
-  dateStr += (date.getMonth() + 1).toString().padStart(2, '0') // 获取当前月份(01-12)
-  dateStr += date
-    .getDate()
-    .toString()
-    .padStart(2, '0') // 获取当前日(01-31)
+  dateStr += `${date.getMonth() + 1}`.padStart(2, 0) // 获取当前月份(01-12)
+  dateStr += `${date.getDate()}`.padStart(2, 0) // 获取当前日(01-31)
 
   return dateStr
 }
@@ -77,23 +77,10 @@ exports.getTimeStr = (showMS = false) => {
   let dateStr = ''
 
   const date = new Date()
-  dateStr += date
-    .getHours()
-    .toString()
-    .padStart(2, '0') // 获取当前小时数(0-23)
-  dateStr += date
-    .getMinutes()
-    .toString()
-    .padStart(2, '0') // 获取当前分钟数(0-59)
-  dateStr += date
-    .getSeconds()
-    .toString()
-    .padStart(2, '0') // 获取当前秒数(0-59)
-  if (showMS)
-    dateStr += date
-      .getMilliseconds()
-      .toString()
-      .padStart(3, '0')
+  dateStr += `${date.getHours()}`.padStart(2, 0) // 获取当前小时数(0-23)
+  dateStr += `${date.getMinutes()}`.padStart(2, 0) // 获取当前分钟数(0-59)
+  dateStr += `${date.getSeconds()}`.padStart(2, 0) // 获取当前秒数(0-59)
+  if (showMS) dateStr += `${date.getMilliseconds()}`.padStart(3, 0)
 
   return dateStr
 }
@@ -103,28 +90,12 @@ exports.getDateTimeStr = (showMS = false) => {
 
   const date = new Date()
   dateStr += date.getFullYear() // 获取完整的年份(4位,1970-????)
-  dateStr += (date.getMonth() + 1).toString().padStart(2, '0') // 获取当前月份(01-12)
-  dateStr += date
-    .getDate()
-    .toString()
-    .padStart(2, '0') // 获取当前日(01-31)
-  dateStr += date
-    .getHours()
-    .toString()
-    .padStart(2, '0') // 获取当前小时数(0-23)
-  dateStr += date
-    .getMinutes()
-    .toString()
-    .padStart(2, '0') // 获取当前分钟数(0-59)
-  dateStr += date
-    .getSeconds()
-    .toString()
-    .padStart(2, '0') // 获取当前秒数(0-59)
-  if (showMS)
-    dateStr += date
-      .getMilliseconds()
-      .toString()
-      .padStart(3, '0')
+  dateStr += `${date.getMonth() + 1}`.padStart(2, 0) // 获取当前月份(01-12)
+  dateStr += `${date.getDate()}`.padStart(2, 0) // 获取当前日(01-31)
+  dateStr += `${date.getHours()}`.padStart(2, 0) // 获取当前小时数(0-23)
+  dateStr += `${date.getMinutes()}`.padStart(2, 0) // 获取当前分钟数(0-59)
+  dateStr += `${date.getSeconds()}`.padStart(2, 0) // 获取当前秒数(0-59)
+  if (showMS) dateStr += `${date.getMilliseconds()}`.padStart(3, 0)
 
   return dateStr
 }
@@ -147,7 +118,7 @@ exports.isEmpty = d => {
  *
  * @returns {string} randStr
  */
-exports.genRandStr = (len = 32, chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') => {
+exports.genRandStr = (len = 32, chars = '0123456789abcdefghijklmnopqrstuvwxyz') => {
   let randStr = ''
   while (randStr.length < len) {
     const randIndex = Math.floor(Math.random() * chars.length)
@@ -156,12 +127,15 @@ exports.genRandStr = (len = 32, chars = '0123456789abcdefghijklmnopqrstuvwxyzABC
 
   return randStr
 }
+/**
+ * 生成16进制内的随机数字
+ */
+exports.genRandNum = (len = 16, onlyNum = true) =>
+  onlyNum ? exports.genRandStr(len, '0123456789') : exports.genRandStr(len, '0123456789abcdef')
 
-exports.genNonceStr = (len = 16, onlyNum = false) =>
-  Math.random()
-    .toString(onlyNum ? 10 : 16)
-    .substr(2, len)
-
+/**
+ * 生成指定范围内的数字
+ */
 exports.genRangeNum = (from, to) => Math.floor(Math.random() * (to - from + 1) + from) * 1 || 0
 
 /**
@@ -248,38 +222,6 @@ exports.jsonFind = (j, pathString, safeTrace) => {
 }
 
 /**
-转换为Base64
-
-参数
-  str <string> 待转换内容
-
-返回
-  <string>
-*/
-
-/**
- * 转换为Base64
- * @param {string} str 待转换内容
- * @returns {string} 转换后base64
- */
-exports.getBase64 = str => {
-  let b = Buffer.alloc(str.length, str)
-  let base64 = b.toString('base64')
-  return base64
-}
-
-/**
- * 从Base64转回字符串
- * @param {string} str 待解密字符串
- * @returns {string} 解密后字符串
- */
-exports.fromBase64 = base64str => {
-  let b = Buffer.from(base64str, 'base64')
-  let raw = b.toString()
-  return raw
-}
-
-/**
  * MD5加密
  * @param {string} str md5加密字符串
  * @returns {string} md5 str
@@ -289,6 +231,7 @@ exports.getMd5 = str =>
     .createHash('md5')
     .update(str)
     .digest('hex')
+    .toUpperCase()
 
 /**
  * sha1加密
@@ -300,11 +243,12 @@ exports.getSha1 = str =>
     .createHash('sha1')
     .update(str)
     .digest('hex')
+    .toUpperCase()
 
 /**
  * 获取Hash值
  *
- * @param {string} [type=sha1] 待获取hash类型（md5|sha1）
+ * @param {string} [type=sha1] 待获取hash类型(md5|sha1)
  * @param {string} str 待获取hash值的字符串
  * @param {string} key 密钥
  * @param {string} output 输出格式(hex|base64)
@@ -315,12 +259,13 @@ exports.getHash = (type = 'sha1', str) => {
     .createHash(type)
     .update(str)
     .digest('hex')
+    .toUpperCase()
 }
 
 /**
  * 获取HMAC-SHA1值
  *
- * @param {string} [type=sha1] 待获取HMAC类型（md5|sha1）
+ * @param {string} [type=sha1] 待获取HMAC类型(md5|sha1)
  * @param {string} str 待获取HMAC-SHA1值的字符串
  * @param {string} key 密钥
  * @param {string} output 输出格式(hex|base64)
@@ -330,10 +275,13 @@ exports.getHMac = (type = 'sha1', str, key, output) => {
   const c = crypto.createHmac(type, key).update(str)
 
   if (output === 'base64') {
-    return c.digest().toString('base64')
+    return c
+      .digest()
+      .toString('base64')
+      .toUpperCase()
   }
 
-  return c.digest('hex')
+  return c.digest('hex').toUpperCase()
 }
 
 /**
@@ -355,15 +303,16 @@ exports.getSaltedHashStr = (md5Str, secret, salt = CONFIG.webServer.secret) => {
  * @param {string} rawText 待加密内容
  * @param {string(32)} [key=CONFIG.aes.key] 密匙
  * @param {string(16)} [iv=CONFIG.aes.iv] 向量
+ * @param {string} [method=aes-256-cbc] 加密算法(aes-256-cbc|aes-128-cbc)
  * @returns {string} base64 str
  */
-exports.aesEncode = (rawText, key = CONFIG.aes.key, iv = CONFIG.aes.iv) => {
+exports.aesEncrypt = (rawText, key = CONFIG.aes.key, iv = CONFIG.aes.iv, method = 'aes-256-cbc') => {
   try {
-    const c = crypto.createCipheriv('aes-256-cbc', key, iv)
+    const c = crypto.createCipheriv(method, key, iv)
     const chunks = [c.update(rawText, 'binary', 'base64'), c.final('base64')]
     return chunks.join('')
   } catch (ex) {
-    console.log('aesEncode失败: ', ex)
+    console.log('aesEncrypt失败: ', ex)
     return null
   }
 }
@@ -374,17 +323,38 @@ exports.aesEncode = (rawText, key = CONFIG.aes.key, iv = CONFIG.aes.iv) => {
  * @param {string} base64Output 待解密内容
  * @param {string(32)} [key=CONFIG.aes.key] 密匙
  * @param {string(16)} [iv=CONFIG.aes.iv] 向量
+ * @param {string} [method=aes-256-cbc] 加密算法(aes-256-cbc|aes-128-cbc)
  * @returns {string} text str
  */
-exports.aesDecode = (base64Output, key = CONFIG.aes.key, iv = CONFIG.aes.iv) => {
+exports.aesDecrypt = (base64Output, key = CONFIG.aes.key, iv = CONFIG.aes.iv, method = 'aes-256-cbc') => {
   try {
-    const c = crypto.createDecipheriv('aes-256-cbc', key, iv)
+    const c = crypto.createDecipheriv(method, key, iv)
     const chunks = [c.update(base64Output, 'base64', 'binary'), c.final('binary')]
     return chunks.join('')
   } catch (ex) {
-    console.log('aesDecode失败: ', ex)
+    console.log('aesDecrypt失败: ', ex)
     return null
   }
+}
+
+/**
+ * 转换为Base64
+ * @param {string} str 待转换内容
+ * @returns {string} 转换后base64
+ */
+exports.base64Encode = str => {
+  if ('string' !== typeof str) str = CircularJSON.stringify(str)
+
+  return Buffer.from(str).toString('base64')
+}
+
+/**
+ * 从Base64转回字符串
+ * @param {string} str 待解密字符串
+ * @returns {string} 解密后字符串
+ */
+exports.base64Decode = base64str => {
+  return Buffer.from(base64str, 'base64').toString()
 }
 
 /**
@@ -395,13 +365,13 @@ exports.aesDecode = (base64Output, key = CONFIG.aes.key, iv = CONFIG.aes.iv) => 
  * @return {int} exec result
  */
 exports.compute = (execStr, fixed) => {
-  math.config({
+  mathjs.create(mathjs.all, {
     number: 'BigNumber', // Default type of number:
     precision: 20, // Number of significant digits for BigNumbers
   })
 
-  const unformatVal = math.eval(execStr)
-  const formatVal = math.format(unformatVal, { notation: 'fixed', precision: fixed }) * 1
+  const unformatVal = mathjs.evaluate(execStr)
+  const formatVal = mathjs.format(unformatVal, { notation: 'fixed', precision: fixed }) * 1
 
   return fixed ? formatVal : formatVal.toFixed(0) * 1
 }
@@ -482,7 +452,7 @@ exports.safeData = (data, deleteFields = ['seq', 'password']) => {
  *
  * @param {string} patten 格式
  * @param  {...any} args 参数
- * @returns {string} 字符串, 如：strf('{0} {1}!', 'Hello', 'World') => 'Hello World'
+ * @returns {string} 字符串, 如: strf('{0} {1}!', 'Hello', 'World') => 'Hello World'
  */
 exports.strf = (patten, ...args) => {
   if (!args.length) return patten
@@ -492,7 +462,7 @@ exports.strf = (patten, ...args) => {
 
 exports.jsonParse = str => {
   try {
-    str = JSON.parse(str)
+    str = CircularJSON.parse(str)
   } catch (ex) {
     console.log('jsonParse失败: ', ex)
     str = {}
@@ -503,7 +473,7 @@ exports.jsonParse = str => {
 
 exports.jsonStringify = data => {
   try {
-    data = JSON.stringify(data, {}, '')
+    data = CircularJSON.stringify(data)
   } catch (ex) {
     console.log('jsonStringify失败: ', ex)
     data = ''
@@ -512,7 +482,7 @@ exports.jsonStringify = data => {
   return data
 }
 
-exports.jsonFormat = json => (json === Object(json) ? JSON.parse(JSON.stringify(json)) : json)
+exports.jsonFormat = json => (json === Object(json) ? CircularJSON.parse(CircularJSON.stringify(json)) : json)
 
 // 下划线转换驼峰
 exports.toHump = name => name.replace(/_(\w)/g, (all, letter) => letter.toUpperCase())
@@ -551,23 +521,23 @@ exports.toBoolean = o => {
 
   if (typeof o === 'string') {
     if (['true', 'yes', 'ok', 'on', '1'].includes(o)) return true
-    if (['false', 'no', 'ng', 'off', '0'].includes(o)) return false
+    if (['false', 'no', 'ng', 'off', 0].includes(o)) return false
   }
 
   return false
 }
 
-exports.buildXML = data => {
+exports.json2xml = json => {
   const builder = new xml2js.Builder({
     rootName: 'xml',
     cdata: true,
     headless: true,
     allowSurrogateChars: true,
   })
-  return Promise.resolve(builder.buildObject(data))
+  return Promise.resolve(builder.buildObject(json))
 }
 
-exports.parseXML = xml => {
+exports.xml2json = xml => {
   const parser = new xml2js.Parser({
     normalize: true,
     explicitRoot: false,
@@ -582,7 +552,7 @@ exports.parseXML = xml => {
   })
 }
 
-exports.padFileSrc = (data, prefix = CONFIG.apiServer.baseURL + CONFIG.apiServer.prefix || '') => {
+exports.padFileSrc = (data, prefix = CONFIG.apiServer.baseUrl + CONFIG.webServer.prefix || '') => {
   if (exports.isEmpty(data)) return data
 
   return data.replace(/(src\s*=\s*['"]?)([^'"]*files)/g, `$1${prefix}/files`)
@@ -593,4 +563,101 @@ exports.isStream = val => val !== null && typeof val === 'object' && typeof val.
 exports.isHas = (data, key) => {
   if (util.isArray(data)) return data.includes(key)
   if (util.isObject(data)) return Object.prototype.hasOwnProperty.call(data, key)
+
+  return false
+}
+
+exports.util = util
+
+//获取文件真实类型
+exports.getFileMimeType = filePath => {
+  const buffer = new Buffer(8)
+  const fd = fs.openSync(filePath, 'r')
+  fs.readSync(fd, buffer, 0, 8, 0)
+  const newBuf = buffer.slice(0, 4)
+  const typeCode = newBuf[0].toString(16) + newBuf[1].toString(16) + newBuf[2].toString(16) + newBuf[3].toString(16) // head
+
+  let filetype = ''
+  let mimetype
+  switch (typeCode) {
+    case 'ffd8ffe1':
+      filetype = 'jpg'
+      mimetype = ['image/jpeg', 'image/pjpeg']
+      break
+    case 'ffd8ffe0':
+      filetype = 'jpg'
+      mimetype = ['image/jpeg', 'image/pjpeg']
+      break
+    case 'ffd8ffdb':
+      filetype = 'jpg'
+      mimetype = ['image/jpeg', 'image/pjpeg']
+      break
+    case '47494638':
+      filetype = 'gif'
+      mimetype = 'image/gif'
+      break
+    case '89504e47':
+      filetype = 'png'
+      mimetype = ['image/png', 'image/x-png']
+      break
+    case '504b34':
+      filetype = 'zip'
+      mimetype = ['application/x-zip', 'application/zip', 'application/x-zip-compressed']
+      break
+    case '2f2aae5':
+      filetype = 'js'
+      mimetype = 'application/x-javascript'
+      break
+    case '2f2ae585':
+      filetype = 'css'
+      mimetype = 'text/css'
+      break
+    case '5b7bda':
+      filetype = 'json'
+      mimetype = ['application/json', 'text/json']
+      break
+    case '3c212d2d':
+      filetype = 'ejs'
+      mimetype = 'text/html'
+      break
+    default:
+      filetype = 'unknown'
+      break
+  }
+
+  fs.closeSync(fd)
+
+  return {
+    fileType: filetype,
+    mimeType: mimetype,
+  }
+}
+
+/**
+ * 文件大小格式
+ *
+ * 122343345283B => 113.94GB
+ */
+exports.formatSize = (size, delimiter = '') => {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+  for (var i = 0; size >= 1024 && i < 5; i++) size /= 1024
+  return Math.round(size * 100) / 100 + delimiter + units[i]
+}
+
+/**
+ * unix时间戳转时间
+ * 1594889129161 => 2020-07-16-16:45:29
+ */
+exports.formatTime = ts => {
+  const date = new Date(ts)
+
+  let dateStr = ''
+  dateStr += date.getFullYear() // 获取完整的年份(4位,1970-????)
+  dateStr += '-' + `${date.getMonth() + 1}`.padStart(2, 0) // 获取当前月份(01-12)
+  dateStr += '-' + `${date.getDate()}`.padStart(2, 0) // 获取当前日(01-31)
+  dateStr += '-' + `${date.getHours()}`.padStart(2, 0) // 获取当前小时数(0-23)
+  dateStr += ':' + `${date.getMinutes()}`.padStart(2, 0) // 获取当前分钟数(0-59)
+  dateStr += ':' + `${date.getSeconds()}`.padStart(2, 0) // 获取当前秒数(0-59)
+
+  return dateStr
 }

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-08-20 15:53:41
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-10-23 18:12:58
+ * @Last Modified time: 2020-08-11 15:07:32
  */
 /** 内建模块 */
 
@@ -13,14 +13,14 @@ import redis from 'redis'
 import ioRedis from 'socket.io-redis'
 
 /** 基础模块 */
-import { CONFIG, logger, ce } from '../helper'
+import { CONFIG, Log, ce } from '../helper'
 
 /** 项目模块 */
 import ioEvent from './event'
 
 export default class {
-  constructor(server, options = {}) {
-    this.server = server
+  constructor(app, options = {}) {
+    this.app = app
     this.options = {
       path: '/socket.io',
       serveClient: false,
@@ -30,7 +30,7 @@ export default class {
       cookie: false,
       namespaces: [{ name: '/test' }, { name: '/test1' }],
     }
-    this.io = new IO(server, options)
+    this.io = new IO(app, options)
     this.events = {}
 
     const dbConf = CONFIG.dbServer.socketIO
@@ -52,7 +52,7 @@ export default class {
       })
 
       this.io.on('error', err => {
-        logger('error', 'socketIO连接出现异常：', err)
+        Log.logger('error', 'socketIO连接出现异常：', err)
       })
     }
     Promise.all(funcs)
@@ -70,13 +70,13 @@ export default class {
         }
         await Promise.all(mids)
       } catch (ex) {
-        logger(ex, 'socket.io请求出现异常：', ex)
+        Log.logger(ex, 'socket.io请求出现异常：', ex)
         s.emit('err', new ce('eSocketIO', ex.message, { data }))
       }
     }
 
     for (const r in ioEvent) {
-      if (!{}.hasOwnProperty.call(ioEvent, r)) continue
+      if (!Object.keys(ioEvent).includes(r)) continue
 
       socket.on(r, routerHandler(r, socket))
     }

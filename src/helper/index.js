@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:00:29
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 10:15:22
+ * @Last Modified time: 2020-07-17 09:40:14
  */
 exports.CONFIG = require('config')
 exports.Log = require('./logger')
@@ -14,3 +14,4 @@ exports.ce = require('./customError')
 exports.nodeMailer = require('./nodeMailerHelper')
 exports.prepare = require('./prepare')
 exports.redis = require('./redisHelper')
+exports.casbinHelper = require('./casbinHelper')

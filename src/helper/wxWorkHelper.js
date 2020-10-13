@@ -52,7 +52,7 @@ export default class {
       },
     }
 
-    this.ctx.state.logger('info', '调用企业微信群机器人webhook-send，参数：', JSON.stringify(param))
+    this.ctx.state.logger('info', '调用企业微信群机器人webhook-send, 参数：', JSON.stringify(param))
     return await this._request(wxWorkConf.webhook.send + wxWorkConf.webhook.key, param)
   }
 }

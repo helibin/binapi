@@ -1,3 +1,55 @@
+# 资源类型
+resourceType:
+  menu: 菜单
+  api: 接口
+  button: 按钮
+
+# 商品类型
+goodsType:
+  user: 用户专用
+  card: 电卡专用
+
+# 卡片状态
+cardStatus:
+  disabled: 未激活
+  using: 使用中
+  revoke: 已作废
+  lost: 遗失
+
+# 设备上报原因
+deviceReportStatus:
+  1: toCharge # 1. 空闲状态转充电 --- 暂不处理
+  2: normal # 2. 正常充电中 --- 暂不处理
+  3: disconnect # 3. 充电过程中, 插座拔出导致充插座关闭.(用户拔出) --- 退余款
+  4: underloading # 4. 充电过程中, 检测到没有负载导致充插座关闭. (无负载, 停止) --- 退余款
+  5: fullStop # 5. 充电过程中, 检测到充电电流到stop阀值, 自动停止. (充满, 自停) --- 退余款
+  6: timeStop # 6. 充电过程中, 检测到充电时间到, 自动停止.(倒计时, 停止) --- 正常终止订单
+  7: reconnect # 7. 充电过程中, 断电, 上电后, 充电自动续充.(断电续充) --- 不处理
+  8: underloading2 # 8. 充电过程中, 断电, 上电后, 充电自动续充, 没有负载导致充插座关闭. (断电续充, 0: 无负载, 停止) --- 暂不处理
+  9: powerOverload # 9. 充电过程中, 充电功率超过了最大功率. --- 退余款
+  a: userSignOut # A. 充电过程中, 用户退出 --- 退余款
+
+# 微信退款状态
+sysWechatRefundStatus:
+  success: 退款成功
+  change: 退款异常
+  refundclosed: 退款关闭
+
+# 结束类型
+stopType:
+  wait: 等待停止
+  auto: 充满自停
+  normal: 正常停止
+  manual: 手动停止
+  error: 异常停止
+  timeout: 超时停止
+  unknown: 未知
+
+# 电池类型
+batteryType:
+  leadAcid: 铅酸电池
+  lithium: 锂电池
+
 # 收费模式
 priceMode:
   fix: 固定收费
@@ -8,6 +60,23 @@ deviceGroupType:
   eBike: 电单车
   eCar: 电汽车
 
+deviceType:
+  eBike: 电单车
+  eCar: 电汽车
+
+# 设备状态
+deviceStatus:
+  online: 在线
+  offline: 离线
+  error: 异常
+  auditing: 待审核
+
+# 设备状态
+portStatus:
+  free: 空闲
+  using: 使用中
+  off: 不可用
+
 # 充电类型
 chargingType:
   quick: 快充
@@ -15,14 +84,30 @@ chargingType:
 
 # 商品优惠类型
 reliefType:
+  none: 无优惠
   discount: 折扣
   present: 赠送
 
 # 认证类型
 authType:
-  account: 账密认证
-  phone: 手机认证
+  account: 账密
+  phone: 手机
+  email: 电子邮件
   wechat: 微信认证
+  alipay: 支付宝
+  weibo: 微博
+  qq: 腾讯QQ
+
+# 认证来源
+authFrom:
+  desktop: 桌面
+  web: 电脑网页
+  h5: 手机网页
+  app: 移动应用
+  wechat.mp: 微信小程序
+  wechat.oa: 微信公众号
+  wechat.app: 微信APP
+  alipay.mp: 支付宝小程序
 
 # 性别
 gender:
@@ -41,87 +126,108 @@ mediaType:
 muserType:
   admin: 管理员
   agent: 代理商
-  patner: 合作商
+  partner: 合作商
+  nomal: 普通用户
 
 # 验证码类型
 captchaType:
   signIn: 用户登录
   signUp: 用户注册
   resetPassword: 找回密码
-  verifyMobile: 验证手机号码
-  bindMobile: 绑定手机号码
+  verifyPhone: 验证手机号码
+  bindPhone: 绑定手机号码
 
 # 短信类型
 smsCodeType:
   signUp: 用户注册
   resetPassword: 找回密码
-  verifyMobile: 验证手机号码
-  bindMobile: 绑定手机号码
+  verifyPhone: 验证手机号码
+  bindPhone: 绑定手机号码
   smsSignIn: 短信登录认证
 
-# 设备类型
-deviceType:
-  floor: 落地式
-  hang: 悬挂式
-  desktop: 桌面式
-  other: 其它
+# 消息类型
+messageType:
+  notice: 通知
+  alarm: 报警
+  system: 系统消息
+  announce: 通告
 
-# 设备状态
-deviceStatus:
-  online: 在线
-  offline: 离线
-  error: 异常
-  auditing: 待审核
+# 消息来源
+messageCause:
+  system: '系统触发'
+  wechat_refund: 微信退款
+  wechat_pay: 微信支付
 
 # 通知方式
 noticeWay:
   sms: 短信通知
   system: 系统通知
-  umeng: 友盟推送
+  wechat.oa: 微信公众号
+  wechat.mp: 微信小程序
 
 # 订单状态
 orderStatus:
   paying: 支付中
   preparing: 商品准备中
-  refunded: 已申请退款
+  refunded: 申请退款
   refunding: 退款中
   auditing: 审核中
-  sending: 快递运送中
+  charging: 充电中
   completed: 已完成
 
-  canceled: 已取消
   closed: 已关闭
+
+# 订单类型
+orderType:
+  systemRecharge: 系统充值
+  userRecharge: 用户充值
+  cardRecharge: 电卡充值
+  eBikeCharging: 电单车充电
+  withdraw: 提现
+
+  # 流水动作
+balanceAction:
+  systemRecharge: 系统充值
+  userRecharge: 用户充值
+  cardRecharge: 电卡充值
+  eBikeCharging: 电单车充电
+  withdraw: 提现
+
+  cardBind: 电卡绑定
+  systemPresent: 系统赠送
+  chargingRefund: 充电退费
+  rechargeRefund: 充值退费
+
+# 流水流向
+balanceFlow:
+  income: 入账
+  pay: 出账
 
 # 支付状态
 payStatus:
   unpay: 未支付
   timeout: 支付超时
-  refund: 已退款
-  refunding: 退款中
+  refunded: 已退款
   error: 支付失败
   success: 支付成功
 
-  closed: 已关闭
-
-# 微信交易类型
-wxTradeType:
-  app: APP支付
-  native: 扫码支付
-  mweb: H5支付
-  jsapi: jsapi支付
+  canceled: 已取消
 
 # 支付方式
 payWay:
+  balance: 余额
   wechat: 微信支付
   aliPay: 支付宝
+  card: 电卡
 
 # 交易来源
 payFrom:
-  app: app
-  h5: mweb
-  native: native
-  wxa: jsapi
-  mp: jsapi
+  app: APP支付
+  native: 扫码支付
+  mweb: H5支付
+  mp: 小程序支付
+  oa: 公众号支付
+  card: 刷卡支付
 
 # 文件常用类型
 mimeType:

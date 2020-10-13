@@ -1,13 +1,9 @@
 apps:
-  - script: './app/app.js'
-    name: 'BinAPI'
-    instances: 'max'
-    exec_mode: cluster
-    watch: false
-    log_date_format: 'YYYYMMDD HH:mm:ss(Z)'
-    error_file: './logs/err.log'
-    merge_logs: true
-    max_restarts: 5
-    restart_delay: 1000
-    env:
-      NODE_ENV: 'prod'
+  name: 'BinAPI'
+  script: 'app/app.js'
+  instances: 'max'
+  exec_mode: cluster
+  watch: false
+  max_restarts: 5
+  restart_delay: 1000
+  instance_var: 'INSTANCE_ID'

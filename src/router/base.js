@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-10-31 21:38:13
+ * @Last Modified time: 2020-02-27 23:06:54
  */
 /** 内建模块 */
 
@@ -21,7 +21,7 @@ import { databaseCtrl } from '../controller'
 
 /** 预处理 */
 const router = new Router({ prefix: CONFIG.apiServer.prefix || '' })
-const pageRouter = new Router({ prefix: CONFIG.webServer.prefix || '' })
+const pageRouter = new Router()
 
 /**
  * @api {post} /areas/pc 省市联动数据

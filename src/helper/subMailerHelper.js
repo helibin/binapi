@@ -39,7 +39,7 @@ export default class {
       this.ctx.state.logger(ex, ex, opt)
       throw ex
     } finally {
-      this.ctx.state.logger('info', `发送邮件至\`${email}\`，用时：${Date.now() - now}ms`)
+      this.ctx.state.logger('info', `发送邮件至\`${email}\`, 用时：${Date.now() - now}ms`)
     }
   }
 
@@ -51,7 +51,7 @@ export default class {
    * @param {*} options 模板参数
    * @returns {object} 公共返回值
    */
-  async sendSMS(mobile, type = 'default', options) {
+  async sendSms(mobile, type = 'default', options) {
     const now = parseInt(Date.now(), 10)
     const opt = {
       appid: subMailConf.sms.accessKeyId,
@@ -73,7 +73,7 @@ export default class {
       this.ctx.state.logger(ex, ex, opt)
       throw ex
     } finally {
-      this.ctx.state.logger('info', `发送短信至\`${mobile}\`，用时：${Date.now() - now}ms`)
+      this.ctx.state.logger('info', `发送短信至\`${mobile}\`, 用时：${Date.now() - now}ms`)
     }
   }
 

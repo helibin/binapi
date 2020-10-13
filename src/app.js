@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 19:03:53
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-08 11:59:11
+ * @Last Modified time: 2020-08-11 14:31:18
  */
 /* 内建模块 */
 import http from 'http'
@@ -24,7 +24,7 @@ import { CONFIG, Log, prepare, YamlCC } from './helper'
 
 /** 项目模块 */
 import { authMid, errorHandler, noPageCache, headerMid } from './middleware'
-// import { ioHelper } from "./socketio";
+import { ioHelper } from './socketio'
 
 /** 路由模块 */
 import { pageRouter, router } from './router'
@@ -92,7 +92,7 @@ app.use(pageRouter.routes())
 const server = http.createServer(app.callback())
 
 // socket.io初始化
-// new ioHelper(server).init()
+new ioHelper(server).init()
 try {
   server.listen(CONFIG.webServer.port, CONFIG.webServer.host, () => {
     /* 服务器运行配置 */

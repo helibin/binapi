@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-14 15:09:58
+ * @Last Modified time: 2019-12-09 17:24:57
  */
 /** 内建模块 */
 
@@ -44,20 +44,10 @@ export default class {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Ctrl调用方法：[${chalk.magenta(func)}], `,
-          `响应：${ctx.state.hasError ? '异常' : '正常'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Ctrl调用方法: [${chalk.magenta(func)}], `,
+          `响应: ${ctx.state.hasError ? '异常' : '正常'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
-
-        // 操作日志记录, 查询操作除外
-        if (
-          ctx.state.user &&
-          !ctx.state.hasError &&
-          actionMsg &&
-          !['queryCommon', 'listCommon', 'getCommon', 'query', 'list', 'get', 'signIn'].includes(func)
-        ) {
-          Mod.actionLogMod.run(ctx, 'addData', func, actionMsg)
-        }
       }
     }
   }
@@ -67,7 +57,8 @@ export default class {
     const model = `${modelName}Mod`
     const { id } = ctx.query
 
-    ret.data = await Mod[model][id ? 'get' : 'list'](ctx)
+    ret.data = await Mod[model][id ? 'get' : 'list'](ctx, ctx.state.userId ? { id, user_id: ctx.state.userId } : id)
+    if (id && this.t.isEmpty(ret.data)) throw new this.ce('noSuchResource', { data_id: id })
 
     ctx.state.logger('debug', `获取${modelName}`)
     ctx.state.sendJSON(ret)
@@ -77,7 +68,7 @@ export default class {
     const ret = this.t.initRet()
     const model = `${modelName}Mod`
 
-    ret.data = await Mod[model].list(ctx)
+    ret.data = await Mod[model].list(ctx, ctx.state.userId ? { user_id: ctx.state.userId } : null)
 
     ctx.state.logger('debug', `列出${modelName}`)
     ctx.state.sendJSON(ret)
@@ -88,9 +79,9 @@ export default class {
     const targetId = ctx.params.targetId
     const model = `${modelName}Mod`
 
-    ret.data = await Mod[model].get(ctx, targetId)
+    ret.data = await Mod[model].get(ctx, ctx.state.userId ? { id: targetId, user_id: ctx.state.userId } : targetId)
 
-    ctx.state.logger('debug', `获取${modelName}：targetId=${targetId}`)
+    ctx.state.logger('debug', `获取${modelName}: targetId=${targetId}`)
     ctx.state.sendJSON(ret)
   }
 
@@ -117,7 +108,7 @@ export default class {
 
     await Mod[model].modify(ctx, targetId, nextData)
 
-    ctx.state.logger('debug', `修改${modelName}：targetId=${targetId}`, nextData)
+    ctx.state.logger('debug', `修改${modelName}: targetId=${targetId}`, nextData)
     ctx.state.sendJSON(ret)
   }
 
@@ -129,7 +120,7 @@ export default class {
 
     await Mod[model].modify(ctx, targetId, { is_disabled })
 
-    ctx.state.logger('debug', `修改${modelName}：targetId=${targetId}`, { is_disabled })
+    ctx.state.logger('debug', `修改${modelName}: targetId=${targetId}`, { is_disabled })
     ctx.state.sendJSON(ret)
   }
 
@@ -140,7 +131,7 @@ export default class {
 
     await Mod[model].delete(ctx, targetId)
 
-    ctx.state.logger('debug', `删除${modelName}：targetId=${targetId}`)
+    ctx.state.logger('debug', `删除${modelName}: targetId=${targetId}`)
     ctx.state.sendJSON(ret)
   }
 }

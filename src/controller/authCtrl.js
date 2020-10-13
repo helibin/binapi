@@ -2,24 +2,25 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-06 15:47:45
+ * @Last Modified time: 2020-07-16 18:17:25
  */
 /** 内建模块 */
+import fs from 'fs'
 
 /** 第三方模块 */
 import jwt from 'jsonwebtoken'
-import dayjs from 'dayjs'
 
 /** 基础模块 */
 import Base from './base'
 
 /** 项目模块 */
 import Mod from '../model'
+import Ctrl from '.'
 
 module.exports = new (class extends Base {
   async createAuthCacheKey(
     userId = '*',
-    authType = 'web',
+    authType = 'wechat.mp',
     xAuthTokenId = '*',
     clientType = '*',
     userType = this.CONFIG.webServer.name,
@@ -31,17 +32,17 @@ module.exports = new (class extends Base {
    *
    * @param {object} ctx 上下文
    * @param {string} uid 用户ID
-   * @param {string} authType=[web] 认证类型（web|ak）
-   * @param {string} clientType=[desktop] 客户端类型（desktop|mobile）
-   * @param {string} userType 用户类型（www|manage）
+   * @param {string} authType=[wechat.mp] 认证类型(CONST.authType)
+   * @param {string} clientType=[desktop] 客户端类型(CONST.clientType)
+   * @param {string} userType 用户类型(www|manage)
    * @param {string} [xatId] 令牌ID
    * @returns {string} xAuthToken
    */
   async genXAuthToken(
     ctx,
     uid,
-    authType = 'web',
-    clientType = 'desktop',
+    authType = 'wechat.mp',
+    clientType = ctx.state.clientType,
     userType = this.CONFIG.webServer.name,
     xatId,
   ) {
@@ -76,47 +77,146 @@ module.exports = new (class extends Base {
     // 用户登录校验
     const whereOpt = {
       $or: {
+        user_id: body.identifier,
         identifier: body.identifier,
-        phone: body.identifier,
-        email: body.identifier,
       },
+      type: 'account',
     }
-    const userRes = await Mod.muserMod.get(ctx, whereOpt, { attributes: {} })
+    // 用户登录校验
+    const authRes = await Mod.authMod.get(ctx, whereOpt)
+    if (this.t.isEmpty(authRes)) {
+      throw new this.ce('EUserAuth', 'noSuchIdentifier', { identifier: body.identifier })
+    }
+
+    // 准备用户信息
+    const userRes = await Mod.userMod.run(ctx, 'getData', authRes.user_id, { noPassword: false, type: 'account' })
     if (this.t.isEmpty(userRes)) {
-      throw new this.ce('noSuchMuser', { identifier: body.identifier })
+      throw new this.ce('noSuchUser', { user_id: authRes.user_id })
     }
-    if (userRes.password !== this.t.getSaltedHashStr(body.password.toUpperCase(), userRes.id)) {
-      throw new this.ce('invildUsenameOrPassowrd')
-    }
+
+    // TODO 开启密码校验
+    // const passwordHash = this.t.getSaltedHashStr(body.password.toUpperCase(), authRes.user_id)
+    // if (passwordHash !== userRes.password.toUpperCase()) {
+    //   throw new this.ce('invildUsenameOrPassowrd')
+    // }
 
     // 发放令牌
-    const tokenInfo = await this.genXAuthToken(ctx, userRes.id, 'web', ctx.state.clientType)
+    const tokenInfo = await this.genXAuthToken(ctx, userRes.id, 'phone')
 
     // 记录最后登录时间
-    await Mod.muserMod.modify(ctx, userRes.id, { last_sign_at: Date.now() })
+    await Mod.userMod.modify(ctx, userRes.id, { last_sign_at: Date.now() })
 
     // 准备响应数据
     ret.data = this.t.safeData(userRes)
     ret.data = { ...ret.data, ...tokenInfo }
-
-    Mod.actionLogMod.run(ctx, 'addData', 'signIn', '登录', userRes.name || userRes.identifier)
 
     // 打印日志并返回数据
     ctx.state.logger('debug', `用户登录: muserId=${userRes.id}`)
     ctx.state.sendJSON(ret)
   }
 
+  async signInByOAuth(ctx) {
+    const ret = this.t.initRet()
+    const { app = 'wechat.mp' } = ctx.request.body
+
+    let oAuthInfo = {}
+    if (app === 'wechat.mp') {
+      oAuthInfo = await Ctrl.wechatCtrl.signInByMp(ctx, true)
+      oAuthInfo.type = 'wechat'
+      oAuthInfo.from = 'wechat.mp'
+    }
+
+    if (app === 'wechat.oa') {
+      oAuthInfo = await Ctrl.wechatCtrl.signInByOa(ctx, true)
+      oAuthInfo.type = 'wechat'
+      oAuthInfo.from = 'wechat.oa'
+    }
+
+    if (app === 'wechat.app') {
+      oAuthInfo = await Ctrl.wechatCtrl.signInByApp(ctx, true)
+      oAuthInfo.type = 'wechat'
+      oAuthInfo.from = 'wechat.app'
+    }
+
+    if (app === 'apple') {
+      oAuthInfo = await this._signInByApple(ctx, true)
+      oAuthInfo.type = 'apple'
+      oAuthInfo.from = 'apple.app'
+    }
+
+    const oAuthData = {
+      type: oAuthInfo.type,
+      from: oAuthInfo.from,
+      identifier: oAuthInfo.identifier,
+      unique_id: oAuthInfo.unique_id,
+      auth_info: oAuthInfo.auth_info,
+    }
+    const { userId, isNewUser } = await Mod.authMod.run(ctx, 'signInByOAuth', oAuthData)
+
+    // 发放令牌
+    const xAuthToken = await this.genXAuthToken(ctx, userId)
+
+    // 记录最后登录时间
+    await Mod.userMod.modify(ctx, userId, { last_sign_at: Date.now() })
+
+    // 返回用户信息
+    const userRes = await Mod.userMod.run(ctx, 'getData', userId)
+
+    ret.data = { ...userRes, ...xAuthToken }
+
+    ctx.state.logger(
+      'debug',
+      `${oAuthData.type}第三方登录: identifier=${oAuthData.identifier}`,
+      `是否首次登录: ${isNewUser}`,
+    )
+    ctx.state.sendJSON(ret)
+  }
+
+  /**
+   * Sign in with Apple（苹果授权登陆）
+   *
+   * userID、email、fullName、authorizationCode、identityToken
+   *
+   * identityToken = {
+   *   "iss":"https://appleid.apple.com",  // 苹果签发的标识
+   *   "aud":"com.example.xxx", // 接收者的APP ID
+   *   "exp":1565668086, "iat":1565667486, "auth_time":1565667486,
+   *   "sub":"001247.93b3a799a7c84c0cb46cd08f100797f2.0704", //用户的唯一标识
+   *   "c_hash":"Oh2am9eMNWVY3dq5JmClbg",
+   * }
+   */
+  async _signInByApple(ctx, callback) {
+    const { edata } = ctx.query
+
+    const cert = fs.readFileSync(path.resolve(__dirname, this.CONFIG.appleServer.certPath))
+    const tokenInfo = jwt.verifyAsync(edata, cert).catch(ex => {
+      throw new this._e('EOpenAPI', 'appleOAuthFailed', ex)
+    })
+
+    return {
+      identifier: tokenInfo.sub,
+      unique_id: tokenInfo.sub,
+      auth_info: tokenInfo,
+    }
+  }
+
   async signOut(ctx) {
+    const { app } = ctx.query
     // 回收token
     const xAuthTokenCacheKey = await this.createAuthCacheKey(
       ctx.state.userId,
-      'web',
+      app || 'phone',
       ctx.state.xAuthTokenId,
       ctx.state.clientType,
     )
     await ctx.state.redis.del(xAuthTokenCacheKey)
 
-    ctx.state.logger('debug', `用户登出：muserId=${ctx.state.userId}`)
+    // 清除cookie
+    if (this.CONFIG.webServer.xAuthCookie) {
+      ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, null)
+    }
+
+    ctx.state.logger('debug', `用户登出: muserId=${ctx.state.userId}`)
     ctx.state.sendJSON()
   }
 
@@ -141,16 +241,7 @@ module.exports = new (class extends Base {
       await ctx.state.redis.del(xAuthTokenCacheKey)
     }
 
-    ctx.state.logger('debug', `重置密码：targetId=${authRes.user_id}`, body)
+    ctx.state.logger('debug', `重置密码: targetId=${authRes.user_id}`, body)
     ctx.state.sendJSON()
-  }
-
-  async applySTSDownloadToken(ctx) {
-    const ret = this.t.initRet()
-    const { cate } = ctx.query
-    const stsToken = await ctx.state.alyOss.getSTSDownloadToken(cate || 'media')
-
-    ret.data = { sts_token: stsToken }
-    ctx.state.sendJSON(ret)
   }
 })()

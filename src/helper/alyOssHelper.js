@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-10-06 16:01:07
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-06 14:06:40
+ * @Last Modified time: 2020-02-28 11:07:43
  */
 /** 内建模块 */
 import assert from 'assert'
@@ -10,7 +10,7 @@ import fs from 'fs'
 import path from 'path'
 
 /** 第三方模块 */
-import OSS from 'ali-oss'
+import Oss from 'ali-oss'
 import chalk from 'chalk'
 import dayjs from 'dayjs'
 import is from 'is-type-of'
@@ -26,25 +26,31 @@ import Log from './logger'
 // 缓存
 const alyServerCache = { oss: {} }
 
-const alyAK = CONFIG.alyServer.oss.accessKeyId || CONFIG.alyServer.accessKeyId
-const alyAS = CONFIG.alyServer.oss.accessKeySecret || CONFIG.alyServer.accessKeySecret
+const ossConfig = CONFIG.alyServer.oss
+const alyAk = ossConfig.accessKeyId || CONFIG.alyServer.accessKeyId
+const alyAs = ossConfig.accessKeySecret || CONFIG.alyServer.accessKeySecret
+const bucket = ossConfig.bucket
 let client = {}
 let sts = {}
 
-if (alyAK && alyAS) {
-  client = new OSS({
-    accessKeyId: alyAK,
-    accessKeySecret: alyAS,
-    region: CONFIG.alyServer.oss.region,
-    bucket: CONFIG.alyServer.oss.bucket,
-  })
+try {
+  if (alyAk && alyAs && bucket) {
+    client = new Oss({
+      accessKeyId: alyAk,
+      accessKeySecret: alyAs,
+      bucket: bucket,
+      region: ossConfig.region,
+    })
 
-  sts = new OSS.STS({
-    accessKeyId: alyAK,
-    accessKeySecret: alyAS,
-  })
-} else {
-  Log.logger('error', 'alyOss服务缺少参数  ：', `alyAK='${alyAK}', alyAS='${alyAS}'`)
+    sts = new Oss.STS({
+      accessKeyId: alyAk,
+      accessKeySecret: alyAs,
+    })
+  } else {
+    Log.logger('error', 'alyOss服务缺少参数  : ', `alyAk='${alyAk}', alyAs='${alyAs}', bucket=${bucket}`)
+  }
+} catch (ex) {
+  Log.logger(ex, '初始化阿里云OSS客户端失败: ', JSON.stringify(ex))
 }
 
 export default class {
@@ -63,40 +69,40 @@ export default class {
 
       return await this.client[func](...args)
     } catch (ex) {
-      this.ctx.state.logger('error', `OSS调用方法：[${chalk.magenta(func)}]发生异常：`, ex)
+      this.ctx.state.logger('error', `Oss调用方法: [${chalk.magenta(func)}]发生异常: `, ex)
       this.ctx.state.hasError = true
 
       throw ex
     } finally {
       this.ctx.state.logger(
         this.ctx.state.hasError,
-        `OSS调用方法：[${chalk.magenta(func)}], `,
-        `响应：${this.ctx.state.hasError ? '异常' : '正常'},`,
-        chalk.green(`用时：${Date.now() - now}ms`),
+        `Oss调用方法: [${chalk.magenta(func)}], `,
+        `响应: ${this.ctx.state.hasError ? '异常' : '正常'},`,
+        chalk.green(`用时: ${Date.now() - now}ms`),
       )
     }
   }
 
   async _upload(ossClient, ossPath, content, options = {}) {
-    assert(ossClient instanceof OSS, 'invalidOSSClient')
-    assert(typeof ossPath === 'string', 'invalidOSSPath')
+    assert(ossClient instanceof Oss, 'invalidOssClient')
+    assert(typeof ossPath === 'string', 'invalidOssPath')
     assert(is.string(content) || is.buffer(content) || is.readableStream(content), 'invalidContent')
     assert(typeof options === 'object', 'invalidOptions')
 
     try {
       const ret = this.t.initRet()
 
-      const { name, url } = await ossClient.put(ossPath, content, options).catch(ex => {
+      const { name, url } = await ossClient.put(ossPath, content, options).catch((ex) => {
         throw new ce('eAliyunAPI', ex.code, { ex })
       })
       ret.data = { name, url }
 
       // 上传成功后, 清理缓存
-      if (CONFIG.alyServer.oss.cacheExpire) {
+      if (ossConfig.cacheExpire) {
         delete alyServerCache.oss[ossPath]
       }
 
-      this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 文件上传至\`${ossPath}\``)
+      this.ctx.state.logger(null, `${chalk.blue('[Oss]')} 文件上传至\`${ossPath}\``)
       return ret
     } catch (ex) {
       this.ctx.state.logger(null, '上传异常', ex)
@@ -106,8 +112,8 @@ export default class {
   }
 
   async _download(ossClient, ossPath, options = {}) {
-    assert(ossClient instanceof OSS, 'invalidOSSClient')
-    assert(typeof ossPath === 'string', 'invalidOSSPath')
+    assert(ossClient instanceof Oss, 'invalidOssClient')
+    assert(typeof ossPath === 'string', 'invalidOssPath')
     assert(typeof options === 'object', 'invalidOptions')
 
     try {
@@ -117,15 +123,15 @@ export default class {
       }
 
       if (
-        CONFIG.alyServer.oss.cacheExpire &&
+        ossConfig.cacheExpire &&
         alyServerCache.oss[ossPath] &&
         alyServerCache.oss[ossPath][this.t.jsonStringify(options)]
       ) {
         const content = alyServerCache.oss[ossPath][this.t.jsonStringify(options)]
         this.ctx.state.logger(
           null,
-          `${chalk.magenta('[OSS缓存]')} 从\`${ossPath}\`下载文件`,
-          `文件大小：${content.length}字节 = ${content.length / 1024}KB = ${content.length / 1024 / 1024}MB`,
+          `${chalk.magenta('[Oss缓存]')} 从\`${ossPath}\`下载文件`,
+          `文件大小: ${content.length}字节 = ${content.length / 1024}KB = ${content.length / 1024 / 1024}MB`,
           `options: ${this.t.jsonStringify(options)}`,
         )
 
@@ -136,13 +142,13 @@ export default class {
       const { content } = await ossClient.get(ossPath, options)
       this.ctx.state.logger(
         null,
-        `${chalk.blue('[OSS]')} 从\`${ossPath}\`下载文件`,
-        `文件大小：${content.length}字节`,
+        `${chalk.blue('[Oss]')} 从\`${ossPath}\`下载文件`,
+        `文件大小: ${content.length}字节`,
         `options: ${this.t.jsonStringify(options)}`,
       )
 
       // 首次下载后, 缓存1MB以内的文件在Web服务器
-      if (CONFIG.alyServer.oss.cacheExpire && content && content.length < 1 * 1024 * 1024) {
+      if (ossConfig.cacheExpire && content && content.length < 1 * 1024 * 1024) {
         alyServerCache.oss[ossPath] = {
           [this.t.jsonStringify(options)]: content,
         }
@@ -150,7 +156,7 @@ export default class {
         // 缓存自动销毁
         setTimeout(() => {
           delete alyServerCache.oss[ossPath][this.t.jsonStringify(options)]
-        }, CONFIG.alyServer.oss.cacheExpire * 1000)
+        }, ossConfig.cacheExpire * 1000)
       }
 
       return content
@@ -158,7 +164,7 @@ export default class {
       this.ctx.state.logger(null, '下载异常', ex)
       if (ex instanceof ce) throw ex
 
-      if (ex.code === 'NoSuchKey') throw new ce('noSuchResource', null, { ossPath })
+      if (ex && ['BadRequest', 'NoSuchKey'].includes(ex.code)) throw new ce('eAliyunAPI', ex.message || ex.code, ex)
       throw new ce('eAliyunAPI', 'downloadFailed', { ossPath })
     }
   }
@@ -166,9 +172,9 @@ export default class {
   /**
    * 上传
    *
-   * @param {*} ossPath oss路径, 如：static/img/test.txt
-   * @param {any} content 上传内容（String(file path)/Buffer/ReadableStream）
-   * @param {object} [options={}] 上传选项（timeout,ms|mime|meta|callback）
+   * @param {*} ossPath oss路径, 如: static/img/test.txt
+   * @param {any} content 上传内容(String(file path)/Buffer/ReadableStream)
+   * @param {object} [options={}] 上传选项(timeout,ms|mime|meta|callback)
    * @returns {object} 公共返回值
    */
   async upload(ossPath, content, options = {}) {
@@ -178,8 +184,8 @@ export default class {
   /**
    * 下载
    *
-   * @param {*} ossPath oss路径, 如：static/img/test.txt
-   * @param {object} [options={}] 下载选项（timeout|process|headers）
+   * @param {*} ossPath oss路径, 如: static/img/test.txt
+   * @param {object} [options={}] 下载选项(timeout|process|headers)
    * @returns {object} 公共返回值
    */
   async download(ossPath, options = {}) {
@@ -190,10 +196,10 @@ export default class {
    * 获取上传STS令牌
    *
    * @param {*} type 类型
-   * @param {*} expireTime 过期时间（15min|1h）
+   * @param {*} expireTime 过期时间(15min|1h)
    * @returns {object} stsToken
    */
-  async getSTSUploadToken(type = 'common', expireTime = CONFIG.alyServer.oss.stsTokenExpireTime) {
+  async getSTSUploadToken(type = 'common', expireTime = ossConfig.stsTokenExpireTime) {
     try {
       const stsTokenCacheKey = this.t.genCacheKey('upload', this.ctx.state.userId, type)
 
@@ -204,12 +210,7 @@ export default class {
         return this.t.jsonParse(redisRes)
       }
 
-      const { credentials } = await sts.assumeRole(
-        CONFIG.alyServer.oss.rwRoleArn,
-        null,
-        expireTime,
-        this.ctx.state.userId,
-      )
+      const { credentials } = await sts.assumeRole(ossConfig.rwRoleArn, null, expireTime, this.ctx.state.userId)
 
       // 缓存stsToken
       await this.ctx.state.redis.set(stsTokenCacheKey, this.t.jsonStringify(credentials), expireTime)
@@ -226,10 +227,10 @@ export default class {
    * 获取下载STS令牌
    *
    * @param {*} type 类型
-   * @param {*} expireTime 过期时间（15min|1h）
+   * @param {*} expireTime 过期时间(15min|1h)
    * @returns {object} stsToken
    */
-  async getSTSDownloadToken(type = 'common', expireTime = CONFIG.alyServer.oss.stsTokenExpireTime) {
+  async getSTSDownloadToken(type = 'common', expireTime = ossConfig.stsTokenExpireTime) {
     try {
       const stsTokenCacheKey = this.t.genCacheKey('upload', this.ctx.state.userId, type)
 
@@ -240,12 +241,7 @@ export default class {
         return this.t.jsonParse(redisRes)
       }
 
-      const { credentials } = await sts.assumeRole(
-        CONFIG.alyServer.oss.roRoleArn,
-        null,
-        expireTime,
-        this.ctx.state.userId,
-      )
+      const { credentials } = await sts.assumeRole(ossConfig.roRoleArn, null, expireTime, this.ctx.state.userId)
 
       // 缓存stsToken
       await this.ctx.state.redis.set(stsTokenCacheKey, this.t.jsonStringify(credentials), expireTime)
@@ -263,8 +259,8 @@ export default class {
    *
    * @param {object} credentials sts临时令牌
    * @param {string} ossPath oss存储路径
-   * @param {any} content 上传内容（String(file path)/Buffer/ReadableStream）
-   * @param {object} [options={}] 上传选项（timeout|mime|meta|callback）
+   * @param {any} content 上传内容(String(file path)/Buffer/ReadableStream)
+   * @param {object} [options={}] 上传选项(timeout|mime|meta|callback)
    * @returns {object} 上传结果
    */
   async stsUpload(credentials, ossPath, content, options = {}) {
@@ -272,12 +268,12 @@ export default class {
 
     if (dayjs().isAfter(credentials.Expiration)) throw new ce('eAliyunAPI', 'stsTokenExpired', { credentials })
 
-    const stsClient = new OSS({
+    const stsClient = new Oss({
       accessKeyId: credentials.AccessKeyId,
       accessKeySecret: credentials.AccessKeySecret,
       stsToken: credentials.SecurityToken,
-      region: CONFIG.alyServer.oss.region,
-      bucket: CONFIG.alyServer.oss.bucket,
+      region: ossConfig.region,
+      bucket: ossConfig.bucket,
     })
     return this._upload(stsClient, ossPath, content, options)
   }
@@ -287,7 +283,7 @@ export default class {
    *
    * @param {object} credentials sts临时令牌
    * @param {string} ossPath oss存储路径
-   * @param {object} [options={}] 下载选项（timeout|process|headers）
+   * @param {object} [options={}] 下载选项(timeout|process|headers)
    * @returns {buffer} 下载结果
    */
   async stsDownload(credentials, ossPath, options = {}) {
@@ -295,12 +291,12 @@ export default class {
 
     if (dayjs().isAfter(credentials.Expiration)) throw new ce('eAliyunAPI', 'stsTokenExpired', { credentials })
 
-    const stsClient = new OSS({
+    const stsClient = new Oss({
       accessKeyId: credentials.AccessKeyId,
       accessKeySecret: credentials.AccessKeySecret,
       stsToken: credentials.SecurityToken,
-      region: CONFIG.alyServer.oss.region,
-      bucket: CONFIG.alyServer.oss.bucket,
+      region: ossConfig.region,
+      bucket: ossConfig.bucket,
     })
 
     return this._download(stsClient, ossPath, options)
@@ -311,8 +307,8 @@ export default class {
    *
    * @param {object} credentials sts临时令牌
    * @param {string} ossPath oss存储路径
-   * @param {any} content 上传内容（String(file path)/Buffer/ReadableStream）
-   * @param {object} [options={}] 上传选项（timeout|mime|meta|callback）
+   * @param {any} content 上传内容(String(file path)/Buffer/ReadableStream)
+   * @param {object} [options={}] 上传选项(timeout|mime|meta|callback)
    * @returns {object} 上传结果
    */
   async stsMultipartUpload(credentials, ossPath, content) {
@@ -326,12 +322,12 @@ export default class {
 
       if (this.t.isEmpty(content)) return ret
 
-      const stsClient = new OSS({
+      const stsClient = new Oss({
         accessKeyId: credentials.AccessKeyId,
         accessKeySecret: credentials.AccessKeySecret,
         stsToken: credentials.SecurityToken,
-        region: CONFIG.alyServer.oss.region,
-        bucket: CONFIG.alyServer.oss.bucket,
+        region: ossConfig.region,
+        bucket: ossConfig.bucket,
       })
 
       // 断点恢复
@@ -353,17 +349,17 @@ export default class {
             user: that.ctx.state.userId,
           },
         })
-        .catch(ex => {
+        .catch((ex) => {
           this.ctx.state.logger(ex, ex)
           throw new ce('eAliyunAPI', ex.code)
         })
       // 上传成功后, 清理缓存
       await this.ctx.state.redis.del(checkpointKey)
-      if (CONFIG.alyServer.oss.cacheExpire) {
+      if (ossConfig.cacheExpire) {
         delete alyServerCache.oss[ossPath]
       }
 
-      this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 文件成功上传至\`${ossPath}\``)
+      this.ctx.state.logger(null, `${chalk.blue('[Oss]')} 文件成功上传至\`${ossPath}\``)
       return ret
     } catch (ex) {
       this.ctx.state.logger(null, '上传异常', ex)
@@ -374,7 +370,7 @@ export default class {
 
   async getSignatureUrl(ossPath, options = {}) {
     try {
-      const expireTime = options.expires || CONFIG.alyServer.oss.ossUrlExpireTime
+      const expireTime = options.expires || ossConfig.ossUrlExpireTime
 
       const ossUrlCacheKey = this.t.genCacheKey('ossUrl', ossPath, this.t.jsonStringify(options))
 
@@ -392,12 +388,12 @@ export default class {
       // 获取成功后, 缓存
       await this.ctx.state.redis.set(ossUrlCacheKey, this.t.jsonStringify(url), expireTime)
 
-      this.ctx.state.logger(null, `${chalk.blue('[OSS]')} 获取文件下载地址\`${url}\``)
+      this.ctx.state.logger(null, `${chalk.blue('[Oss]')} 获取文件下载地址\`${url}\``)
       return url
     } catch (ex) {
-      this.ctx.state.logger(null, '获取OSS下载链接异常', ex)
+      this.ctx.state.logger(null, '获取Oss下载链接异常', ex)
       if (ex instanceof ce) throw ex
-      throw new ce('eAliyunAPI', 'getOSSUrlFailed', { ossPath })
+      throw new ce('eAliyunAPI', 'getOssUrlFailed', { ossPath })
     }
   }
 
@@ -412,24 +408,35 @@ export default class {
   }
 
   async uploadByUrl(ossPath, url) {
-    return new Promise((resolve, reject) => {
+    const ossName = ossPath.startsWith('/') ? ossPath.subString(1) : ossPath
+    return new Promise((resolve) => {
       const tmpPath = path.resolve(__dirname, `../upload/tmp-3rd-${Date.now()}.${this.t.genRandStr(8)}.png`)
       const ws = fs.createWriteStream(tmpPath)
 
-      this.ctx.state.axios.get(url, null, { responseType: 'stream' }).then(urlRes => {
-        urlRes.pipe(ws)
-        ws.on('finish', async () => {
-          await this.upload(ossPath, tmpPath)
-          fs.unlinkSync(tmpPath)
-          resolve(ossPath)
-        }).on('error', async ex => {
-          this.ctx.state.logger(ex, 'url文件上传失败', ex)
-          reject()
+      this.ctx.state.axios
+        .get(url, null, { responseType: 'stream' })
+        .then((urlRes) => {
+          urlRes.pipe(ws)
+          ws.on('finish', async () => {
+            await this.upload(ossName, tmpPath)
+            fs.unlinkSync(tmpPath)
+            resolve(ossPath)
+          })
         })
-      })
+        .catch((ex) => {
+          this.ctx.state.logger(ex, 'url文件上传失败', ex && (ex.message || ex.statusMessage))
+
+          fs.unlinkSync(tmpPath)
+          resolve()
+        })
     })
   }
 
+  /**
+   *
+   * @param {string} ossPathPrefix oss前缀匹配
+   * @returns {int} 大小, 字节=KB * 1024
+   */
   async getOssPathSize(ossPathPrefix) {
     const { objects } = await this.run('list', {
       prefix: ossPathPrefix,
@@ -444,3 +451,4 @@ export default class {
 }
 
 // https://github.com/ali-sdk/ali-oss/blob/master/README.md
+// Oss升级通知 https://help.aliyun.com/noticelist/articleid/24226493.html?spm=a2c4g.11186623.2.15.35fa4c07KHCwZn

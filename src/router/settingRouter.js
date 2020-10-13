@@ -32,8 +32,8 @@ import { settingCtrl } from '../controller'
  *
  * @apiUse commonParam
  *
- * @apiParam (Param) {string(32)} old_password 原密码，md5值
- * @apiParam (Param) {string(32)} new_password 新密码，md5值
+ * @apiParam (Param) {string(32)} old_password 原密码, md5值
+ * @apiParam (Param) {string(32)} new_password 新密码, md5值
  *
  * @apiUse commonSuccessRes
  * @apiUse commonErrorRes

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 09:25:56
+ * @Last Modified time: 2019-10-18 10:47:22
  */
 /** 内建模块 */
 
@@ -33,8 +33,8 @@ export default class {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Mid:<${this.mid}>调用方法：[${chalk.magenta(func)}] ${ctx.state.hasError ? '终止' : '通过'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Mid:<${this.mid}>调用方法: [${chalk.magenta(func)}] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
       }
       return await next()

@@ -46,7 +46,7 @@ module.exports = {
     databaseInited: '数据库已初始化',
     invalidCaptchaToken: '无效的验证码令牌',
     invalidCaptcha: '无效图形验证码',
-    invalidSMSCode: '无效短信验证码',
+    invalidSmsCode: '无效短信验证码',
     tooLargeTimeSpanFromCS: '客户端与服务端时间差异过大',
     nonceIsUsed: '随机数已使用',
     noSuchAccessKey: 'AK不存在',

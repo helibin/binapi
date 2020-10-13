@@ -43,7 +43,7 @@ module.exports = {
       .string()
       .regex(/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/)
       .required(),
-    code: CONFIG.webServer.skipAuthSMSCode ? joi.string() : joi.string().required(),
+    code: CONFIG.webServer.skipAuthSmsCode ? joi.string() : joi.string().required(),
     password: joi
       .string()
       .length(32)
@@ -84,7 +84,7 @@ module.exports = {
     },
   }),
 
-  getSMSCode: joi.object().keys({
+  getSmsCode: joi.object().keys({
     phone: joi
       .string()
       .regex(/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/)

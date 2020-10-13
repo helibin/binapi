@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 22:09:52
+ * @Last Modified time: 2020-03-16 09:40:36
  */
 /** 内建模块 */
 
@@ -81,14 +81,19 @@ export default class {
 
     try {
       // 分页处理
-      if (extraOpt.paging === undefined) extraOpt.paging = ctx.state.paging
-      if (extraOpt.paging) {
+      if (extraOpt.byPage === undefined) extraOpt.byPage = ctx.state.byPage
+      if (extraOpt.byPage) {
+        let [{ dbCount }] = await this.sequelize.query(`SELECT COUNT(1) dbCount FROM (${this.t.strf(sql, 1)}) t`, {
+          type: 'SELECT',
+          ...extraOpt,
+        })
+        this.dbCount = dbCount
         sql += `
           LIMIT :offset, :limit
         `
         extraOpt.replacements = extraOpt.replacements || {}
         extraOpt.replacements.offset = ctx.state.pageSetting.pageStart
-        extraOpt.replacements.limit = ctx.state.pageSetting.psize
+        extraOpt.replacements.limit = ctx.state.pageSetting.pageSize
       }
 
       const dbRes = await this.sequelize.query(sql, {
@@ -99,7 +104,7 @@ export default class {
 
       if (this.t.isEmpty(extraOpt.transaction)) await transaction.commit()
 
-      return extraOpt.paging ? this.t.genPageInfo(ctx, dbRes) : dbRes
+      return extraOpt.byPage ? this.t.formatPageInfo(ctx, this.dbCount, dbRes) : dbRes
     } catch (ex) {
       ctx.state.hasError = true
       await transaction.rollback()

@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-08 11:57:24
+ * @Last Modified time: 2020-03-02 18:23:17
  */
 /** 内建模块 */
 
@@ -35,36 +35,19 @@ module.exports = new (class extends Base {
           ctx.state.xAuthToken = ctx.query[CONFIG.webServer.xAuthQuery]
         }
 
-        // 验证JWT并存储相关数据
-        if (!this.t.isEmpty(ctx.state.xAuthToken)) {
-          const xAuthTokenInfo = await jwt.verifyAsync(ctx.state.xAuthToken, this.CONFIG.webServer.secret).catch(() => {
-            throw new this.ce('invalidXAuthToken', { x_auth_token: ctx.state.xAuthToken })
-          })
-
-          ctx.state.userId = xAuthTokenInfo.uid
-          ctx.state.xatId = xAuthTokenInfo.xatId
-          ctx.state.authType = xAuthTokenInfo.authType
-          const xAuthTokenCacheKey = await authCtrl.createAuthCacheKey(
-            xAuthTokenInfo.uid,
-            ctx.state.authType,
-            xAuthTokenInfo.xatId,
-            ctx.state.clientType,
-          )
-
-          // 服务器端验证xAuthToken
-          const redisRes = await ctx.state.redis.get(xAuthTokenCacheKey)
-          if (this.t.isEmpty(redisRes) || redisRes !== ctx.state.xAuthToken) {
-            throw new this.ce('xAuthTokenExpired', {
-              x_auth_token: ctx.state.xAuthToken,
-            })
-          }
-
-          await ctx.state.redis.run(
-            'expire',
-            xAuthTokenCacheKey,
-            this.CONFIG.webServer.xAuthMaxAge[ctx.state.clientType],
-          )
+        // 从Cookie中获取
+        else if (CONFIG.webServer.xAuthCookie && ctx.cookies.get(CONFIG.webServer.xAuthCookie)) {
+          ctx.state.xAuthToken = ctx.cookies.get(CONFIG.webServer.xAuthCookie)
         }
+
+        // 验证JWT并存储相关数据
+        const xAuthTokenInfo = await jwt.verifyAsync(ctx.state.xAuthToken, this.CONFIG.webServer.secret).catch(() => {
+          throw new this.ce('invalidXAuthToken', { x_auth_token: ctx.state.xAuthToken })
+        })
+
+        ctx.state.userId = xAuthTokenInfo.uid
+        ctx.state.xatId = xAuthTokenInfo.xatId
+        ctx.state.authType = xAuthTokenInfo.authType
       } catch (ex) {
         if (ex instanceof this.ce) {
           ctx.state.xAuthTokenErr = ex
@@ -92,34 +75,55 @@ module.exports = new (class extends Base {
    */
   requireSignIn() {
     return async (ctx, next) => {
+      if (this.t.isEmpty(ctx.state.xAuthToken)) throw new this.ce('userNotSignedIn')
+
       if (!this.t.isEmpty(ctx.state.xAuthTokenErr)) {
         ctx.state.logger('error', '解析用户令牌出现异常: ', this.t.jsonStringify(ctx.state.xAuthTokenErr))
         throw ctx.state.xAuthTokenErr
       }
 
+      // 刷新认证令牌
+      await this._authTokenCheck(ctx)
+
+      // 初始化用户信息
       await this._initUserInfo(ctx)
 
       await next()
     }
   }
 
-  /**
-   * 验证权限
-   *
-   * @param {array} privilege 权限
-   * @returns {*} null
-   */
-  requirePrivilege(...privilege) {
-    return async (ctx, next) => {
-      const privileges = ctx.state.user.privileges || ''
-      if (privileges.trim() === '*') return await next()
+  async _authTokenCheck(ctx) {
+    try {
+      const xAuthTokenCacheKey = await authCtrl.createAuthCacheKey(
+        ctx.state.userId,
+        ctx.state.authType,
+        ctx.state.xatId,
+        ctx.state.clientType,
+      )
 
-      const privilegeArr = privileges.replace(' ', '').split(',')
-      if (!privilegeArr.some(p => privilege.includes(p))) {
-        throw new this.ce('noSuchPrivilege', { privilege })
+      // 服务器端验证xAuthToken
+      const redisRes = await ctx.state.redis.get(xAuthTokenCacheKey)
+      if (this.t.isEmpty(redisRes) || redisRes !== ctx.state.xAuthToken) {
+        if (this.CONFIG.webServer.xAuthCookie) {
+          ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, null)
+        }
+
+        throw new this.ce('xAuthTokenExpired', { x_auth_token: ctx.state.xAuthToken })
       }
 
-      await next()
+      // 刷新xAuthToken, 如支持Cookie, 同时刷新Cookie
+      if (ctx.state.authType === 'phone' && this.CONFIG.webServer.xAuthCookie) {
+        ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, redisRes, {
+          signed: true,
+          httpOnly: false,
+          expires: new Date(Date.now() + this.CONFIG.webServer.xAuthMaxAge[ctx.state.client] * 1000),
+        })
+      }
+      await ctx.state.redis.run('expire', xAuthTokenCacheKey, this.CONFIG.webServer.xAuthMaxAge[ctx.state.clientType])
+    } catch (ex) {
+      ctx.state.logger('error', '解析用户令牌出现异常: ', this.t.jsonStringify(ex))
+
+      throw ex
     }
   }
 
@@ -127,15 +131,12 @@ module.exports = new (class extends Base {
   async _initUserInfo(ctx) {
     try {
       ctx.state.user = {}
-      if (this.t.isEmpty(ctx.state.xAuthToken) || !this.t.isEmpty(ctx.state.xAuthTokenErr)) {
-        throw new this.ce('userNotSignedIn')
-      }
 
       // 服务端获取完整用户信息并覆盖
-      let dbRes = await Mod.muserMod.run(ctx, 'get', ctx.state.userId, { attributes: {} })
+      let dbRes = await Mod.muserMod.get(ctx, ctx.state.userId, { attributes: {} })
       if (this.t.isEmpty(dbRes)) {
         const xAuthTokenCacheKey = await authCtrl.createAuthCacheKey(
-          ctx.state.uid,
+          ctx.state.userId,
           ctx.state.authType,
           ctx.state.xatId,
           ctx.state.clientType,
@@ -154,6 +155,11 @@ module.exports = new (class extends Base {
       await Mod.userMod.modify(ctx, ctx.state.userId, nextData)
     } catch (ex) {
       ctx.state.logger(ex, `初始化用户信息出错: `, JSON.stringify(ex))
+
+      // 清空cookie
+      if (this.CONFIG.webServer.xAuthCookie) {
+        ctx.cookies.set(this.CONFIG.webServer.xAuthCookie, null)
+      }
 
       throw ex
     }

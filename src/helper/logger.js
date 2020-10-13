@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-12 21:12:44
+ * @Last Modified time: 2019-11-20 14:53:23
  */
 /** 内建模块 */
 
@@ -22,7 +22,7 @@ if (CONFIG.apiServer.sentryDSN) {
 }
 
 /**
- * 默认情况下：
+ * 默认情况下:
  * 仅输出至控制台
  */
 
@@ -81,9 +81,9 @@ const logger = (...args) => {
 }
 
 const sqlLog = (execSql, execTime) => {
-  let logStr = `执行SQL语句：${execSql}`
+  let logStr = `执行SQL语句: ${execSql}`
   if (typeof execTime === 'number') {
-    logStr += ' => ' + chalk.green(`用时：${execTime}ms`)
+    logStr += ' => ' + chalk.green(`用时: ${execTime}ms`)
   }
   log4js.getLogger('Mysql    ').debug(logStr)
 }

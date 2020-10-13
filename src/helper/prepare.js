@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-13 23:14:29
+ * @Last Modified time: 2020-03-03 11:38:09
  */
 /** 内建模块 */
 
@@ -20,9 +20,11 @@ import AlyPop from './alyPopHelper'
 import AlySms from './alySmsHelper'
 import Axios from './axiosHelper'
 import NodeMailer from './nodeMailerHelper'
+import Wechat from './wechatHelper'
+import { ef } from '../helper/casbinHelper'
+import HttpSms from './httpSmsHelper'
 import SubMailer from './subMailerHelper'
 import WxWork from './wxWorkHelper'
-import Wxpay from './wxPayHelper'
 
 import Log from './logger'
 
@@ -46,6 +48,10 @@ exports.response = async (ctx, next) => {
       (ctx.headers['x-real-ip'] || '').split(',')[0] || (ctx.headers['x-forwarded-for'] || '').split(',')[0] || ctx.ip
     ctx.state.clientType = t.isMobile(ctx.userAgent) ? 'mobile' : 'desktop'
     ctx.state.clientId = t.getMd5(ctx.state.clientType + ctx.userAgent.source + ctx.state.clientIp)
+    ctx.state.authFrom = ctx.headers['x-auth-from'] || 'web'
+
+    // 参数容错
+    ctx.request.files = ctx.request.files || {}
 
     // 包装日志函数, 使日志中包含reqId
     ctx.state.logger = (...args) => {
@@ -59,7 +65,7 @@ exports.response = async (ctx, next) => {
 
     // 包装重定向函数, 自动打印日志并包含reqId
     ctx.state.redirect = nextUrl => {
-      ctx.state.logger('debug', `重定向：nextUrl=${nextUrl}`)
+      ctx.state.logger('debug', `重定向: nextUrl=${nextUrl}`)
 
       ctx.set('x-req-id', ctx.state.reqId)
       ctx.redirect(nextUrl)
@@ -86,7 +92,7 @@ exports.response = async (ctx, next) => {
 
     // 包装媒体发送函数
     ctx.state.sendMedia = (media, mime = 'mp4') => {
-      ctx.state.logger('debug', `发送文件：长度：${media.length}；MIME类型：${mime}, 名称：${'<文件流>'}`)
+      ctx.state.logger('debug', `发送文件: 长度: ${media.length}；MIME类型: ${mime}, 名称: ${'<文件流>'}`)
       const mimeType = Object.assign(
         {},
         CONST.mimeType.audio,
@@ -103,7 +109,7 @@ exports.response = async (ctx, next) => {
 
     // 包装文件发送函数, 自动打印日志, 但不包含reqId
     ctx.state.sendFile = (f, fileName) => {
-      ctx.state.logger('debug', `发送文件：长度：${f.length}；名称：${fileName || '<文件流>'}`)
+      ctx.state.logger('debug', `发送文件: 长度: ${f.length}；名称: ${fileName || '<文件流>'}`)
 
       if (fileName) {
         ctx.attachment(fileName)
@@ -140,7 +146,7 @@ exports.response = async (ctx, next) => {
     }
 
     ctx.state.sendXML = async json => {
-      const data = await t.buildXML(json)
+      const data = await t.json2xml(json)
 
       ctx.body = data
     }
@@ -161,14 +167,18 @@ exports.response = async (ctx, next) => {
     ctx.state.subMailer = new SubMailer(ctx)
     // redis初始化
     ctx.state.redis = new Redis(ctx)
+    // wechat初始化
+    ctx.state.wechat = new Wechat(ctx)
+    // casbin初始化
+    ctx.state.ef = ef
+    // httpSms初始化
+    ctx.state.httpSms = new HttpSms(ctx)
     // wxWork初始化
     ctx.state.wxWork = new WxWork(ctx)
-    // wxPay初始化
-    ctx.state.wxpay = new Wxpay(ctx)
 
     // 格式化xml数据
     if (ctx.request.type && ctx.request.type.includes('xml')) {
-      ctx.request.xml = await exports.parseXMLFromReq(ctx.req)
+      ctx.request.xmlJSON = await exports.reqXml2json(ctx.req)
     }
 
     ctx.state.logger(ctx.state.hasError, chalk.blueBright('收到客户端数据 >>>\n'), {
@@ -184,11 +194,11 @@ exports.response = async (ctx, next) => {
       clientIdStr: ctx.state.clientType + ctx.userAgent.source + ctx.state.clientIp,
       clientId: ctx.state.clientId || null,
       referer: ctx.get('referer') || null,
-      headers: { ...ctx.headers, cookie: undefined } || null,
+      headers: t.jsonFormat({ ...ctx.headers, cookie: undefined }) || null,
       query: t.jsonStringify(ctx.query || null),
       post: t.jsonStringify(ctx.request.body || null),
-      file: t.jsonStringify((ctx.request.files && ctx.request.files.file) || null),
-      xml: t.jsonStringify(ctx.request.xml || null),
+      file: t.jsonStringify(ctx.request.files.file || null),
+      xmlJSON: t.jsonStringify(ctx.request.xmlJSON || null),
     })
 
     await next()
@@ -196,7 +206,7 @@ exports.response = async (ctx, next) => {
     if (ex instanceof ce) {
       ctx.state.hasError = true
     } else {
-      Log.logger('debug', '发生异常：', ex)
+      Log.logger('debug', '发生异常: ', ex)
     }
 
     throw ex
@@ -206,13 +216,17 @@ exports.response = async (ctx, next) => {
     ctx.set('x-response-time', xResponseTime)
 
     // 响应数据处理
-    let resData =
-      ctx.body && ctx.body.req_id
-        ? t.jsonStringify({
-            ...ctx.body,
-            data: ['prod', 'qa'].includes(process.env.NODE_ENV) ? ctx.body.data : undefined,
-          })
-        : ctx.body
+    let resData = ctx.body
+    if (ctx.body && ctx.body.req_id) {
+      resData = { ...resData }
+      if (['prod', 'qa'].includes(process.env.NODE_ENV)) {
+        delete resData.data
+      } else if (t.util.isArray(resData.data) && JSON.stringify(resData.data).length > 500) {
+        resData.data = [resData.data[0], '...']
+      }
+
+      resData = t.jsonStringify(resData)
+    }
     resData = Buffer.isBuffer(resData) ? '<Buffer ...></Buffer>' : resData
     resData = t.isStream(resData) ? '<Stream ...></Stream>' : resData
 
@@ -259,7 +273,7 @@ exports.handlePageSetting = async (ctx, next) => {
 }
 
 // 解析XML参数
-exports.parseXMLFromReq = async req =>
+exports.reqXml2json = async req =>
   new Promise((resolve, reject) => {
     let data = ''
 
@@ -268,7 +282,7 @@ exports.parseXMLFromReq = async req =>
     })
 
     req.on('end', async () => {
-      data = await t.parseXML(data).catch(ex => reject(ex))
+      data = await t.xml2json(data).catch(ex => reject(ex))
 
       resolve(data)
     })

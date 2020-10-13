@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-12-23 21:08:08
+ * @Last Modified time: 2020-01-04 15:35:38
  */
 /** 内建模块 */
 
@@ -47,10 +47,12 @@ module.exports = new (class extends Base {
 
         if (ex.name !== 'ValidationError') throw ex
 
-        const errData = ['prod', 'qa'].includes(process.env.NODE_ENV) ? ex._object : ex
+        const errData = ['prod', 'qa'].includes(process.env.NODE_ENV)
+          ? ex._object
+          : { details: ex.details, _object: ex._object }
         throw new this.ce('invalidParam', ex.details[0].message, errData)
       } finally {
-        ctx.state.logger(ctx.state.hasError, `Mid调用 [joiCheck]：参数校验是否通过：${!ctx.state.hasError}`)
+        ctx.state.logger(ctx.state.hasError, `Mid调用 [joiCheck]: 参数校验是否通过: ${!ctx.state.hasError}`)
       }
       await next()
     }

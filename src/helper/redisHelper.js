@@ -2,14 +2,14 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-08 16:07:36
+ * @Last Modified time: 2020-02-26 11:10:00
  */
 /** 内建模块 */
 import { isNullOrUndefined } from 'util'
 
 /** 第三方模块 */
 import chalk from 'chalk'
-import sortedJSON from 'sorted-json'
+import sortedJson from 'sorted-json'
 import Promise from 'bluebird'
 import redis from 'redis'
 
@@ -40,7 +40,7 @@ client
     Log.logger('debug', `Redis连接成功！${res}`)
   })
   .catch(ex => {
-    Log.logger('error', `无法连接至Redis数据库：${ex}`)
+    Log.logger('error', `无法连接至Redis数据库: ${ex}`)
   })
 
 export default class {
@@ -61,7 +61,7 @@ export default class {
 
       return await this.client[`${func}Async`](...args)
     } catch (ex) {
-      this.ctx.state.logger(ex, `运行Redis任务错误：${ex}`)
+      this.ctx.state.logger(ex, `运行Redis任务错误: ${ex}`)
       throw ex
     }
   }
@@ -69,7 +69,7 @@ export default class {
   async addTask(queueName, task, delay = 0) {
     const timestamp = parseInt(Date.now() / 1000 + delay, 10)
 
-    await this.run('zadd', queueName, timestamp, sortedJSON.stringify(task))
+    await this.run('zadd', queueName, timestamp, sortedJson.stringify(task))
   }
 
   async list(patten) {

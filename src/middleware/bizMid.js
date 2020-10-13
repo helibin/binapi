@@ -2,7 +2,7 @@
  * @Author: helibin@139.com
  * @Date: 2018-07-17 15:55:47
  * @Last Modified by: lybeen
- * @Last Modified time: 2019-11-11 15:03:30
+ * @Last Modified time: 2020-01-02 17:38:45
  */
 /** 内建模块 */
 
@@ -47,8 +47,8 @@ module.exports = new (class extends Base {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Mid调用方法：[baseExists] ${ctx.state.hasError ? '终止' : '通过'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Mid调用方法: [baseExists] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
       }
     }
@@ -79,8 +79,8 @@ module.exports = new (class extends Base {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Mid调用方法：[baseNotExists] ${ctx.state.hasError ? '终止' : '通过'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Mid调用方法: [baseNotExists] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
       }
     }
@@ -110,8 +110,8 @@ module.exports = new (class extends Base {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Mid调用方法：[baseNotDisabled] ${ctx.state.hasError ? '终止' : '通过'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Mid调用方法: [baseNotDisabled] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
       }
     }
@@ -121,8 +121,8 @@ module.exports = new (class extends Base {
    * 通用存在
    *
    * @param {string} modelName 模型名字
-   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如：'params.targetId'
-   * @param {string} dataField 指定查找字段, 如：id
+   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如: 'params.targetId'
+   * @param {string} dataField 指定查找字段, 如: id
    * @return {*} none
    */
   commonExists(modelName, dataIdPosition, dataField) {
@@ -138,8 +138,8 @@ module.exports = new (class extends Base {
    * 通用不存在
    *
    * @param {string} modelName 模型名字
-   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如：'params.targetId'
-   * @param {string} dataField 指定查找字段, 如：id
+   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如: 'params.targetId'
+   * @param {string} dataField 指定查找字段, 如: id
    * @return {*} none
    */
   commonNotExists(modelName, dataIdPosition, dataField) {
@@ -150,8 +150,8 @@ module.exports = new (class extends Base {
    * 通用未禁用
    *
    * @param {string} modelName 模型名字
-   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如：'params.targetId'
-   * @param {string} dataField 指定查找字段, 如：id
+   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如: 'params.targetId'
+   * @param {string} dataField 指定查找字段, 如: id
    * @return {*} none
    */
   commonNotDisabled(modelName, dataIdPosition, dataField) {
@@ -222,8 +222,8 @@ module.exports = new (class extends Base {
       } finally {
         ctx.state.logger(
           ctx.state.hasError,
-          `Mid调用方法：[baseOwner] ${ctx.state.hasError ? '终止' : '通过'},`,
-          chalk.green(`用时：${Date.now() - now}ms`),
+          `Mid调用方法: [baseOwner] ${ctx.state.hasError ? '终止' : '通过'},`,
+          chalk.green(`用时: ${Date.now() - now}ms`),
         )
       }
     }
@@ -233,8 +233,8 @@ module.exports = new (class extends Base {
    * 通用内容对象所属用户
    *
    * @param {string} modelName 模型名字
-   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如：'params.targetId'
-   * @param {string} ownerIdPosition 指定ctx下需校验的数据位置, 如：'params.userId'
+   * @param {string} dataIdPosition 指定ctx下需校验的数据位置, 如: 'params.targetId'
+   * @param {string} ownerIdPosition 指定ctx下需校验的数据位置, 如: 'params.userId'
    * @return {*} none
    */
   commonOwner(modelName, dataIdPosition, ownerIdPosition) {
